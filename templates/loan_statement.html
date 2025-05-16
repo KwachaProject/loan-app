@@ -11,7 +11,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Customer:</strong> {{ loan['customer']['first_name'] }} {{ loan['customer']['last_name'] }}</p>
+                    <p><strong>Customer:</strong> {{ loan.customer.first_name }} {{ loan.customer.last_name }}</p>
                     <p><strong>Loan Amount:</strong> MWK {{ "{:,.2f}".format(loan.loan_amount) }}</p>
                     <p><strong>Term:</strong> {{ loan.term_months }} months</p>
                 </div>

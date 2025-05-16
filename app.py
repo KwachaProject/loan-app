@@ -81,7 +81,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(100), unique=True)
     password_hash = db.Column(db.String(128), nullable=False)
     role = db.Column(db.String(20), nullable=False, default='loan_officer')  # Roles: admin, loan_officer, customer_support
-    email = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -1492,8 +1492,6 @@ def loan_statement(loan_number):
             statement=statement,
             capitalized_amount=round(capitalized_amount, 2),
             current_balance=round(running_balance, 2),
-            top_up_balance=round(top_up_balance, 2),
-            settlement_balance=round(settlement_balance, 2),
             totals=totals  # ← this was missing
             
         )
