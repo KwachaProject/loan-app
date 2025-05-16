@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Loan Applications</h2>
+    <table class="table table-bordered table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Amount Requested</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in loans %}
+            <tr>
+                <td>{{ loan.customer.first_name }} {{ loan.customer.last_name }}</td>
+                <td>${{ loan.amount }}</td>
+                <td>{{ loan.status }}</td>
+                <td>
+                    {% if loan.status == 'pending' %}
+                        <form action="{{ url_for('process_loan', loan_id=loan.id, action='approve') }}" method="post" style="display:inline;">
+                            <button class="btn btn-success btn-sm" type="submit">Approve</button>
+                        </form>
+                        <form action="{{ url_for('process_loan', loan_id=loan.id, action='reject') }}" method="post" style="display:inline;">
+                            <button class="btn btn-danger btn-sm" type="submit">Reject</button>
+                        </form>
+                    {% else %}
+                        {{ loan.status.capitalize() }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
