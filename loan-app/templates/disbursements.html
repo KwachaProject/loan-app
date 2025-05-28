@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Loan Disbursements{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold">Loan Disbursements</h2>
+    </div>
+
+    <p class="text-muted">Select one or more approved loans to generate a disbursement letter for the chosen bank.</p>
+
+    <!-- Disbursement Form -->
+    <form method="POST" action="{{ url_for('disbursements') }}">
+        <!-- CSRF token if using Flask-WTF -->
+        {{ form.hidden_tag() if form else '' }}
+
+        <!-- Bank Dropdown -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="bank" class="form-label">Select Paying Bank</label>
+                <select id="bank" name="bank" class="form-select" required>
+                    <option value="">-- Select Bank --</option>
+                    <option value="NBS Bank" {% if selected_bank == 'NBS Bank' %}selected{% endif %}>NBS Bank</option>
+                    <option value="National Bank" {% if selected_bank == 'National Bank' %}selected{% endif %}>National Bank</option>
+                    <option value="Standard Bank" {% if selected_bank == 'Standard Bank' %}selected{% endif %}>Standard Bank</option>
+                    <option value="First Capital Bank" {% if selected_bank == 'First Capital Bank' %}selected{% endif %}>First Capital Bank</option>
+                </select>                
+            </div>
+        </div>
+
+        <!-- Loan Table -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Select</th>
+                        <th scope="col">Customer Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Loan Amount</th>
+                        <th scope="col">Bank Account</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}
+                        <tr>
+                            <td>
+                                <input class="form-check-input" type="checkbox" name="loan_ids[]" value="{{ loan.id }}">
+                            </td>
+                            <td>{{ loan.customer.first_name }} {{ loan.customer.last_name }}</td>
+                            <td>{{ loan.customer.email }}</td>
+                            <td>{{ "{:,.2f}".format(loan.loan_amount or 0) }}</td>
+                            <td>{{ loan.customer.bank_account }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3 d-flex justify-content-end">
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-file-earmark-pdf"></i> Generate Disbursement Letter
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

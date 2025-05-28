@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <!-- Chart Containers -->
+  <div class="row">
+    <div class="chart-container">
+      <canvas id="loanPortfolioChart"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="repaymentTrendChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Include chart code -->
+  <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}

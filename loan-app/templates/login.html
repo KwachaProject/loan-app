@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" 
+                         class="mb-3" 
+                         style="height: 60px;">
+                    <h3 class="h4">Loan Management System</h3>
+                </div>
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" required placeholder="Username">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Password</label>
+                        <div class="input-group">
+                            <input type="password" name="password" id="password" class="form-control" required placeholder="Password">
+                            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" tabindex="-1">
+                                <i class="bi bi-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Password toggle script -->
+<script>
+    function togglePassword() {
+        const input = document.getElementById("password");
+        const icon = document.getElementById("toggleIcon");
+        const type = input.type === "password" ? "text" : "password";
+        input.type = type;
+        icon.classList.toggle("bi-eye");
+        icon.classList.toggle("bi-eye-slash");
+    }
+</script>
+{% endblock %}

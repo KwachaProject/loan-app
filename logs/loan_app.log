@@ -2478,3 +2478,4 @@ ValueError: Settlement proof document is required
 [2025-05-28 04:52:30,581] INFO in app: Customer ID: 2
 [2025-05-28 04:52:30,582] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'topped_up'), ('203000026', 'application')]
 [2025-05-28 04:52:37,784] INFO in app: [DISBURSEMENT] Loan #203000026 | Top-up of: 25 | Cash to Client: 1756798.25
+[2025-05-28 15:54:59,162] INFO in app: [DISBURSEMENT] Loan #136000001 | Top-up of: None | Cash to Client: 700000.0

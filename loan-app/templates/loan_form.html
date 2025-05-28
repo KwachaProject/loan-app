@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application for {{ customer.first_name }} {{ customer.last_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Loan Application for {{ customer.first_name }} {{ customer.last_name }}</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Loan Application Form -->
+        {% if loan %}
+            <form method="POST">
+                <div class="form-group">
+                    <label for="loan_amount">Loan Amount</label>
+                    <input type="number" step="0.01" id="loan_amount" name="loan_amount" class="form-control" value="{{ loan.amount }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loan_purpose">Loan Purpose</label>
+                    <textarea id="loan_purpose" name="loan_purpose" class="form-control" required>{{ loan.purpose }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="loan_status">Loan Status</label>
+                    <input type="text" id="loan_status" name="loan_status" class="form-control" value="{{ loan.status }}" readonly>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update Loan Application</button>
+            </form>
+        {% else %}
+            <div class="alert alert-warning">
+                No loan application found for this customer.
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
