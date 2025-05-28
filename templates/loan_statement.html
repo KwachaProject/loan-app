@@ -14,16 +14,27 @@
                     <p><strong>Customer:</strong> {{ loan.customer.first_name }} {{ loan.customer.last_name }}</p>
                     <p><strong>Loan Amount:</strong> MWK {{ "{:,.2f}".format(loan.loan_amount) }}</p>
                     <p><strong>Term:</strong> {{ loan.term_months }} months</p>
+                    <p><strong>Top-Up Balance:</strong> MWK {{ "{:,.2f}".format(top_up_balance) }}</p>
                 </div>
                 <div class="col-md-6">
                     <p><strong>Capitalized Amount:</strong> MWK {{ "{:,.2f}".format(capitalized_amount) }}</p>
                     <p><strong>Current Balance:</strong> MWK {{ "{:,.2f}".format(current_balance) }}</p>
-                    <p><strong>Status:</strong> <span class="badge bg-{{ 'success' if loan.status == 'active' else 'warning' }}">{{ loan.status|title }}</span></p>
+                    <p><strong>Status:</strong> 
+                        <span class="badge 
+                            {% if loan.loan_state == 'active' %}bg-primary
+                            {% elif loan.loan_state == 'settled_client' %}bg-success
+                            {% elif loan.loan_state == 'written_off' %}bg-danger
+                            {% elif loan.loan_state == 'closed' %}bg-secondary
+                            {% else %}bg-warning{% endif %}">
+                            {{ loan.loan_state|upper|replace('_', ' ') }}
+                        </span>
+                    </p>
+                    <p><strong>Settlement Balance:</strong> MWK {{ "{:,.2f}".format(settlement_balance) }}</p>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <!-- Payment Summary -->
     <div class="row mb-4">
         <div class="col-md-3">

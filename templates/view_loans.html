@@ -4,7 +4,9 @@
 
 {% block content %}
 <div class="container mt-4">
-  <h2 class="mb-4">Loan Applications</h2>
+  <h2 class="mb-4 text-primary">
+    <i class="bi bi-clipboard-data me-2"></i>Loan Applications
+  </h2>
 
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -17,100 +19,116 @@
     {% endif %}
   {% endwith %}
 
-  
-  <table class="table table-striped table-bordered align-middle" id="loanTable">
-    <thead class="table-dark">
-      <tr>
-        <th>Customer</th>
-        <th>Amount MWK</th>
-        <th>Term</th>
-        <th>Monthly Payment MWK</th>
-        <th>Status</th>
-        <th>Requested</th>
-        <th>Category</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for entry in loans %}
-      <tr>
-        <td>{{ entry.customer.first_name }} {{ entry.customer.last_name }}</td>
-        <td>{{ "%.2f"|format(entry.loan.loan_amount or 0) }}</td>
-        <td>{{ entry.loan.term_months if entry.loan else '' }}</td>
-        <td>{{ "%.2f"|format(entry.loan.monthly_instalment or 0) }}</td>
-        <td>
-          {% if entry.loan and entry.loan.status == 'approved' %}
-            <span class="badge bg-success">{{ entry.loan.status }}</span>
-          {% elif entry.loan and entry.loan.status == 'pending' %}
-            <span class="badge bg-warning text-dark">{{ entry.loan.status }}</span>
-          {% else %}
-            <span class="badge bg-danger">{{ entry.loan.status if entry.loan else 'N/A' }}</span>
-          {% endif %}
-        </td>
-        <td>{{ entry.loan.created_at.strftime('%Y-%m-%d') if entry.loan and entry.loan.created_at else '' }}</td>
-        <td>{{ entry.loan.category if entry.loan else 'None' }}</td>
-        <td>
-          {% if entry.loan %}
-            <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='approve') }}" style="display:inline-block;">
-              <button class="btn btn-sm btn-success" type="submit" {% if entry.loan.status == 'approved' %}disabled{% endif %}>
-                Approve
-              </button>
-            </form>
-            <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='reject') }}" style="display:inline-block;">
-              <button class="btn btn-sm btn-danger" type="submit" {% if entry.loan.status == 'rejected' %}disabled{% endif %}>
-                Reject
-              </button>
-            </form>
-          {% endif %}
-          <a href="{{ url_for('loan_form', customer_id=entry.customer.id) }}" class="btn btn-sm btn-primary">Edit</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-    <tfoot class="table-light fw-bold">
-      <tr>
-        <td colspan="3">Totals</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
+  <div class="card border-primary shadow">
+    <div class="card-header bg-primary text-white">
+      <i class="bi bi-table me-2"></i>Loan Portfolio Overview
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover align-middle mb-0" id="loanTable">
+        <thead class="bg-light-primary">
+          <tr>
+            <th class="text-primary"><i class="bi bi-person me-1"></i>Customer</th>
+            <th class="text-primary">Amount MWK</th>
+            <th class="text-primary">Term</th>
+            <th class="text-primary">Monthly Payment MWK</th>
+            <th class="text-primary">Status</th>
+            <th class="text-primary">Requested</th>
+            <th class="text-primary">Category</th>
+            <th class="text-primary">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in loans %}
+          <tr>
+            <td class="fw-medium">{{ entry.customer.first_name }} {{ entry.customer.last_name }}</td>
+            <td>{{ "%.2f"|format(entry.loan.loan_amount or 0) }}</td>
+            <td>{{ entry.loan.term_months if entry.loan else '' }}</td>
+            <td class="text-nowrap">{{ "%.2f"|format(entry.loan.monthly_instalment or 0) }}</td>
+            <td>
+              {% if entry.loan %}
+                {% if entry.loan.application_status == 'approved' %}
+                  <span class="badge 
+                    {% if entry.loan.loan_state == 'active' %}bg-primary
+                    {% elif entry.loan.loan_state == 'closed' %}bg-secondary
+                    {% elif entry.loan.loan_state == 'written_off' %}bg-danger
+                    {% elif entry.loan.loan_state == 'topped_up' %}bg-info
+                    {% else %}bg-warning{% endif %}">
+                    {{ entry.loan.loan_state|upper|replace('_', ' ') }}
+                  </span>
+                {% elif entry.loan.application_status == 'pending' %}
+                  <span class="badge bg-warning-soft text-warning">
+                    <i class="bi bi-clock-history me-1"></i>{{ entry.loan.application_status|title }}
+                  </span>
+                {% else %}
+                  <span class="badge bg-danger-soft text-danger">
+                    <i class="bi bi-x-circle me-1"></i>{{ entry.loan.application_status|title }}
+                  </span>
+                {% endif %}
+              {% else %}
+                <span class="badge bg-secondary-soft text-secondary">No Loan</span>
+              {% endif %}
+            </td>
+            <td>{{ entry.loan.created_at.strftime('%d %b %Y') if entry.loan and entry.loan.created_at else '' }}</td>
+            <td>
+              <span class="badge bg-primary-soft text-primary">
+                {{ entry.loan.category if entry.loan else 'None' }}
+              </span>
+            </td>
+            <td class="text-nowrap">
+              <div class="d-flex gap-2">
+                {% if entry.loan %}
+                <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='approve') }}">
+                  <button class="btn btn-success-soft btn-sm px-3 py-1" type="submit" 
+                    {% if entry.loan.application_status == 'approved' %}disabled{% endif %}>
+                    <i class="bi bi-check2"></i>
+                  </button>
+                </form>
+                <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='reject') }}">
+                  <button class="btn btn-danger-soft btn-sm px-3 py-1" type="submit" 
+                    {% if entry.loan.application_status == 'rejected' %}disabled{% endif %}>
+                    <i class="bi bi-x"></i>
+                  </button>
+                </form>
+                {% endif %}
+                <a href="{{ url_for('loan_form', customer_id=entry.customer.id) }}" 
+                   class="btn btn-primary-soft btn-sm px-3 py-1">
+                  <i class="bi bi-pencil"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<script>
-  const searchInput = document.getElementById("searchInput");
-  const categoryFilter = document.getElementById("categoryFilter");
-  const tenureFilter = document.getElementById("tenureFilter");
-  const table = document.getElementById("loanTable");
-  const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-
-  function filterTable() {
-    const searchTerm = searchInput.value.toLowerCase();
-    const selectedCategory = categoryFilter.value.toLowerCase();
-    const selectedTenure = tenureFilter.value;
-
-    for (let row of rows) {
-      const name = row.cells[0].textContent.toLowerCase();
-      const email = row.cells[1].textContent.toLowerCase();
-      const category = row.cells[8].textContent.toLowerCase();
-      const status = row.cells[6].textContent.toLowerCase();
-      const tenure = row.cells[4].textContent;
-
-      const matchSearch = name.includes(searchTerm) || email.includes(searchTerm) || status.includes(searchTerm);
-      const matchCategory = !selectedCategory || category === selectedCategory;
-      const matchTenure = !selectedTenure || tenure === selectedTenure;
-
-      row.style.display = (matchSearch && matchCategory && matchTenure) ? "" : "none";
-    }
+<style>
+  .bg-light-primary { background-color: #e3f2fd; }
+  .bg-primary-soft { background-color: #e3f2fd; }
+  .bg-success-soft { background-color: #d1e7dd; }
+  .bg-warning-soft { background-color: #fff3cd; }
+  .bg-danger-soft { background-color: #f8d7da; }
+  .bg-secondary-soft { background-color: #dee2e6; }
+  .btn-primary-soft { 
+    background-color: #e3f2fd;
+    color: #0d6efd;
+    border: 1px solid #0d6efd40;
   }
+  .btn-success-soft { 
+    background-color: #d1e7dd;
+    color: #198754;
+    border: 1px solid #19875440;
+  }
+  .btn-danger-soft { 
+    background-color: #f8d7da;
+    color: #dc3545;
+    border: 1px solid #dc354540;
+  }
+</style>
 
-  searchInput.addEventListener("input", filterTable);
-  categoryFilter.addEventListener("change", filterTable);
-  tenureFilter.addEventListener("change", filterTable);
+<script>
+  // Optional: Add JS for table filtering or sorting if needed
 </script>
 {% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Top-Up Loan{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Top-Up Loan Request</h2>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            Original Loan Summary
+        </div>
+        <div class="card-body">
+            <p><strong>Customer:</strong> {{ customer.full_name }}</p>
+            <p><strong>Original Loan #:</strong> {{ base_loan.loan_number }}</p>
+            <p><strong>Current Balance:</strong> {{ current_balance }} KES</p>
+            <p><strong>Settlement Balance:</strong> {{ settlement_balance }} KES</p>
+        </div>
+    </div>
+
+    <form method="POST">
+        <div class="card">
+            <div class="card-header">
+                New Top-Up Details
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="new_amount" class="form-label">Top-Up Amount (KES)</label>
+                    <input 
+                        type="number" 
+                        step="0.01" 
+                        name="new_amount" 
+                        id="new_amount"
+                        class="form-control"
+                        value="{{ request.form.new_amount or '' }}" 
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="loan_term" class="form-label">New Loan Term (months)</label>
+                    <select name="loan_term" id="loan_term" class="form-select" required>
+                        <option value="" disabled {% if not request.form.loan_term %}selected{% endif %}>Select new term</option>
+                        {% for term in [3, 6, 12, 15, 18, 24, 36, 48] %}
+                            <option value="{{ term }}"
+                                {% if request.form.loan_term == term|string %}
+                                    selected
+                                {% endif %}>
+                                {{ term }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Submit Top-Up
+                    </button>
+                    <a href="{{ url_for('view_loans') }}" class="btn btn-secondary ms-2">
+                        <i class="bi bi-arrow-left"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

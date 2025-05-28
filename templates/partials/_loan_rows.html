@@ -1,0 +1,26 @@
+{% for loan in loans %}
+<tr>
+  <td>
+    <a href="{{ url_for('loan_statement', loan_number=loan['loan']['loan_number']) }}">
+        {{ loan['loan']['loan_number'] }}
+    </a>
+    </td>
+    <td>
+    <a href="{{ url_for('customer_account', file_number=loan['customer']['file_number']) }}">
+        {{ loan['customer']['file_number'] }}
+    </a>
+    </td>
+  <td>{{ loan.customer.first_name }} {{ loan.customer.last_name }}</td>
+  <td>{{ "{:,.2f}".format(loan.loan.amount) }}</td>
+  <td>{{ loan.loan.term }}</td>
+  <td>{{ loan.loan.category }}</td>
+  <td>{{ "{:,.2f}".format(loan.fees.crb) }}</td>
+  <td>{{ "{:,.2f}".format(loan.fees.origination) }}</td>
+  <td>{{ "{:,.2f}".format(loan.fees.insurance) }}</td>
+  <td>{{ "{:,.2f}".format(loan.fees.total) }}</td>
+  <td>{{ "{:,.2f}".format(loan.loan.collection_fee) }}</td>
+  <td>{{ "{:,.2f}".format(loan.loan.monthly_instalment) }}</td>
+  <td>{{ "{:,.2f}".format(loan.loan.total_repayment) }}</td>
+  <td>{{ "{:,.2f}".format(loan.loan.balance) }}</td>
+</tr>
+{% endfor %}

@@ -1,0 +1,629 @@
+2025-05-27 07:26:35,153 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 07:26:35,153 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 07:31:24,294 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 07:31:24,294 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 07:39:24,672 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 07:39:24,673 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 07:42:10,216 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 07:42:10,216 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 07:57:02,843 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 07:57:02,843 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 10:53:06,669 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 10:53:06,670 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 10:58:10,111 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 10:58:10,111 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 12:08:28,229 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 12:08:28,229 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 12:23:11,961 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 12:23:11,962 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 12:23:34,280 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 12:23:34,280 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 13:57:26,519 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 13:57:26,519 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 14:12:00,232 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 14:12:00,232 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 14:12:04,864 - INFO - 127.0.0.1 - - [27/May/2025 14:12:04] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 14:12:05,599 - INFO - 127.0.0.1 - - [27/May/2025 14:12:05] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-27 14:12:08,274 - INFO - 127.0.0.1 - - [27/May/2025 14:12:08] "GET /loanbook HTTP/1.1" 200 -
+2025-05-27 14:12:09,959 - INFO - Found 8 loans for customer 202505000001
+2025-05-27 14:12:09,959 - INFO - Customer ID: 1
+2025-05-27 14:12:09,960 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+2025-05-27 14:12:10,002 - INFO - 127.0.0.1 - - [27/May/2025 14:12:10] "GET /customer/202505000001/account HTTP/1.1" 200 -
+2025-05-27 14:12:13,647 - INFO - Found 8 loans for customer 202505000001
+2025-05-27 14:12:13,649 - INFO - Customer ID: 1
+2025-05-27 14:12:13,651 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+2025-05-27 14:12:13,664 - INFO - 127.0.0.1 - - [27/May/2025 14:12:13] "GET /customer/202505000001/account?section=topup HTTP/1.1" 200 -
+2025-05-27 14:13:19,899 - INFO - 127.0.0.1 - - [27/May/2025 14:13:19] "[31m[1mPOST /customer/202505000001/account?section=topup HTTP/1.1[0m" 405 -
+2025-05-27 14:13:50,515 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 14:13:50,515 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 14:14:01,121 - INFO - Found 8 loans for customer 202505000001
+2025-05-27 14:14:01,122 - INFO - Customer ID: 1
+2025-05-27 14:14:01,123 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+2025-05-27 14:14:01,140 - INFO - 127.0.0.1 - - [27/May/2025 14:14:01] "GET /customer/202505000001/account?section=additional HTTP/1.1" 200 -
+2025-05-27 14:14:01,934 - INFO - Found 8 loans for customer 202505000001
+2025-05-27 14:14:01,935 - INFO - Customer ID: 1
+2025-05-27 14:14:01,936 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+2025-05-27 14:14:01,950 - INFO - 127.0.0.1 - - [27/May/2025 14:14:01] "GET /customer/202505000001/account?section=topup HTTP/1.1" 200 -
+2025-05-27 14:14:24,744 - INFO - 127.0.0.1 - - [27/May/2025 14:14:24] "[31m[1mPOST /customer/202505000001/account?section=topup HTTP/1.1[0m" 405 -
+2025-05-27 14:15:14,198 - INFO - Found 8 loans for customer 202505000001
+2025-05-27 14:15:14,199 - INFO - Customer ID: 1
+2025-05-27 14:15:14,199 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+2025-05-27 14:15:14,217 - INFO - 127.0.0.1 - - [27/May/2025 14:15:14] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+2025-05-27 14:15:17,415 - INFO - Found 8 loans for customer 202505000001
+2025-05-27 14:15:17,417 - INFO - Customer ID: 1
+2025-05-27 14:15:17,417 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+2025-05-27 14:15:17,436 - INFO - 127.0.0.1 - - [27/May/2025 14:15:17] "GET /customer/202505000001/account?section=additional HTTP/1.1" 200 -
+2025-05-27 14:15:18,967 - INFO - 127.0.0.1 - - [27/May/2025 14:15:18] "GET /loanbook HTTP/1.1" 200 -
+2025-05-27 14:15:21,478 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:15:21,479 - INFO - Customer ID: 3
+2025-05-27 14:15:21,479 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:15:21,484 - INFO - 127.0.0.1 - - [27/May/2025 14:15:21] "GET /customer/202505000003/account HTTP/1.1" 200 -
+2025-05-27 14:15:23,534 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:15:23,535 - INFO - Customer ID: 3
+2025-05-27 14:15:23,536 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:15:23,540 - INFO - 127.0.0.1 - - [27/May/2025 14:15:23] "GET /customer/202505000003/account?section=additional HTTP/1.1" 200 -
+2025-05-27 14:15:24,654 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:15:24,655 - INFO - Customer ID: 3
+2025-05-27 14:15:24,657 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:15:24,661 - INFO - 127.0.0.1 - - [27/May/2025 14:15:24] "GET /customer/202505000003/account?section=topup HTTP/1.1" 200 -
+2025-05-27 14:16:03,420 - INFO - 127.0.0.1 - - [27/May/2025 14:16:03] "[31m[1mPOST /customer/202505000003/account?section=topup HTTP/1.1[0m" 405 -
+2025-05-27 14:16:33,952 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:16:33,952 - INFO - Customer ID: 3
+2025-05-27 14:16:33,953 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:16:33,957 - INFO - 127.0.0.1 - - [27/May/2025 14:16:33] "GET /customer/202505000003/account?section=settlement HTTP/1.1" 200 -
+2025-05-27 14:16:41,884 - ERROR - Failed to close loan 8: Settlement proof document is required
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 2945, in settle_loan
+    return redirect(request.referrer)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Settlement proof document is required
+2025-05-27 14:16:41,887 - INFO - 127.0.0.1 - - [27/May/2025 14:16:41] "[32mPOST /settle_loan/8 HTTP/1.1[0m" 302 -
+2025-05-27 14:16:41,898 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:16:41,899 - INFO - Customer ID: 3
+2025-05-27 14:16:41,899 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:16:41,902 - INFO - 127.0.0.1 - - [27/May/2025 14:16:41] "GET /customer/202505000003/account?section=settlement HTTP/1.1" 200 -
+2025-05-27 14:16:49,613 - ERROR - Failed to close loan 8: Settlement proof document is required
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 2945, in settle_loan
+    return redirect(request.referrer)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Settlement proof document is required
+2025-05-27 14:16:49,615 - INFO - 127.0.0.1 - - [27/May/2025 14:16:49] "[32mPOST /settle_loan/8 HTTP/1.1[0m" 302 -
+2025-05-27 14:16:49,622 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:16:49,623 - INFO - Customer ID: 3
+2025-05-27 14:16:49,624 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:16:49,626 - INFO - 127.0.0.1 - - [27/May/2025 14:16:49] "GET /customer/202505000003/account?section=settlement HTTP/1.1" 200 -
+2025-05-27 14:49:39,007 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:49:39,009 - INFO - Customer ID: 3
+2025-05-27 14:49:39,010 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:49:39,013 - INFO - 127.0.0.1 - - [27/May/2025 14:49:39] "GET /customer/202505000003/account?section=additional HTTP/1.1" 200 -
+2025-05-27 14:49:39,893 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:49:39,894 - INFO - Customer ID: 3
+2025-05-27 14:49:39,894 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:49:39,899 - INFO - 127.0.0.1 - - [27/May/2025 14:49:39] "GET /customer/202505000003/account?section=statement HTTP/1.1" 200 -
+2025-05-27 14:49:40,620 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:49:40,620 - INFO - Customer ID: 3
+2025-05-27 14:49:40,621 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:49:40,625 - INFO - 127.0.0.1 - - [27/May/2025 14:49:40] "GET /customer/202505000003/account?section=topup HTTP/1.1" 200 -
+2025-05-27 14:49:41,819 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:49:41,819 - INFO - Customer ID: 3
+2025-05-27 14:49:41,820 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:49:41,824 - INFO - 127.0.0.1 - - [27/May/2025 14:49:41] "GET /customer/202505000003/account?section=statement HTTP/1.1" 200 -
+2025-05-27 14:51:14,146 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 14:51:14,147 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 14:51:20,114 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:51:20,115 - INFO - Customer ID: 3
+2025-05-27 14:51:20,117 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:51:20,120 - INFO - 127.0.0.1 - - [27/May/2025 14:51:20] "GET /customer/202505000003/account?section=topup HTTP/1.1" 200 -
+2025-05-27 14:51:40,767 - INFO - 127.0.0.1 - - [27/May/2025 14:51:40] "[31m[1mPOST /customer/202505000003/account?section=topup HTTP/1.1[0m" 405 -
+2025-05-27 14:52:37,185 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 14:52:37,185 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 14:52:47,546 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:52:47,546 - INFO - Customer ID: 3
+2025-05-27 14:52:47,547 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:52:47,549 - INFO - 127.0.0.1 - - [27/May/2025 14:52:47] "GET /customer/202505000003/account?section=topup HTTP/1.1" 200 -
+2025-05-27 14:52:48,808 - INFO - 127.0.0.1 - - [27/May/2025 14:52:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-27 14:53:14,150 - INFO - 127.0.0.1 - - [27/May/2025 14:53:14] "[31m[1mPOST /customer/202505000003/account?section=topup HTTP/1.1[0m" 405 -
+2025-05-27 14:53:22,718 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:53:22,718 - INFO - Customer ID: 3
+2025-05-27 14:53:22,719 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:53:22,722 - INFO - 127.0.0.1 - - [27/May/2025 14:53:22] "GET /customer/202505000003/account?section=settlement HTTP/1.1" 200 -
+2025-05-27 14:53:25,852 - INFO - Found 2 loans for customer 202505000003
+2025-05-27 14:53:25,853 - INFO - Customer ID: 3
+2025-05-27 14:53:25,853 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+2025-05-27 14:53:25,857 - INFO - 127.0.0.1 - - [27/May/2025 14:53:25] "GET /customer/202505000003/account?section=additional HTTP/1.1" 200 -
+2025-05-27 14:53:42,337 - INFO - 127.0.0.1 - - [27/May/2025 14:53:42] "[32mPOST /apply_additional/3 HTTP/1.1[0m" 302 -
+2025-05-27 14:53:42,345 - INFO - Found 3 loans for customer 202505000003
+2025-05-27 14:53:42,345 - INFO - Customer ID: 3
+2025-05-27 14:53:42,346 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active'), ('103000016', 'active')]
+2025-05-27 14:53:42,348 - INFO - 127.0.0.1 - - [27/May/2025 14:53:42] "GET /customer/202505000003/account?section=statement HTTP/1.1" 200 -
+2025-05-27 14:53:45,994 - INFO - 127.0.0.1 - - [27/May/2025 14:53:45] "GET /loans HTTP/1.1" 200 -
+2025-05-27 14:53:47,832 - INFO - 127.0.0.1 - - [27/May/2025 14:53:47] "[32mPOST /process_loan/16/approve HTTP/1.1[0m" 302 -
+2025-05-27 14:53:47,843 - INFO - 127.0.0.1 - - [27/May/2025 14:53:47] "GET /loans HTTP/1.1" 200 -
+2025-05-27 14:53:49,180 - INFO - 127.0.0.1 - - [27/May/2025 14:53:49] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 15:13:14,610 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 15:13:14,610 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 15:13:19,011 - INFO - 127.0.0.1 - - [27/May/2025 15:13:19] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 15:13:20,190 - INFO - 127.0.0.1 - - [27/May/2025 15:13:20] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-27 15:13:22,216 - INFO - 127.0.0.1 - - [27/May/2025 15:13:22] "GET /payments HTTP/1.1" 200 -
+2025-05-27 15:13:23,469 - INFO - 127.0.0.1 - - [27/May/2025 15:13:23] "GET /loanbook HTTP/1.1" 200 -
+2025-05-27 15:13:26,869 - INFO - Found 8 loans for customer 202505000001
+2025-05-27 15:13:26,872 - INFO - Customer ID: 1
+2025-05-27 15:13:26,872 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+2025-05-27 15:13:26,888 - INFO - 127.0.0.1 - - [27/May/2025 15:13:26] "GET /customer/202505000001/account HTTP/1.1" 200 -
+2025-05-27 15:13:32,395 - INFO - Found 8 loans for customer 202505000001
+2025-05-27 15:13:32,396 - INFO - Customer ID: 1
+2025-05-27 15:13:32,397 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+2025-05-27 15:13:32,412 - INFO - 127.0.0.1 - - [27/May/2025 15:13:32] "GET /customer/202505000001/account?section=additional HTTP/1.1" 200 -
+2025-05-27 15:13:46,992 - INFO - 127.0.0.1 - - [27/May/2025 15:13:46] "[32mPOST /apply_additional/1 HTTP/1.1[0m" 302 -
+2025-05-27 15:13:47,003 - INFO - Found 9 loans for customer 202505000001
+2025-05-27 15:13:47,004 - INFO - Customer ID: 1
+2025-05-27 15:13:47,004 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+2025-05-27 15:13:47,018 - INFO - 127.0.0.1 - - [27/May/2025 15:13:47] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+2025-05-27 15:13:48,565 - INFO - 127.0.0.1 - - [27/May/2025 15:13:48] "GET /loans HTTP/1.1" 200 -
+2025-05-27 15:13:50,372 - INFO - 127.0.0.1 - - [27/May/2025 15:13:50] "[32mPOST /process_loan/17/approve HTTP/1.1[0m" 302 -
+2025-05-27 15:13:50,385 - INFO - 127.0.0.1 - - [27/May/2025 15:13:50] "GET /loans HTTP/1.1" 200 -
+2025-05-27 15:13:51,973 - INFO - 127.0.0.1 - - [27/May/2025 15:13:51] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 15:13:54,187 - INFO - 127.0.0.1 - - [27/May/2025 15:13:54] "GET /payments HTTP/1.1" 200 -
+2025-05-27 15:14:31,819 - INFO - 127.0.0.1 - - [27/May/2025 15:14:31] "GET /loanbook HTTP/1.1" 200 -
+2025-05-27 15:14:32,531 - INFO - 127.0.0.1 - - [27/May/2025 15:14:32] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 15:18:36,107 - INFO - 127.0.0.1 - - [27/May/2025 15:18:36] "GET / HTTP/1.1" 200 -
+2025-05-27 15:18:37,018 - INFO - 127.0.0.1 - - [27/May/2025 15:18:37] "GET / HTTP/1.1" 200 -
+2025-05-27 15:18:37,224 - INFO - 127.0.0.1 - - [27/May/2025 15:18:37] "GET / HTTP/1.1" 200 -
+2025-05-27 15:18:37,408 - INFO - 127.0.0.1 - - [27/May/2025 15:18:37] "GET / HTTP/1.1" 200 -
+2025-05-27 15:18:37,585 - INFO - 127.0.0.1 - - [27/May/2025 15:18:37] "GET / HTTP/1.1" 200 -
+2025-05-27 15:18:37,761 - INFO - 127.0.0.1 - - [27/May/2025 15:18:37] "GET / HTTP/1.1" 200 -
+2025-05-27 15:18:37,962 - INFO - 127.0.0.1 - - [27/May/2025 15:18:37] "GET / HTTP/1.1" 200 -
+2025-05-27 15:18:38,163 - INFO - 127.0.0.1 - - [27/May/2025 15:18:38] "GET / HTTP/1.1" 200 -
+2025-05-27 15:18:38,362 - INFO - 127.0.0.1 - - [27/May/2025 15:18:38] "GET / HTTP/1.1" 200 -
+2025-05-27 15:18:38,540 - INFO - 127.0.0.1 - - [27/May/2025 15:18:38] "GET / HTTP/1.1" 200 -
+2025-05-27 15:22:07,250 - INFO - 127.0.0.1 - - [27/May/2025 15:22:07] "GET /register HTTP/1.1" 200 -
+2025-05-27 15:22:08,004 - INFO - 127.0.0.1 - - [27/May/2025 15:22:08] "GET /approve_customers HTTP/1.1" 200 -
+2025-05-27 15:22:08,831 - INFO - 127.0.0.1 - - [27/May/2025 15:22:08] "GET /customers HTTP/1.1" 200 -
+2025-05-27 15:22:10,144 - INFO - 127.0.0.1 - - [27/May/2025 15:22:10] "GET /register HTTP/1.1" 200 -
+2025-05-27 15:23:36,348 - INFO - 127.0.0.1 - - [27/May/2025 15:23:36] "[32mPOST /register HTTP/1.1[0m" 302 -
+2025-05-27 15:23:36,357 - INFO - 127.0.0.1 - - [27/May/2025 15:23:36] "GET /register HTTP/1.1" 200 -
+2025-05-27 15:23:37,885 - INFO - 127.0.0.1 - - [27/May/2025 15:23:37] "GET /approve_customers HTTP/1.1" 200 -
+2025-05-27 15:23:40,612 - INFO - 127.0.0.1 - - [27/May/2025 15:23:40] "[32mPOST /approve_customers HTTP/1.1[0m" 302 -
+2025-05-27 15:23:40,620 - INFO - 127.0.0.1 - - [27/May/2025 15:23:40] "GET /approve_customers HTTP/1.1" 200 -
+2025-05-27 15:23:42,033 - INFO - 127.0.0.1 - - [27/May/2025 15:23:42] "GET /customers HTTP/1.1" 200 -
+2025-05-27 15:23:43,110 - INFO - 127.0.0.1 - - [27/May/2025 15:23:43] "GET /loans HTTP/1.1" 200 -
+2025-05-27 15:23:46,675 - INFO - 127.0.0.1 - - [27/May/2025 15:23:46] "[32mPOST /process_loan/18/approve HTTP/1.1[0m" 302 -
+2025-05-27 15:23:46,687 - INFO - 127.0.0.1 - - [27/May/2025 15:23:46] "GET /loans HTTP/1.1" 200 -
+2025-05-27 15:23:49,603 - INFO - 127.0.0.1 - - [27/May/2025 15:23:49] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 15:23:51,496 - INFO - 127.0.0.1 - - [27/May/2025 15:23:51] "GET /payments HTTP/1.1" 200 -
+2025-05-27 15:23:52,545 - INFO - 127.0.0.1 - - [27/May/2025 15:23:52] "GET /loanbook HTTP/1.1" 200 -
+2025-05-27 15:23:57,082 - INFO - Found 1 loans for customer 202505000004
+2025-05-27 15:23:57,082 - INFO - Customer ID: 4
+2025-05-27 15:23:57,083 - INFO - Found Loans: [('218000018', 'active')]
+2025-05-27 15:23:57,087 - INFO - 127.0.0.1 - - [27/May/2025 15:23:57] "GET /customer/202505000004/account HTTP/1.1" 200 -
+2025-05-27 15:23:58,850 - INFO - Found 1 loans for customer 202505000004
+2025-05-27 15:23:58,850 - INFO - Customer ID: 4
+2025-05-27 15:23:58,854 - INFO - Found Loans: [('218000018', 'active')]
+2025-05-27 15:23:58,856 - INFO - 127.0.0.1 - - [27/May/2025 15:23:58] "GET /customer/202505000004/account?section=additional HTTP/1.1" 200 -
+2025-05-27 15:23:59,643 - INFO - Found 1 loans for customer 202505000004
+2025-05-27 15:23:59,644 - INFO - Customer ID: 4
+2025-05-27 15:23:59,645 - INFO - Found Loans: [('218000018', 'active')]
+2025-05-27 15:23:59,647 - INFO - 127.0.0.1 - - [27/May/2025 15:23:59] "GET /customer/202505000004/account?section=topup HTTP/1.1" 200 -
+2025-05-27 15:24:00,259 - INFO - Found 1 loans for customer 202505000004
+2025-05-27 15:24:00,259 - INFO - Customer ID: 4
+2025-05-27 15:24:00,260 - INFO - Found Loans: [('218000018', 'active')]
+2025-05-27 15:24:00,263 - INFO - 127.0.0.1 - - [27/May/2025 15:24:00] "GET /customer/202505000004/account?section=settlement HTTP/1.1" 200 -
+2025-05-27 15:24:01,010 - INFO - Found 1 loans for customer 202505000004
+2025-05-27 15:24:01,011 - INFO - Customer ID: 4
+2025-05-27 15:24:01,011 - INFO - Found Loans: [('218000018', 'active')]
+2025-05-27 15:24:01,014 - INFO - 127.0.0.1 - - [27/May/2025 15:24:01] "GET /customer/202505000004/account?section=statement HTTP/1.1" 200 -
+2025-05-27 16:05:13,978 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 16:05:13,978 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 16:05:17,517 - INFO - 127.0.0.1 - - [27/May/2025 16:05:17] "[32mGET /customer/202505000004/account?section=statement HTTP/1.1[0m" 302 -
+2025-05-27 16:05:17,593 - INFO - 127.0.0.1 - - [27/May/2025 16:05:17] "GET /login?next=/customer/202505000004/account?section%3Dstatement HTTP/1.1" 200 -
+2025-05-27 16:05:17,635 - INFO - 127.0.0.1 - - [27/May/2025 16:05:17] "[33mGET /static/img/logo.png HTTP/1.1[0m" 404 -
+2025-05-27 16:05:17,781 - INFO - 127.0.0.1 - - [27/May/2025 16:05:17] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-27 16:05:20,854 - INFO - 127.0.0.1 - - [27/May/2025 16:05:20] "[32mPOST /login?next=/customer/202505000004/account?section%3Dstatement HTTP/1.1[0m" 302 -
+2025-05-27 16:05:20,878 - INFO - 127.0.0.1 - - [27/May/2025 16:05:20] "GET / HTTP/1.1" 200 -
+2025-05-27 16:05:26,480 - INFO - 127.0.0.1 - - [27/May/2025 16:05:26] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 16:05:48,761 - INFO - 127.0.0.1 - - [27/May/2025 16:05:48] "[32mPOST /disbursements HTTP/1.1[0m" 302 -
+2025-05-27 16:05:48,771 - INFO - 127.0.0.1 - - [27/May/2025 16:05:48] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 16:05:53,718 - INFO - 127.0.0.1 - - [27/May/2025 16:05:53] "GET /payments HTTP/1.1" 200 -
+2025-05-27 16:05:55,139 - INFO - 127.0.0.1 - - [27/May/2025 16:05:55] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-27 16:05:58,042] INFO in app: Found 3 loans for customer 202505000003
+2025-05-27 16:05:58,042 - INFO - Found 3 loans for customer 202505000003
+[2025-05-27 16:05:58,043] INFO in app: Customer ID: 3
+2025-05-27 16:05:58,043 - INFO - Customer ID: 3
+[2025-05-27 16:05:58,044] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active'), ('103000016', 'active')]
+2025-05-27 16:05:58,044 - INFO - Found Loans: [('124000003', 'topped_up'), ('103000008', 'active'), ('103000016', 'active')]
+[2025-05-27 16:05:58,094] ERROR in app: Account view error: Encountered unknown tag 'endblock'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.
+2025-05-27 16:05:58,094 - ERROR - Account view error: Encountered unknown tag 'endblock'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.
+2025-05-27 16:05:58,095 - INFO - 127.0.0.1 - - [27/May/2025 16:05:58] "[32mGET /customer/202505000003/account HTTP/1.1[0m" 302 -
+2025-05-27 16:05:58,103 - INFO - 127.0.0.1 - - [27/May/2025 16:05:58] "GET / HTTP/1.1" 200 -
+2025-05-27 16:06:00,476 - INFO - 127.0.0.1 - - [27/May/2025 16:06:00] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-27 16:06:01,951] INFO in app: Found 9 loans for customer 202505000001
+2025-05-27 16:06:01,951 - INFO - Found 9 loans for customer 202505000001
+[2025-05-27 16:06:01,953] INFO in app: Customer ID: 1
+2025-05-27 16:06:01,953 - INFO - Customer ID: 1
+[2025-05-27 16:06:01,953] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+2025-05-27 16:06:01,953 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+[2025-05-27 16:06:01,978] ERROR in app: Account view error: Encountered unknown tag 'endblock'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.
+2025-05-27 16:06:01,978 - ERROR - Account view error: Encountered unknown tag 'endblock'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.
+2025-05-27 16:06:01,982 - INFO - 127.0.0.1 - - [27/May/2025 16:06:01] "[32mGET /customer/202505000001/account HTTP/1.1[0m" 302 -
+2025-05-27 16:06:01,989 - INFO - 127.0.0.1 - - [27/May/2025 16:06:01] "GET / HTTP/1.1" 200 -
+2025-05-27 16:09:25,019 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 16:09:25,019 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-27 16:09:31,072 - INFO - 127.0.0.1 - - [27/May/2025 16:09:31] "GET / HTTP/1.1" 200 -
+2025-05-27 16:09:31,823 - INFO - 127.0.0.1 - - [27/May/2025 16:09:31] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-27 16:09:33,053 - INFO - 127.0.0.1 - - [27/May/2025 16:09:33] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-27 16:09:34,418] INFO in app: Found 9 loans for customer 202505000001
+2025-05-27 16:09:34,418 - INFO - Found 9 loans for customer 202505000001
+[2025-05-27 16:09:34,418] INFO in app: Customer ID: 1
+2025-05-27 16:09:34,418 - INFO - Customer ID: 1
+[2025-05-27 16:09:34,419] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+2025-05-27 16:09:34,419 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+2025-05-27 16:09:34,486 - INFO - 127.0.0.1 - - [27/May/2025 16:09:34] "GET /customer/202505000001/account HTTP/1.1" 200 -
+[2025-05-27 16:09:37,495] INFO in app: Found 9 loans for customer 202505000001
+2025-05-27 16:09:37,495 - INFO - Found 9 loans for customer 202505000001
+[2025-05-27 16:09:37,495] INFO in app: Customer ID: 1
+2025-05-27 16:09:37,495 - INFO - Customer ID: 1
+[2025-05-27 16:09:37,496] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+2025-05-27 16:09:37,496 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+2025-05-27 16:09:37,514 - INFO - 127.0.0.1 - - [27/May/2025 16:09:37] "GET /customer/202505000001/account?section=additional HTTP/1.1" 200 -
+2025-05-27 16:09:52,894 - INFO - 127.0.0.1 - - [27/May/2025 16:09:52] "[32mPOST /apply_additional/1 HTTP/1.1[0m" 302 -
+[2025-05-27 16:09:52,907] INFO in app: Found 10 loans for customer 202505000001
+2025-05-27 16:09:52,907 - INFO - Found 10 loans for customer 202505000001
+[2025-05-27 16:09:52,907] INFO in app: Customer ID: 1
+2025-05-27 16:09:52,907 - INFO - Customer ID: 1
+[2025-05-27 16:09:52,908] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'active')]
+2025-05-27 16:09:52,908 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'active')]
+2025-05-27 16:09:52,919 - INFO - 127.0.0.1 - - [27/May/2025 16:09:52] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+[2025-05-27 16:09:56,754] INFO in app: Found 10 loans for customer 202505000001
+2025-05-27 16:09:56,754 - INFO - Found 10 loans for customer 202505000001
+[2025-05-27 16:09:56,755] INFO in app: Customer ID: 1
+2025-05-27 16:09:56,755 - INFO - Customer ID: 1
+[2025-05-27 16:09:56,755] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'active')]
+2025-05-27 16:09:56,755 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'active')]
+2025-05-27 16:09:56,773 - INFO - 127.0.0.1 - - [27/May/2025 16:09:56] "GET /customer/202505000001/account?section=topup HTTP/1.1" 200 -
+[2025-05-27 16:10:24,049] INFO in app: [TOPUP] Submit route hit for loan 19
+2025-05-27 16:10:24,049 - INFO - [TOPUP] Submit route hit for loan 19
+[2025-05-27 16:10:24,061] DEBUG in app: [DEBUG] Balance calc for base loan #203000019: 1243201.75
+2025-05-27 16:10:24,061 - DEBUG - [DEBUG] Balance calc for base loan #203000019: 1243201.75
+[2025-05-27 16:10:24,088] INFO in app: Skipping allocation for internal_topup payment ID 13
+2025-05-27 16:10:24,088 - INFO - Skipping allocation for internal_topup payment ID 13
+2025-05-27 16:10:24,104 - INFO - 127.0.0.1 - - [27/May/2025 16:10:24] "[32mPOST /topup/19 HTTP/1.1[0m" 302 -
+[2025-05-27 16:10:24,118] INFO in app: Found 11 loans for customer 202505000001
+2025-05-27 16:10:24,118 - INFO - Found 11 loans for customer 202505000001
+[2025-05-27 16:10:24,118] INFO in app: Customer ID: 1
+2025-05-27 16:10:24,118 - INFO - Customer ID: 1
+[2025-05-27 16:10:24,119] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'application')]
+2025-05-27 16:10:24,119 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'application')]
+2025-05-27 16:10:24,135 - INFO - 127.0.0.1 - - [27/May/2025 16:10:24] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+2025-05-27 16:10:29,273 - INFO - 127.0.0.1 - - [27/May/2025 16:10:29] "GET /loans HTTP/1.1" 200 -
+2025-05-27 16:10:33,111 - INFO - 127.0.0.1 - - [27/May/2025 16:10:33] "[32mPOST /process_loan/20/approve HTTP/1.1[0m" 302 -
+2025-05-27 16:10:33,118 - INFO - 127.0.0.1 - - [27/May/2025 16:10:33] "GET /loans HTTP/1.1" 200 -
+2025-05-27 16:10:35,600 - INFO - 127.0.0.1 - - [27/May/2025 16:10:35] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 16:10:43,970 - INFO - 127.0.0.1 - - [27/May/2025 16:10:43] "GET /payments HTTP/1.1" 200 -
+2025-05-27 16:10:44,609 - INFO - 127.0.0.1 - - [27/May/2025 16:10:44] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-27 18:09:46,865] INFO in app: Found 11 loans for customer 202505000001
+2025-05-27 18:09:46,865 - INFO - Found 11 loans for customer 202505000001
+[2025-05-27 18:09:46,866] INFO in app: Customer ID: 1
+2025-05-27 18:09:46,866 - INFO - Customer ID: 1
+[2025-05-27 18:09:46,870] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+2025-05-27 18:09:46,870 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+2025-05-27 18:09:46,930 - INFO - 127.0.0.1 - - [27/May/2025 18:09:46] "GET /customer/202505000001/account HTTP/1.1" 200 -
+2025-05-27 20:33:21,008 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 20:33:21,008 - INFO - [33mPress CTRL+C to quit[0m
+[2025-05-27 20:33:27,152] INFO in app: Found 11 loans for customer 202505000001
+2025-05-27 20:33:27,152 - INFO - Found 11 loans for customer 202505000001
+[2025-05-27 20:33:27,153] INFO in app: Customer ID: 1
+2025-05-27 20:33:27,153 - INFO - Customer ID: 1
+[2025-05-27 20:33:27,154] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+2025-05-27 20:33:27,154 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+2025-05-27 20:33:27,288 - INFO - 127.0.0.1 - - [27/May/2025 20:33:27] "GET /customer/202505000001/account HTTP/1.1" 200 -
+[2025-05-27 20:33:27,589] INFO in app: Found 11 loans for customer 202505000001
+2025-05-27 20:33:27,589 - INFO - Found 11 loans for customer 202505000001
+[2025-05-27 20:33:27,590] INFO in app: Customer ID: 1
+2025-05-27 20:33:27,590 - INFO - Customer ID: 1
+[2025-05-27 20:33:27,591] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+2025-05-27 20:33:27,591 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+2025-05-27 20:33:27,626 - INFO - 127.0.0.1 - - [27/May/2025 20:33:27] "GET /customer/202505000001/account HTTP/1.1" 200 -
+2025-05-27 20:33:28,488 - INFO - 127.0.0.1 - - [27/May/2025 20:33:28] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-05-27 20:33:31,999] INFO in app: Found 11 loans for customer 202505000001
+2025-05-27 20:33:31,999 - INFO - Found 11 loans for customer 202505000001
+[2025-05-27 20:33:31,999] INFO in app: Customer ID: 1
+2025-05-27 20:33:31,999 - INFO - Customer ID: 1
+[2025-05-27 20:33:32,000] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+2025-05-27 20:33:32,000 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+2025-05-27 20:33:32,022 - INFO - 127.0.0.1 - - [27/May/2025 20:33:32] "GET /customer/202505000001/account?section=topup HTTP/1.1" 200 -
+[2025-05-27 20:34:01,126] INFO in app: [TOPUP] Submit route hit for loan 20
+2025-05-27 20:34:01,126 - INFO - [TOPUP] Submit route hit for loan 20
+[2025-05-27 20:34:01,144] DEBUG in app: [DEBUG] Balance calc for base loan #203000020: 3723180.44
+2025-05-27 20:34:01,144 - DEBUG - [DEBUG] Balance calc for base loan #203000020: 3723180.44
+[2025-05-27 20:34:01,176] INFO in app: Skipping allocation for internal_topup payment ID 14
+2025-05-27 20:34:01,176 - INFO - Skipping allocation for internal_topup payment ID 14
+2025-05-27 20:34:01,193 - INFO - 127.0.0.1 - - [27/May/2025 20:34:01] "[32mPOST /topup/20 HTTP/1.1[0m" 302 -
+[2025-05-27 20:34:01,204] INFO in app: Found 12 loans for customer 202505000001
+2025-05-27 20:34:01,204 - INFO - Found 12 loans for customer 202505000001
+[2025-05-27 20:34:01,206] INFO in app: Customer ID: 1
+2025-05-27 20:34:01,206 - INFO - Customer ID: 1
+[2025-05-27 20:34:01,207] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'topped_up'), ('203000021', 'application')]
+2025-05-27 20:34:01,207 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'topped_up'), ('203000021', 'application')]
+2025-05-27 20:34:01,228 - INFO - 127.0.0.1 - - [27/May/2025 20:34:01] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+2025-05-27 20:34:04,986 - INFO - 127.0.0.1 - - [27/May/2025 20:34:04] "GET /loans HTTP/1.1" 200 -
+2025-05-27 20:34:07,145 - INFO - 127.0.0.1 - - [27/May/2025 20:34:07] "[32mPOST /process_loan/21/approve HTTP/1.1[0m" 302 -
+2025-05-27 20:34:07,159 - INFO - 127.0.0.1 - - [27/May/2025 20:34:07] "GET /loans HTTP/1.1" 200 -
+2025-05-27 20:34:08,825 - INFO - 127.0.0.1 - - [27/May/2025 20:34:08] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 20:34:24,202 - INFO - 127.0.0.1 - - [27/May/2025 20:34:24] "[32mPOST /disbursements HTTP/1.1[0m" 302 -
+2025-05-27 20:34:24,212 - INFO - 127.0.0.1 - - [27/May/2025 20:34:24] "GET /disbursements HTTP/1.1" 200 -
+2025-05-27 20:42:15,614 - INFO - 127.0.0.1 - - [27/May/2025 20:42:15] "GET /loanbook HTTP/1.1" 200 -
+2025-05-27 21:03:11,299 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-27 21:03:11,300 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 02:58:16,144 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 02:58:16,144 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 02:58:21,343 - INFO - 127.0.0.1 - - [28/May/2025 02:58:21] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 02:58:21,667 - INFO - 127.0.0.1 - - [28/May/2025 02:58:21] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 02:58:22,182 - INFO - 127.0.0.1 - - [28/May/2025 02:58:22] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-05-28 02:58:27,098] INFO in app: Found 5 loans for customer 202505000002
+2025-05-28 02:58:27,098 - INFO - Found 5 loans for customer 202505000002
+[2025-05-28 02:58:27,099] INFO in app: Customer ID: 2
+2025-05-28 02:58:27,099 - INFO - Customer ID: 2
+[2025-05-28 02:58:27,100] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active')]
+2025-05-28 02:58:27,100 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active')]
+2025-05-28 02:58:27,142 - INFO - 127.0.0.1 - - [28/May/2025 02:58:27] "GET /customer/202505000002/account HTTP/1.1" 200 -
+[2025-05-28 02:58:32,658] INFO in app: Found 5 loans for customer 202505000002
+2025-05-28 02:58:32,658 - INFO - Found 5 loans for customer 202505000002
+[2025-05-28 02:58:32,659] INFO in app: Customer ID: 2
+2025-05-28 02:58:32,659 - INFO - Customer ID: 2
+[2025-05-28 02:58:32,662] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active')]
+2025-05-28 02:58:32,662 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active')]
+2025-05-28 02:58:32,671 - INFO - 127.0.0.1 - - [28/May/2025 02:58:32] "GET /customer/202505000002/account?section=additional HTTP/1.1" 200 -
+2025-05-28 02:58:52,052 - INFO - 127.0.0.1 - - [28/May/2025 02:58:52] "[32mPOST /apply_additional/2 HTTP/1.1[0m" 302 -
+[2025-05-28 02:58:52,066] INFO in app: Found 6 loans for customer 202505000002
+2025-05-28 02:58:52,066 - INFO - Found 6 loans for customer 202505000002
+[2025-05-28 02:58:52,067] INFO in app: Customer ID: 2
+2025-05-28 02:58:52,067 - INFO - Customer ID: 2
+[2025-05-28 02:58:52,068] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'active')]
+2025-05-28 02:58:52,068 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'active')]
+2025-05-28 02:58:52,076 - INFO - 127.0.0.1 - - [28/May/2025 02:58:52] "GET /customer/202505000002/account?section=statement HTTP/1.1" 200 -
+2025-05-28 02:59:06,543 - INFO - 127.0.0.1 - - [28/May/2025 02:59:06] "GET /loans HTTP/1.1" 200 -
+2025-05-28 02:59:08,482 - INFO - 127.0.0.1 - - [28/May/2025 02:59:08] "[32mPOST /process_loan/22/approve HTTP/1.1[0m" 302 -
+2025-05-28 02:59:08,493 - INFO - 127.0.0.1 - - [28/May/2025 02:59:08] "GET /loans HTTP/1.1" 200 -
+[2025-05-28 02:59:11,694] INFO in app: [DISBURSEMENT] Loan #203000022 | Top-up of: None | Cash to Client: 1000000.0
+2025-05-28 02:59:11,694 - INFO - [DISBURSEMENT] Loan #203000022 | Top-up of: None | Cash to Client: 1000000.0
+2025-05-28 02:59:11,707 - INFO - 127.0.0.1 - - [28/May/2025 02:59:11] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 02:59:20,779 - INFO - 127.0.0.1 - - [28/May/2025 02:59:20] "[32mPOST /disbursements HTTP/1.1[0m" 302 -
+2025-05-28 02:59:20,787 - INFO - 127.0.0.1 - - [28/May/2025 02:59:20] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 02:59:33,527 - INFO - 127.0.0.1 - - [28/May/2025 02:59:33] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-28 02:59:35,502] INFO in app: Found 1 loans for customer 202505000004
+2025-05-28 02:59:35,502 - INFO - Found 1 loans for customer 202505000004
+[2025-05-28 02:59:35,503] INFO in app: Customer ID: 4
+2025-05-28 02:59:35,503 - INFO - Customer ID: 4
+[2025-05-28 02:59:35,503] INFO in app: Found Loans: [('218000018', 'active')]
+2025-05-28 02:59:35,503 - INFO - Found Loans: [('218000018', 'active')]
+2025-05-28 02:59:35,508 - INFO - 127.0.0.1 - - [28/May/2025 02:59:35] "GET /customer/202505000004/account HTTP/1.1" 200 -
+[2025-05-28 02:59:43,573] INFO in app: Found 1 loans for customer 202505000004
+2025-05-28 02:59:43,573 - INFO - Found 1 loans for customer 202505000004
+[2025-05-28 02:59:43,573] INFO in app: Customer ID: 4
+2025-05-28 02:59:43,573 - INFO - Customer ID: 4
+[2025-05-28 02:59:43,574] INFO in app: Found Loans: [('218000018', 'active')]
+2025-05-28 02:59:43,574 - INFO - Found Loans: [('218000018', 'active')]
+2025-05-28 02:59:43,577 - INFO - 127.0.0.1 - - [28/May/2025 02:59:43] "GET /customer/202505000004/account?section=topup HTTP/1.1" 200 -
+[2025-05-28 03:00:07,416] INFO in app: [TOPUP] Submit route hit for loan 18
+2025-05-28 03:00:07,416 - INFO - [TOPUP] Submit route hit for loan 18
+[2025-05-28 03:00:07,425] DEBUG in app: [DEBUG] Balance calc for base loan #218000018: 2043603.28
+2025-05-28 03:00:07,425 - DEBUG - [DEBUG] Balance calc for base loan #218000018: 2043603.28
+[2025-05-28 03:00:07,442] INFO in app: Skipping allocation for internal_topup payment ID 15
+2025-05-28 03:00:07,442 - INFO - Skipping allocation for internal_topup payment ID 15
+2025-05-28 03:00:07,459 - INFO - 127.0.0.1 - - [28/May/2025 03:00:07] "[32mPOST /topup/18 HTTP/1.1[0m" 302 -
+[2025-05-28 03:00:07,470] INFO in app: Found 2 loans for customer 202505000004
+2025-05-28 03:00:07,470 - INFO - Found 2 loans for customer 202505000004
+[2025-05-28 03:00:07,470] INFO in app: Customer ID: 4
+2025-05-28 03:00:07,470 - INFO - Customer ID: 4
+[2025-05-28 03:00:07,471] INFO in app: Found Loans: [('218000018', 'topped_up'), ('203000023', 'application')]
+2025-05-28 03:00:07,471 - INFO - Found Loans: [('218000018', 'topped_up'), ('203000023', 'application')]
+2025-05-28 03:00:07,473 - INFO - 127.0.0.1 - - [28/May/2025 03:00:07] "GET /customer/202505000004/account?section=statement HTTP/1.1" 200 -
+2025-05-28 03:00:09,695 - INFO - 127.0.0.1 - - [28/May/2025 03:00:09] "GET /loans HTTP/1.1" 200 -
+2025-05-28 03:00:12,023 - INFO - 127.0.0.1 - - [28/May/2025 03:00:12] "[32mPOST /process_loan/23/approve HTTP/1.1[0m" 302 -
+2025-05-28 03:00:12,034 - INFO - 127.0.0.1 - - [28/May/2025 03:00:12] "GET /loans HTTP/1.1" 200 -
+[2025-05-28 03:00:13,738] INFO in app: [DISBURSEMENT] Loan #203000023 | Top-up of: 18 | Cash to Client: 4000000.0
+2025-05-28 03:00:13,738 - INFO - [DISBURSEMENT] Loan #203000023 | Top-up of: 18 | Cash to Client: 4000000.0
+2025-05-28 03:00:13,740 - INFO - 127.0.0.1 - - [28/May/2025 03:00:13] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 03:40:32,657 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 03:40:32,657 - INFO - [33mPress CTRL+C to quit[0m
+[2025-05-28 03:40:40,069] INFO in app: [DISBURSEMENT] Loan #203000023 | Top-up of: 18 | Cash to Client: 1956396.72
+2025-05-28 03:40:40,069 - INFO - [DISBURSEMENT] Loan #203000023 | Top-up of: 18 | Cash to Client: 1956396.72
+2025-05-28 03:40:40,113 - INFO - 127.0.0.1 - - [28/May/2025 03:40:40] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 03:40:40,672 - INFO - 127.0.0.1 - - [28/May/2025 03:40:40] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 03:41:43,324 - INFO - 127.0.0.1 - - [28/May/2025 03:41:43] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-28 03:42:51,480] INFO in app: Found 6 loans for customer 202505000002
+2025-05-28 03:42:51,480 - INFO - Found 6 loans for customer 202505000002
+[2025-05-28 03:42:51,481] INFO in app: Customer ID: 2
+2025-05-28 03:42:51,481 - INFO - Customer ID: 2
+[2025-05-28 03:42:51,483] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'active')]
+2025-05-28 03:42:51,483 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'active')]
+2025-05-28 03:42:51,524 - INFO - 127.0.0.1 - - [28/May/2025 03:42:51] "GET /customer/202505000002/account HTTP/1.1" 200 -
+[2025-05-28 03:42:55,319] INFO in app: Found 6 loans for customer 202505000002
+2025-05-28 03:42:55,319 - INFO - Found 6 loans for customer 202505000002
+[2025-05-28 03:42:55,320] INFO in app: Customer ID: 2
+2025-05-28 03:42:55,320 - INFO - Customer ID: 2
+[2025-05-28 03:42:55,322] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'active')]
+2025-05-28 03:42:55,322 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'active')]
+2025-05-28 03:42:55,332 - INFO - 127.0.0.1 - - [28/May/2025 03:42:55] "GET /customer/202505000002/account?section=topup HTTP/1.1" 200 -
+[2025-05-28 03:43:27,422] INFO in app: [TOPUP] Submit route hit for loan 22
+2025-05-28 03:43:27,422 - INFO - [TOPUP] Submit route hit for loan 22
+[2025-05-28 03:43:27,437] DEBUG in app: [DEBUG] Balance calc for base loan #203000022: 1243201.75
+2025-05-28 03:43:27,437 - DEBUG - [DEBUG] Balance calc for base loan #203000022: 1243201.75
+[2025-05-28 03:43:27,480] INFO in app: Skipping allocation for internal_topup payment ID 16
+2025-05-28 03:43:27,480 - INFO - Skipping allocation for internal_topup payment ID 16
+2025-05-28 03:43:27,493 - INFO - 127.0.0.1 - - [28/May/2025 03:43:27] "[32mPOST /topup/22 HTTP/1.1[0m" 302 -
+[2025-05-28 03:43:27,504] INFO in app: Found 7 loans for customer 202505000002
+2025-05-28 03:43:27,504 - INFO - Found 7 loans for customer 202505000002
+[2025-05-28 03:43:27,505] INFO in app: Customer ID: 2
+2025-05-28 03:43:27,505 - INFO - Customer ID: 2
+[2025-05-28 03:43:27,506] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'application')]
+2025-05-28 03:43:27,506 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'application')]
+2025-05-28 03:43:27,514 - INFO - 127.0.0.1 - - [28/May/2025 03:43:27] "GET /customer/202505000002/account?section=statement HTTP/1.1" 200 -
+2025-05-28 03:43:30,686 - INFO - 127.0.0.1 - - [28/May/2025 03:43:30] "GET /loans HTTP/1.1" 200 -
+2025-05-28 03:43:32,761 - INFO - 127.0.0.1 - - [28/May/2025 03:43:32] "[32mPOST /process_loan/24/approve HTTP/1.1[0m" 302 -
+2025-05-28 03:43:32,774 - INFO - 127.0.0.1 - - [28/May/2025 03:43:32] "GET /loans HTTP/1.1" 200 -
+[2025-05-28 03:43:36,151] INFO in app: [DISBURSEMENT] Loan #203000023 | Top-up of: 18 | Cash to Client: 1956396.72
+2025-05-28 03:43:36,151 - INFO - [DISBURSEMENT] Loan #203000023 | Top-up of: 18 | Cash to Client: 1956396.72
+[2025-05-28 03:43:36,153] INFO in app: [DISBURSEMENT] Loan #224000024 | Top-up of: 22 | Cash to Client: 3756798.25
+2025-05-28 03:43:36,153 - INFO - [DISBURSEMENT] Loan #224000024 | Top-up of: 22 | Cash to Client: 3756798.25
+2025-05-28 03:43:36,156 - INFO - 127.0.0.1 - - [28/May/2025 03:43:36] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 03:43:45,852 - INFO - 127.0.0.1 - - [28/May/2025 03:43:45] "[32mPOST /disbursements HTTP/1.1[0m" 302 -
+2025-05-28 03:43:45,860 - INFO - 127.0.0.1 - - [28/May/2025 03:43:45] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 03:43:52,209 - INFO - 127.0.0.1 - - [28/May/2025 03:43:52] "GET /payments HTTP/1.1" 200 -
+2025-05-28 03:43:53,027 - INFO - 127.0.0.1 - - [28/May/2025 03:43:53] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 04:26:06,166 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 04:26:06,166 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 04:26:12,203 - INFO - 127.0.0.1 - - [28/May/2025 04:26:12] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 04:26:13,014 - INFO - 127.0.0.1 - - [28/May/2025 04:26:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 04:32:50,467 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 04:32:50,467 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 04:32:56,758 - INFO - 127.0.0.1 - - [28/May/2025 04:32:56] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 04:32:57,739 - INFO - 127.0.0.1 - - [28/May/2025 04:32:57] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-05-28 04:32:59,851] INFO in app: Found 12 loans for customer 202505000001
+2025-05-28 04:32:59,851 - INFO - Found 12 loans for customer 202505000001
+[2025-05-28 04:32:59,853] INFO in app: Customer ID: 1
+2025-05-28 04:32:59,853 - INFO - Customer ID: 1
+[2025-05-28 04:32:59,854] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'topped_up'), ('203000021', 'active')]
+2025-05-28 04:32:59,854 - INFO - Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'topped_up'), ('203000021', 'active')]
+2025-05-28 04:32:59,908 - INFO - 127.0.0.1 - - [28/May/2025 04:32:59] "GET /customer/202505000001/account HTTP/1.1" 200 -
+2025-05-28 04:33:04,104 - INFO - 127.0.0.1 - - [28/May/2025 04:33:04] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 04:50:41,281 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 04:50:41,281 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 04:50:47,754 - INFO - 127.0.0.1 - - [28/May/2025 04:50:47] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 04:50:48,362 - INFO - 127.0.0.1 - - [28/May/2025 04:50:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-05-28 04:51:13,478] INFO in app: Found 7 loans for customer 202505000002
+2025-05-28 04:51:13,478 - INFO - Found 7 loans for customer 202505000002
+[2025-05-28 04:51:13,479] INFO in app: Customer ID: 2
+2025-05-28 04:51:13,479 - INFO - Customer ID: 2
+[2025-05-28 04:51:13,481] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active')]
+2025-05-28 04:51:13,481 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active')]
+2025-05-28 04:51:13,536 - INFO - 127.0.0.1 - - [28/May/2025 04:51:13] "GET /customer/202505000002/account HTTP/1.1" 200 -
+[2025-05-28 04:51:16,104] INFO in app: Found 7 loans for customer 202505000002
+2025-05-28 04:51:16,104 - INFO - Found 7 loans for customer 202505000002
+[2025-05-28 04:51:16,105] INFO in app: Customer ID: 2
+2025-05-28 04:51:16,105 - INFO - Customer ID: 2
+[2025-05-28 04:51:16,107] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active')]
+2025-05-28 04:51:16,107 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active')]
+2025-05-28 04:51:16,121 - INFO - 127.0.0.1 - - [28/May/2025 04:51:16] "GET /customer/202505000002/account?section=additional HTTP/1.1" 200 -
+2025-05-28 04:51:37,260 - INFO - 127.0.0.1 - - [28/May/2025 04:51:37] "[32mPOST /apply_additional/2 HTTP/1.1[0m" 302 -
+[2025-05-28 04:51:37,267] INFO in app: Found 8 loans for customer 202505000002
+2025-05-28 04:51:37,267 - INFO - Found 8 loans for customer 202505000002
+[2025-05-28 04:51:37,270] INFO in app: Customer ID: 2
+2025-05-28 04:51:37,270 - INFO - Customer ID: 2
+[2025-05-28 04:51:37,272] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'active')]
+2025-05-28 04:51:37,272 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'active')]
+2025-05-28 04:51:37,283 - INFO - 127.0.0.1 - - [28/May/2025 04:51:37] "GET /customer/202505000002/account?section=statement HTTP/1.1" 200 -
+2025-05-28 04:51:38,366 - INFO - 127.0.0.1 - - [28/May/2025 04:51:38] "GET /loans HTTP/1.1" 200 -
+2025-05-28 04:51:40,581 - INFO - 127.0.0.1 - - [28/May/2025 04:51:40] "[32mPOST /process_loan/25/approve HTTP/1.1[0m" 302 -
+2025-05-28 04:51:40,595 - INFO - 127.0.0.1 - - [28/May/2025 04:51:40] "GET /loans HTTP/1.1" 200 -
+[2025-05-28 04:51:41,875] INFO in app: [DISBURSEMENT] Loan #203000025 | Top-up of: None | Cash to Client: 1000000.0
+2025-05-28 04:51:41,875 - INFO - [DISBURSEMENT] Loan #203000025 | Top-up of: None | Cash to Client: 1000000.0
+2025-05-28 04:51:41,885 - INFO - 127.0.0.1 - - [28/May/2025 04:51:41] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 04:51:48,911 - INFO - 127.0.0.1 - - [28/May/2025 04:51:48] "[32mPOST /disbursements HTTP/1.1[0m" 302 -
+2025-05-28 04:51:48,922 - INFO - 127.0.0.1 - - [28/May/2025 04:51:48] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 04:51:57,662 - INFO - 127.0.0.1 - - [28/May/2025 04:51:57] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-28 04:52:02,136] INFO in app: Found 8 loans for customer 202505000002
+2025-05-28 04:52:02,136 - INFO - Found 8 loans for customer 202505000002
+[2025-05-28 04:52:02,137] INFO in app: Customer ID: 2
+2025-05-28 04:52:02,137 - INFO - Customer ID: 2
+[2025-05-28 04:52:02,139] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'active')]
+2025-05-28 04:52:02,139 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'active')]
+2025-05-28 04:52:02,154 - INFO - 127.0.0.1 - - [28/May/2025 04:52:02] "GET /customer/202505000002/account HTTP/1.1" 200 -
+[2025-05-28 04:52:03,576] INFO in app: Found 8 loans for customer 202505000002
+2025-05-28 04:52:03,576 - INFO - Found 8 loans for customer 202505000002
+[2025-05-28 04:52:03,577] INFO in app: Customer ID: 2
+2025-05-28 04:52:03,577 - INFO - Customer ID: 2
+[2025-05-28 04:52:03,579] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'active')]
+2025-05-28 04:52:03,579 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'active')]
+2025-05-28 04:52:03,596 - INFO - 127.0.0.1 - - [28/May/2025 04:52:03] "GET /customer/202505000002/account?section=topup HTTP/1.1" 200 -
+[2025-05-28 04:52:30,528] INFO in app: [TOPUP] Submit route hit for loan 25
+2025-05-28 04:52:30,528 - INFO - [TOPUP] Submit route hit for loan 25
+[2025-05-28 04:52:30,540] DEBUG in app: [DEBUG] Balance calc for base loan #203000025: 1243201.75
+2025-05-28 04:52:30,540 - DEBUG - [DEBUG] Balance calc for base loan #203000025: 1243201.75
+[2025-05-28 04:52:30,555] INFO in app: Skipping allocation for internal_topup payment ID 17
+2025-05-28 04:52:30,555 - INFO - Skipping allocation for internal_topup payment ID 17
+2025-05-28 04:52:30,573 - INFO - 127.0.0.1 - - [28/May/2025 04:52:30] "[32mPOST /topup/25 HTTP/1.1[0m" 302 -
+[2025-05-28 04:52:30,581] INFO in app: Found 9 loans for customer 202505000002
+2025-05-28 04:52:30,581 - INFO - Found 9 loans for customer 202505000002
+[2025-05-28 04:52:30,581] INFO in app: Customer ID: 2
+2025-05-28 04:52:30,581 - INFO - Customer ID: 2
+[2025-05-28 04:52:30,582] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'topped_up'), ('203000026', 'application')]
+2025-05-28 04:52:30,582 - INFO - Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'topped_up'), ('203000026', 'application')]
+2025-05-28 04:52:30,597 - INFO - 127.0.0.1 - - [28/May/2025 04:52:30] "GET /customer/202505000002/account?section=statement HTTP/1.1" 200 -
+2025-05-28 04:52:34,337 - INFO - 127.0.0.1 - - [28/May/2025 04:52:34] "GET /loans HTTP/1.1" 200 -
+2025-05-28 04:52:36,263 - INFO - 127.0.0.1 - - [28/May/2025 04:52:36] "[32mPOST /process_loan/26/approve HTTP/1.1[0m" 302 -
+2025-05-28 04:52:36,275 - INFO - 127.0.0.1 - - [28/May/2025 04:52:36] "GET /loans HTTP/1.1" 200 -
+[2025-05-28 04:52:37,784] INFO in app: [DISBURSEMENT] Loan #203000026 | Top-up of: 25 | Cash to Client: 1756798.25
+2025-05-28 04:52:37,784 - INFO - [DISBURSEMENT] Loan #203000026 | Top-up of: 25 | Cash to Client: 1756798.25
+2025-05-28 04:52:37,785 - INFO - 127.0.0.1 - - [28/May/2025 04:52:37] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 04:52:46,877 - INFO - 127.0.0.1 - - [28/May/2025 04:52:46] "[32mPOST /disbursements HTTP/1.1[0m" 302 -
+2025-05-28 04:52:46,887 - INFO - 127.0.0.1 - - [28/May/2025 04:52:46] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 04:52:48,654 - INFO - 127.0.0.1 - - [28/May/2025 04:52:48] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 04:52:55,392 - INFO - 127.0.0.1 - - [28/May/2025 04:52:55] "[33mGET /loan-book?page=2&ajax=true HTTP/1.1[0m" 404 -
+2025-05-28 05:08:54,925 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 05:08:54,925 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 05:09:00,415 - INFO - 127.0.0.1 - - [28/May/2025 05:09:00] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 05:09:02,151 - INFO - 127.0.0.1 - - [28/May/2025 05:09:02] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 05:09:14,873 - INFO - 127.0.0.1 - - [28/May/2025 05:09:14] "[33mGET /loan-book?page=2&ajax=true HTTP/1.1[0m" 404 -
+2025-05-28 05:09:25,996 - INFO - 127.0.0.1 - - [28/May/2025 05:09:25] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 05:28:36,900 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 05:28:36,901 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 05:28:43,046 - INFO - 127.0.0.1 - - [28/May/2025 05:28:43] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 05:28:44,271 - INFO - 127.0.0.1 - - [28/May/2025 05:28:44] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 05:49:05,766 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 05:49:05,766 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 05:49:08,862 - INFO - 127.0.0.1 - - [28/May/2025 05:49:08] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 05:49:09,601 - INFO - 127.0.0.1 - - [28/May/2025 05:49:09] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 05:50:16,991 - INFO - 127.0.0.1 - - [28/May/2025 05:50:16] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 05:50:18,702 - INFO - 127.0.0.1 - - [28/May/2025 05:50:18] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 05:58:38,905 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 05:58:38,905 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 05:58:45,115 - INFO - 127.0.0.1 - - [28/May/2025 05:58:45] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 05:58:46,522 - INFO - 127.0.0.1 - - [28/May/2025 05:58:46] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 06:11:00,596 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-28 06:11:00,596 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-28 06:11:05,907 - INFO - 127.0.0.1 - - [28/May/2025 06:11:05] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 06:11:06,921 - INFO - 127.0.0.1 - - [28/May/2025 06:11:06] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 06:11:38,533 - INFO - 127.0.0.1 - - [28/May/2025 06:11:38] "GET / HTTP/1.1" 200 -
+2025-05-28 06:11:42,008 - INFO - 127.0.0.1 - - [28/May/2025 06:11:42] "GET /register HTTP/1.1" 200 -
+2025-05-28 06:11:45,732 - INFO - 127.0.0.1 - - [28/May/2025 06:11:45] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 06:17:11,610 - INFO - 127.0.0.1 - - [28/May/2025 06:17:11] "GET / HTTP/1.1" 200 -
+2025-05-28 06:17:13,593 - INFO - 127.0.0.1 - - [28/May/2025 06:17:13] "GET /register HTTP/1.1" 200 -
+2025-05-28 06:17:14,507 - INFO - 127.0.0.1 - - [28/May/2025 06:17:14] "GET /approve_customers HTTP/1.1" 200 -
+2025-05-28 06:17:15,185 - INFO - 127.0.0.1 - - [28/May/2025 06:17:15] "GET /customers HTTP/1.1" 200 -
+2025-05-28 06:17:16,162 - INFO - 127.0.0.1 - - [28/May/2025 06:17:16] "GET /loans HTTP/1.1" 200 -
+2025-05-28 06:17:16,753 - INFO - 127.0.0.1 - - [28/May/2025 06:17:16] "GET /disbursements HTTP/1.1" 200 -
+2025-05-28 06:17:17,711 - INFO - 127.0.0.1 - - [28/May/2025 06:17:17] "GET /payments HTTP/1.1" 200 -
+2025-05-28 06:17:18,277 - INFO - 127.0.0.1 - - [28/May/2025 06:17:18] "GET /loanbook HTTP/1.1" 200 -
+2025-05-28 06:17:26,288 - INFO - 127.0.0.1 - - [28/May/2025 06:17:26] "GET /register HTTP/1.1" 200 -

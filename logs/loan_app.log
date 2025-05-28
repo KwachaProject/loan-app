@@ -1,0 +1,2480 @@
+[2025-05-24 20:35:25,706] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 20:35:25,734] INFO in app: [GET] Loaded 0 approved, un-disbursed loans
+[2025-05-24 20:36:04,118] INFO in app: Skipping allocation for internal_settlement payment ID 23
+[2025-05-24 20:36:33,690] INFO in app: Skipping allocation for internal_topup payment ID 23
+[2025-05-24 20:36:33,711] INFO in app: Top-up submitted for Loan #236000006 by user admin
+[2025-05-24 20:36:40,467] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 20:36:40,470] INFO in app: [GET] Loaded 1 approved, un-disbursed loans
+[2025-05-24 20:36:48,002] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 20:36:48,003] INFO in app: [POST] Selected loans: ['33'] | Bank: NBS Bank
+[2025-05-24 20:36:48,030] INFO in app: [POST] Processing 1 loans
+[2025-05-24 20:36:48,031] DEBUG in app: [DISBURSE] Normal loan 206000033 | Cash: 15000000.0
+[2025-05-24 20:36:48,040] INFO in app: [POST] Disbursement completed. Generating letter.
+[2025-05-24 20:46:43,867] INFO in app: Skipping allocation for internal_topup payment ID 24
+[2025-05-24 20:46:43,888] INFO in app: Top-up submitted for Loan #236000011 by user admin
+[2025-05-24 20:47:01,353] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 20:47:01,387] INFO in app: [GET] Loaded 1 approved, un-disbursed loans
+[2025-05-24 21:38:40,019] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 21:38:40,028] INFO in app: [GET] Loaded 2 approved, un-disbursed loans
+[2025-05-24 21:38:56,660] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 21:38:56,661] INFO in app: [POST] Selected loans: ['35'] | Bank: NBS Bank
+[2025-05-24 21:38:56,680] INFO in app: [POST] Processing 1 loans
+[2025-05-24 21:38:56,683] DEBUG in app: [DISBURSE] Normal loan 203000035 | Cash: 1500000.0
+[2025-05-24 21:38:56,697] INFO in app: [POST] Disbursement completed. Generating letter.
+[2025-05-24 21:39:42,408] INFO in app: Skipping allocation for internal_topup payment ID 25
+[2025-05-24 21:39:42,419] INFO in app: Top-up submitted for Loan #203000035 by user admin
+[2025-05-24 21:39:48,643] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 21:39:48,647] INFO in app: [GET] Loaded 2 approved, un-disbursed loans
+[2025-05-24 21:40:46,267] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 21:40:46,268] INFO in app: [POST] Selected loans: ['36'] | Bank: NBS Bank
+[2025-05-24 21:40:46,273] INFO in app: [POST] Processing 1 loans
+[2025-05-24 21:40:46,280] DEBUG in app: [DISBURSE] Normal loan 203000036 | Cash: 4000000.0
+[2025-05-24 21:40:46,294] INFO in app: [POST] Disbursement completed. Generating letter.
+[2025-05-24 21:50:13,320] INFO in app: Skipping allocation for internal_topup payment ID 26
+[2025-05-24 21:50:13,342] INFO in app: Top-up submitted for Loan #203000036 by user admin
+[2025-05-24 21:50:23,539] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 21:50:23,543] INFO in app: [GET] Loaded 2 approved, un-disbursed loans
+[2025-05-24 21:50:54,085] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 21:50:54,086] INFO in app: [POST] Selected loans: ['37'] | Bank: NBS Bank
+[2025-05-24 21:50:54,092] INFO in app: [POST] Processing 1 loans
+[2025-05-24 21:50:54,093] DEBUG in app: [DISBURSE] Normal loan 203000037 | Cash: 8000000.0
+[2025-05-24 21:50:54,098] INFO in app: [POST] Disbursement completed. Generating letter.
+[2025-05-24 23:01:04,121] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:01:10,169] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:01:10,170] INFO in app: [POST] Selected loans: ['38'] | Bank: NBS Bank
+[2025-05-24 23:01:10,180] DEBUG in app: [DISBURSE] Checking loan #203000038 | top_up_of: None
+[2025-05-24 23:01:10,356] INFO in app: [POST] All disbursements processed.
+[2025-05-24 23:01:49,904] INFO in app: Skipping allocation for internal_topup payment ID 27
+[2025-05-24 23:01:57,457] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:02:05,623] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:02:05,626] INFO in app: [POST] Selected loans: ['39'] | Bank: NBS Bank
+[2025-05-24 23:02:05,630] DEBUG in app: [DISBURSE] Checking loan #203000039 | top_up_of: 38
+[2025-05-24 23:02:05,632] INFO in app: [TOPUP] Loan #203000039 | Parent #203000038 | Top-up balance: 0.0 | Loan amount: 3000000.0
+[2025-05-24 23:02:05,634] WARNING in app: [TOPUP] Invalid balance for loan #203000039: 0.0
+[2025-05-24 23:02:05,637] INFO in app: [POST] All disbursements processed.
+[2025-05-24 23:27:22,781] INFO in app: Skipping allocation for internal_topup payment ID 28
+[2025-05-24 23:27:34,492] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:27:47,714] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:27:47,715] INFO in app: [POST] Selected loans: ['34', '39', '41'] | Bank: NBS Bank
+[2025-05-24 23:27:47,719] DEBUG in app: [DISBURSE] Checking loan #203000034 | top_up_of: None
+[2025-05-24 23:27:47,746] DEBUG in app: [DISBURSE] Checking loan #203000039 | top_up_of: 38
+[2025-05-24 23:27:47,751] INFO in app: [TOPUP] Loan #203000039 | Parent #203000038 | Top-up balance: 0.0 | Loan amount: 3000000.0
+[2025-05-24 23:27:47,754] WARNING in app: [TOPUP] Invalid balance for loan #203000039: 0.0
+[2025-05-24 23:27:47,756] DEBUG in app: [DISBURSE] Checking loan #203000041 | top_up_of: 40
+[2025-05-24 23:27:47,758] INFO in app: [TOPUP] Loan #203000041 | Parent #203000040 | Top-up balance: 0.0 | Loan amount: 3000000.0
+[2025-05-24 23:27:47,759] WARNING in app: [TOPUP] Invalid balance for loan #203000041: 0.0
+[2025-05-24 23:27:47,762] INFO in app: [POST] All disbursements processed.
+[2025-05-24 23:28:46,220] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:28:56,909] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:28:56,911] INFO in app: [POST] Selected loans: ['42'] | Bank: NBS Bank
+[2025-05-24 23:28:56,926] DEBUG in app: [DISBURSE] Checking loan #203000042 | top_up_of: None
+[2025-05-24 23:28:56,973] INFO in app: [POST] All disbursements processed.
+[2025-05-24 23:29:32,372] DEBUG in app: [DEBUG] Balance calc for base loan #203000042: 1863196.42
+[2025-05-24 23:29:32,396] INFO in app: Skipping allocation for internal_topup payment ID 29
+[2025-05-24 23:29:38,458] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:29:47,927] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:29:47,928] INFO in app: [POST] Selected loans: ['39', '41', '43'] | Bank: NBS Bank
+[2025-05-24 23:29:47,932] DEBUG in app: [DISBURSE] Checking loan #203000039 | top_up_of: 38
+[2025-05-24 23:29:47,935] INFO in app: [TOPUP] Loan #203000039 | Parent #203000038 | Top-up balance: 0.0 | Loan amount: 3000000.0
+[2025-05-24 23:29:47,936] WARNING in app: [TOPUP] Invalid balance for loan #203000039: 0.0
+[2025-05-24 23:29:47,937] DEBUG in app: [DISBURSE] Checking loan #203000041 | top_up_of: 40
+[2025-05-24 23:29:47,942] INFO in app: [TOPUP] Loan #203000041 | Parent #203000040 | Top-up balance: 0.0 | Loan amount: 3000000.0
+[2025-05-24 23:29:47,956] WARNING in app: [TOPUP] Invalid balance for loan #203000041: 0.0
+[2025-05-24 23:29:47,958] DEBUG in app: [DISBURSE] Checking loan #209000043 | top_up_of: 42
+[2025-05-24 23:29:47,961] INFO in app: [TOPUP] Loan #209000043 | Parent #203000042 | Top-up balance: 0.0 | Loan amount: 3000000.0
+[2025-05-24 23:29:47,965] WARNING in app: [TOPUP] Invalid balance for loan #209000043: 0.0
+[2025-05-24 23:29:47,970] INFO in app: [POST] All disbursements processed.
+[2025-05-24 23:29:48,457] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:29:48,458] INFO in app: [POST] Selected loans: ['39', '41', '43'] | Bank: NBS Bank
+[2025-05-24 23:29:48,462] DEBUG in app: [DISBURSE] Checking loan #203000039 | top_up_of: 38
+[2025-05-24 23:29:48,467] INFO in app: [TOPUP] Loan #203000039 | Parent #203000038 | Top-up balance: 0.0 | Loan amount: 3000000.0
+[2025-05-24 23:29:48,469] WARNING in app: [TOPUP] Invalid balance for loan #203000039: 0.0
+[2025-05-24 23:29:48,470] DEBUG in app: [DISBURSE] Checking loan #203000041 | top_up_of: 40
+[2025-05-24 23:29:48,473] INFO in app: [TOPUP] Loan #203000041 | Parent #203000040 | Top-up balance: 0.0 | Loan amount: 3000000.0
+[2025-05-24 23:29:48,475] WARNING in app: [TOPUP] Invalid balance for loan #203000041: 0.0
+[2025-05-24 23:29:48,476] DEBUG in app: [DISBURSE] Checking loan #209000043 | top_up_of: 42
+[2025-05-24 23:29:48,480] INFO in app: [TOPUP] Loan #209000043 | Parent #203000042 | Top-up balance: 0.0 | Loan amount: 3000000.0
+[2025-05-24 23:29:48,482] WARNING in app: [TOPUP] Invalid balance for loan #209000043: 0.0
+[2025-05-24 23:29:48,483] INFO in app: [POST] All disbursements processed.
+[2025-05-24 23:46:07,305] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:46:08,079] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:46:09,061] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:46:10,025] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:46:10,529] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:46:10,839] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:46:50,752] DEBUG in app: [DEBUG] Balance calc for base loan #209000043: 3845874.4
+[2025-05-24 23:46:50,792] INFO in app: Skipping allocation for internal_topup payment ID 30
+[2025-05-24 23:46:56,603] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:47:06,055] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-24 23:47:06,057] INFO in app: [POST] Selected loans: ['44'] | Bank: NBS Bank
+[2025-05-24 23:47:06,072] DEBUG in app: [DISBURSE] Checking loan #212000044 | top_up_of: 43
+[2025-05-24 23:47:06,076] INFO in app: [TOPUP] Loan #212000044 | Parent #209000043 | Top-up balance: 0.0 | Loan amount: 5000000.0
+[2025-05-24 23:47:06,079] WARNING in app: [TOPUP] Invalid balance for loan #212000044: 0.0
+[2025-05-24 23:47:06,081] INFO in app: [POST] All disbursements processed.
+[2025-05-25 06:19:15,171] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 06:19:18,149] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 06:20:04,020] DEBUG in app: [DEBUG] Balance calc for base loan #203000041: 3723180.44
+[2025-05-25 06:20:04,074] INFO in app: Skipping allocation for internal_topup payment ID 31
+[2025-05-25 06:20:10,232] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 06:20:23,258] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 06:20:23,296] INFO in app: [POST] Selected loans: ['45'] | Bank: NBS Bank
+[2025-05-25 06:20:23,314] DEBUG in app: [DISBURSE] Checking loan #203000045 | top_up_of: 41
+[2025-05-25 06:20:23,320] INFO in app: [TOPUP] Loan #203000045 | Parent #203000041 | Top-up balance: 0.0 | Loan amount: 5000000.0
+[2025-05-25 06:20:23,322] WARNING in app: [TOPUP] Invalid balance for loan #203000045: 0.0
+[2025-05-25 06:20:23,324] INFO in app: [POST] All disbursements processed.
+[2025-05-25 06:53:44,591] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1731, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 82, in template
+    Submitted {{ customer.created_at|time_ago }}
+    
+jinja2.exceptions.TemplateAssertionError: No filter named 'time_ago'.
+[2025-05-25 06:55:21,122] DEBUG in app: [DEBUG] Balance calc for base loan #212000044: 6293259.1
+[2025-05-25 06:55:21,141] INFO in app: Skipping allocation for internal_topup payment ID 32
+[2025-05-25 06:55:28,431] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 07:11:13,580] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 07:11:49,668] DEBUG in app: [DEBUG] Balance calc for base loan #203000039: 3723180.44
+[2025-05-25 07:11:49,702] INFO in app: Skipping allocation for internal_topup payment ID 33
+[2025-05-25 07:11:58,905] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 07:12:06,704] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 07:12:22,263] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 07:12:22,266] INFO in app: [POST] Selected loans: ['45', '47', '48'] | Bank: NBS Bank
+[2025-05-25 07:12:22,282] INFO in app: [TOPUP] Loan #203000045 -> Parent #203000041 | Top-up balance: 0.0 | Loan amount: 5000000.0
+[2025-05-25 07:12:22,284] INFO in app: [CASH] Loan #203000045 -> Cash to client: 5000000.0
+[2025-05-25 07:12:22,302] INFO in app: [TOPUP] Loan #203000047 -> Parent #212000044 | Top-up balance: 0.0 | Loan amount: 8000000.0
+[2025-05-25 07:12:22,303] INFO in app: [CASH] Loan #203000047 -> Cash to client: 8000000.0
+[2025-05-25 07:12:22,307] INFO in app: [TOPUP] Loan #203000048 -> Parent #203000039 | Top-up balance: 0.0 | Loan amount: 5000000.0
+[2025-05-25 07:12:22,308] INFO in app: [CASH] Loan #203000048 -> Cash to client: 5000000.0
+[2025-05-25 07:12:22,315] INFO in app: [POST] All disbursements processed.
+[2025-05-25 07:12:26,059] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 07:43:05,476] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 07:53:25,193] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1731, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 82, in template
+    Submitted {{ customer.created_at|time_ago }}
+    
+jinja2.exceptions.TemplateAssertionError: No filter named 'time_ago'.
+[2025-05-25 07:56:03,847] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1731, in approve_customers
+    return redirect(url_for('approve_customers'))
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 82, in template
+    Submitted {{ customer.created_at|time_ago }}
+    
+jinja2.exceptions.TemplateAssertionError: No filter named 'time_ago'.
+[2025-05-25 07:56:11,188] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1731, in approve_customers
+    return redirect(url_for('approve_customers'))
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 82, in template
+    Submitted {{ customer.created_at|time_ago }}
+    
+jinja2.exceptions.TemplateAssertionError: No filter named 'time_ago'.
+[2025-05-25 07:58:37,108] ERROR in app: Exception on /approve_customers [POST]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1713, in approve_customers
+    customer.checker_id = 2
+               ^^^^^^^^^^^^
+    ...<4 lines>...
+            amount=customer.amount_requested,
+    
+  File "<string>", line 4, in __init__
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 571, in _initialize_instance
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 569, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\decl_base.py", line 2175, in _declarative_constructor
+    raise TypeError(
+        "%r is an invalid keyword argument for %s" % (k, cls_.__name__)
+    )
+TypeError: 'amount' is an invalid keyword argument for LoanApplication
+[2025-05-25 08:28:57,767] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.cash_to_client) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:29:00,459] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.cash_to_client) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:29:06,240] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.cash_to_client) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:30:18,358] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.amount_requested) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:30:23,333] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.amount_requested) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:31:44,273] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(loan.loan_amount) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:31:48,647] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(loan.loan_amount) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:39:23,307] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.amount_requested) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:42:36,591] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.amount_requested or 0) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:50:29,098] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.amount_requested | default(0)) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:51:45,934] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ (customer.amount_requested | default(0)) | float | round(2) | string(format='{:,.2f}') }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:54:47,639] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ (customer.amount_requested | default(0)) | float | round(2) | string(format='{:,.2f}') }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:54:52,421] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ (customer.amount_requested | default(0)) | float | round(2) | string(format='{:,.2f}') }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:56:07,539] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ (customer.amount_requested | default(0)) | float | round(2) | string(format='{:,.2f}') }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:56:39,907] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    {% if customer.amount_requested is defined and customer.amount_requested is not none %}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:56:40,650] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    {% if customer.amount_requested is defined and customer.amount_requested is not none %}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 08:56:47,848] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    {% if customer.amount_requested is defined and customer.amount_requested is not none %}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 09:01:24,225] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.amount_requested | default(0, true)) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 09:01:25,854] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.amount_requested | default(0, true)) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 09:01:31,597] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.amount_requested | default(0, true)) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 09:04:35,258] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format((customer.amount_requested | default(0, true))|float) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 09:16:16,931] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1734, in approve_customers
+    for loan in customer.loans:
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 155, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 78, in block 'content'
+    MWK {{ "{:,.2f}".format(customer.amount_requested) }}
+    
+TypeError: unsupported format string passed to Undefined.__format__
+[2025-05-25 09:39:58,766] ERROR in app: Exception on /approve_customers [POST]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: NOT NULL constraint failed: loan_applications.cash_to_client
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1723, in approve_customers
+    if request.method == 'POST':
+                       ^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 566, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1086, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1121, in _fire_loader_callables
+    return self.callable_(state, passive)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 978, in _load_for_state
+    return self._emit_lazyload(
+           ~~~~~~~~~~~~~~~~~~~^
+        session,
+        ^^^^^^^^
+    ...<7 lines>...
+        execution_options,
+        ^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 1141, in _emit_lazyload
+    result = session.execute(
+        stmt, params, execution_options=execution_options
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2230, in _execute_internal
+    ) = compile_state_cls.orm_pre_session_exec(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        False,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 577, in orm_pre_session_exec
+    session._autoflush()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3065, in _autoflush
+    raise e.with_traceback(sys.exc_info()[2])
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3054, in _autoflush
+    self.flush()
+    ~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        insert,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+        statement,
+        params,
+        execution_options=execution_options,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.IntegrityError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.IntegrityError) NOT NULL constraint failed: loan_applications.cash_to_client
+[SQL: INSERT INTO loan_applications (customer_id, loan_amount, status, created_at, term_months, monthly_instalment, total_repayment, effective_rate, category, loan_category, disbursed, disbursed_bank, crb_fees, origination_fees, insurance_fees, total_fees, collection_fees, schedule_id, loan_number, file_number, date_created, disbursement_date, cash_to_client, top_up_interest, settlement_interest, closure_type, closure_date, top_up_of, application_status, loan_state, performance_status, top_up_balance, settlement_balance, parent_loan_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (2, 1500000.0, 'pending', '2025-05-25 07:39:58.765913', None, None, None, None, None, 'SME', 0, None, 3000.0, None, None, None, None, None, None, None, '2025-05-25 07:39:58.765919', None, None, 0.0, 0.0, None, None, None, 'awaiting_approval', 'application', 'performing', 0.0, 0.0, None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-05-25 09:47:51,094] ERROR in app: Exception on /approve_customers [POST]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: NOT NULL constraint failed: loan_applications.cash_to_client
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1723, in approve_customers
+    if request.method == 'POST':
+                       ^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 566, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1086, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1121, in _fire_loader_callables
+    return self.callable_(state, passive)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 978, in _load_for_state
+    return self._emit_lazyload(
+           ~~~~~~~~~~~~~~~~~~~^
+        session,
+        ^^^^^^^^
+    ...<7 lines>...
+        execution_options,
+        ^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 1141, in _emit_lazyload
+    result = session.execute(
+        stmt, params, execution_options=execution_options
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2230, in _execute_internal
+    ) = compile_state_cls.orm_pre_session_exec(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        False,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 577, in orm_pre_session_exec
+    session._autoflush()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3065, in _autoflush
+    raise e.with_traceback(sys.exc_info()[2])
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3054, in _autoflush
+    self.flush()
+    ~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        insert,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+        statement,
+        params,
+        execution_options=execution_options,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.IntegrityError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.IntegrityError) NOT NULL constraint failed: loan_applications.cash_to_client
+[SQL: INSERT INTO loan_applications (customer_id, loan_amount, status, created_at, term_months, monthly_instalment, total_repayment, effective_rate, category, loan_category, disbursed, disbursed_bank, crb_fees, origination_fees, insurance_fees, total_fees, collection_fees, schedule_id, loan_number, file_number, date_created, disbursement_date, cash_to_client, top_up_interest, settlement_interest, closure_type, closure_date, top_up_of, application_status, loan_state, performance_status, top_up_balance, settlement_balance, parent_loan_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (2, 1500000.0, 'pending', '2025-05-25 07:47:51.092719', None, None, None, None, None, 'SME', 0, None, 3000.0, None, None, None, None, None, None, None, '2025-05-25 07:47:51.092729', None, None, 0.0, 0.0, None, None, None, 'awaiting_approval', 'application', 'performing', 0.0, 0.0, None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-05-25 10:15:33,755] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 10:16:55,455] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 10:21:41,433] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 10:21:49,220] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 10:21:49,231] INFO in app: [POST] Selected loans: ['1'] | Bank: NBS Bank
+[2025-05-25 10:21:49,239] INFO in app: [CASH] Loan #224000001 -> Cash to client: 1200000.0
+[2025-05-25 10:21:49,250] INFO in app: [POST] All disbursements processed.
+[2025-05-25 10:23:45,729] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 11:02:18,903] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 11:02:26,396] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 11:02:26,397] INFO in app: [POST] Selected loans: ['1'] | Bank: NBS Bank
+[2025-05-25 11:02:26,412] INFO in app: [CASH] Loan #236000001 -> Cash to client: 2600000.0
+[2025-05-25 11:02:26,438] INFO in app: [POST] All disbursements processed.
+[2025-05-25 11:03:31,289] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 11:40:42,771] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+    "amount_requested": loan.amount_requested
+                        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:41:12,939] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+    "amount_requested": loan.amount_requested
+                        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:41:15,828] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+    "amount_requested": loan.amount_requested
+                        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:54:50,038] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:54:51,109] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:54:51,374] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:54:51,683] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:54:55,180] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:54:56,468] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:54:58,775] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 11:54:59,064] ERROR in app: Exception on /loan/236000001/details [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 3007, in loan_details
+AttributeError: 'LoanApplication' object has no attribute 'amount_requested'
+[2025-05-25 12:03:15,616] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 12:03:22,803] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 12:03:22,804] INFO in app: [POST] Selected loans: ['2'] | Bank: NBS Bank
+[2025-05-25 12:03:22,818] INFO in app: [CASH] Loan #224000002 -> Cash to client: 1200000.0
+[2025-05-25 12:03:22,838] INFO in app: [POST] All disbursements processed.
+[2025-05-25 13:08:07,587] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 13:58:48,358] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 13:58:56,559] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 13:58:56,560] INFO in app: [POST] Selected loans: ['1'] | Bank: NBS Bank
+[2025-05-25 13:58:56,570] INFO in app: [CASH] Loan #236000001 -> Cash to client: 2600000.0
+[2025-05-25 13:58:56,623] INFO in app: [POST] All disbursements processed.
+[2025-05-25 19:05:18,594] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 19:05:27,332] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 19:05:27,332] INFO in app: [POST] Selected loans: ['2'] | Bank: NBS Bank
+[2025-05-25 19:05:27,336] INFO in app: [CASH] Loan #236000002 -> Cash to client: 1200000.0
+[2025-05-25 19:05:27,354] INFO in app: [POST] All disbursements processed.
+[2025-05-25 19:05:28,935] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 19:05:28,935] INFO in app: [POST] Selected loans: ['2'] | Bank: NBS Bank
+[2025-05-25 19:05:28,939] INFO in app: [POST] All disbursements processed.
+[2025-05-25 19:43:19,478] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 19:45:34,246] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 19:45:39,748] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-25 19:45:39,749] INFO in app: [POST] Selected loans: ['1'] | Bank: NBS Bank
+[2025-05-25 19:45:39,761] INFO in app: [CASH] Loan #236000001 -> Cash to client: 2600000.0
+[2025-05-25 19:45:39,779] INFO in app: [POST] All disbursements processed.
+[2025-05-26 13:23:05,062] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 13:23:09,880] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 13:23:09,881] INFO in app: [POST] Selected loans: ['2'] | Bank: NBS Bank
+[2025-05-26 13:23:09,884] INFO in app: [CASH] Loan #236000002 -> Cash to client: 1200000.0
+[2025-05-26 13:23:09,894] INFO in app: [POST] All disbursements processed.
+[2025-05-26 15:03:40,976] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 15:12:38,375] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 15:52:24,912] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:02:33,703] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:02:38,066] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:02:46,527] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-26 16:02:46,527] INFO in app: Customer ID: 3
+[2025-05-26 16:02:46,528] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-26 16:02:46,593] ERROR in app: Account view error: Encountered unknown tag 'elif'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+[2025-05-26 16:02:50,771] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:02:50,771] INFO in app: Customer ID: 2
+[2025-05-26 16:02:50,773] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:02:50,784] ERROR in app: Account view error: Encountered unknown tag 'elif'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+[2025-05-26 16:07:45,552] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:07:48,254] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:07:58,292] ERROR in app: Exception on /process_loan/3/reject [POST]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: NOT NULL constraint failed: loan_applications.loan_state
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 1829, in process_loan
+    db.session.commit()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\scoping.py", line 599, in commit
+    return self._proxied.commit()
+           ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2032, in commit
+    trans.commit(_to_root=True)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "<string>", line 2, in commit
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1313, in commit
+    self._prepare_impl()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1288, in _prepare_impl
+    self.session.flush()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 85, in save_obj
+    _emit_update_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        update,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 912, in _emit_update_statements
+    c = connection.execute(
+        statement, multiparams, execution_options=execution_options
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: loan_applications.loan_state
+[SQL: UPDATE loan_applications SET application_status=?, loan_state=? WHERE loan_applications.id = ?]
+[parameters: ('rejected', None, 3)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-05-26 16:27:22,020] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-26 16:27:22,025] INFO in app: Customer ID: 3
+[2025-05-26 16:27:22,026] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-26 16:27:22,037] ERROR in app: Account view error: Encountered unknown tag 'elif'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+[2025-05-26 16:27:29,206] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:27:39,076] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:27:39,077] INFO in app: [POST] Selected loans: ['3'] | Bank: NBS Bank
+[2025-05-26 16:27:39,092] INFO in app: [POST] All disbursements processed.
+[2025-05-26 16:27:44,039] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-26 16:27:44,040] INFO in app: Customer ID: 3
+[2025-05-26 16:27:44,040] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-26 16:27:44,055] ERROR in app: Account view error: Encountered unknown tag 'elif'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+[2025-05-26 16:32:57,039] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-26 16:32:57,040] INFO in app: Customer ID: 3
+[2025-05-26 16:32:57,041] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-26 16:33:13,391] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:33:13,392] INFO in app: Customer ID: 2
+[2025-05-26 16:33:13,392] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:33:14,904] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:33:14,905] INFO in app: Customer ID: 2
+[2025-05-26 16:33:14,905] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:33:17,636] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:33:17,640] INFO in app: Customer ID: 2
+[2025-05-26 16:33:17,641] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:33:19,986] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:33:19,987] INFO in app: Customer ID: 2
+[2025-05-26 16:33:19,988] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:33:30,178] INFO in app: Skipping allocation for internal_settlement payment ID 2
+[2025-05-26 16:33:30,215] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:33:30,220] INFO in app: Customer ID: 2
+[2025-05-26 16:33:30,222] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:33:32,898] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:33:32,903] INFO in app: Customer ID: 2
+[2025-05-26 16:33:32,906] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:33:35,343] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:33:35,344] INFO in app: Customer ID: 2
+[2025-05-26 16:33:35,345] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:33:37,985] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:33:37,985] INFO in app: Customer ID: 2
+[2025-05-26 16:33:37,986] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:33:39,178] INFO in app: Found 1 loans for customer 202505000002
+[2025-05-26 16:33:39,179] INFO in app: Customer ID: 2
+[2025-05-26 16:33:39,181] INFO in app: Found Loans: [('236000002', 'active')]
+[2025-05-26 16:34:00,073] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 16:34:00,074] INFO in app: Customer ID: 2
+[2025-05-26 16:34:00,075] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 16:34:07,853] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:34:19,618] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:34:19,620] INFO in app: [POST] Selected loans: ['4'] | Bank: NBS Bank
+[2025-05-26 16:34:19,634] INFO in app: [POST] All disbursements processed.
+[2025-05-26 16:36:23,316] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:36:30,576] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-26 16:36:30,577] INFO in app: Customer ID: 1
+[2025-05-26 16:36:30,577] INFO in app: Found Loans: [('236000001', 'active')]
+[2025-05-26 16:36:32,520] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-26 16:36:32,521] INFO in app: Customer ID: 1
+[2025-05-26 16:36:32,526] INFO in app: Found Loans: [('236000001', 'active')]
+[2025-05-26 16:37:22,081] DEBUG in app: [DEBUG] Balance calc for base loan #236000001: 3795447.94
+[2025-05-26 16:37:22,141] INFO in app: Skipping allocation for internal_topup payment ID 2
+[2025-05-26 16:37:22,410] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 16:37:22,410] INFO in app: Customer ID: 1
+[2025-05-26 16:37:22,412] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 16:37:46,380] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:37:56,700] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:50:59,446] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:51:12,995] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 16:51:12,996] INFO in app: [POST] Selected loans: ['3', '4', '5'] | Bank: NBS Bank
+[2025-05-26 16:51:13,019] INFO in app: [POST] All disbursements processed.
+[2025-05-26 17:00:00,872] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:00,956] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:00,978] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,002] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,029] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,053] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,075] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,100] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,139] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,161] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,181] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,203] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,226] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,245] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,270] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,288] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,305] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,331] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,356] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:01,388] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,522] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,553] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,576] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,595] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,613] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,631] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,648] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,666] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,687] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,709] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,728] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,744] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,760] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,771] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,787] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,802] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,813] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,827] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,842] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:02,854] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:07,910] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:07,931] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:07,949] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,122] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,164] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,210] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,228] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,245] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,260] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,280] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,303] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,330] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,354] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,382] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,409] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,436] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,456] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,474] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,492] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:08,521] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,247] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,270] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,309] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,335] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,393] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,426] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,450] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,473] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,497] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,518] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,543] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,583] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,617] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,639] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,657] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,675] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,689] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,705] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,723] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:31,748] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:32,888] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:32,918] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:32,936] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:32,955] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:32,974] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:32,995] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,015] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,035] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,052] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,072] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,092] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,117] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,145] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,168] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,196] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,216] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,228] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,244] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,265] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:00:33,284] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:04:45,524] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:04:49,111] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:05:09,808] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:05:09,809] INFO in app: [POST] Selected loans: ['3', '4', '5'] | Bank: NBS Bank
+[2025-05-26 17:05:09,826] INFO in app: [POST] All disbursements processed.
+[2025-05-26 17:05:09,835] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 17:05:17,470] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 19:47:10,559] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-26 19:47:22,301] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:47:22,303] INFO in app: Customer ID: 1
+[2025-05-26 19:47:22,304] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:47:29,343] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:47:29,344] INFO in app: Customer ID: 1
+[2025-05-26 19:47:29,345] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:47:30,894] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:47:30,894] INFO in app: Customer ID: 1
+[2025-05-26 19:47:30,895] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:47:32,431] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:47:32,432] INFO in app: Customer ID: 1
+[2025-05-26 19:47:32,435] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:47:36,294] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:47:36,296] INFO in app: Customer ID: 1
+[2025-05-26 19:47:36,296] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:50:52,948] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:50:52,949] INFO in app: Customer ID: 1
+[2025-05-26 19:50:52,950] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:50:56,094] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:50:56,096] INFO in app: Customer ID: 1
+[2025-05-26 19:50:56,097] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:51:00,381] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:51:00,383] INFO in app: Customer ID: 1
+[2025-05-26 19:51:00,388] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:59:47,900] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:59:47,903] INFO in app: Customer ID: 1
+[2025-05-26 19:59:47,904] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:59:49,820] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:59:49,821] INFO in app: Customer ID: 1
+[2025-05-26 19:59:49,821] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 19:59:51,405] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 19:59:51,406] INFO in app: Customer ID: 1
+[2025-05-26 19:59:51,408] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:14:28,330] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:14:28,330] INFO in app: Customer ID: 1
+[2025-05-26 20:14:28,331] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:14:29,189] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:14:29,190] INFO in app: Customer ID: 1
+[2025-05-26 20:14:29,193] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:14:30,238] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:14:30,239] INFO in app: Customer ID: 1
+[2025-05-26 20:14:30,243] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:14:34,213] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:14:34,214] INFO in app: Customer ID: 1
+[2025-05-26 20:14:34,215] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:14:37,951] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:14:37,952] INFO in app: Customer ID: 1
+[2025-05-26 20:14:37,953] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:14:44,180] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:14:44,181] INFO in app: Customer ID: 1
+[2025-05-26 20:14:44,183] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:36:23,075] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:36:23,076] INFO in app: Customer ID: 1
+[2025-05-26 20:36:23,076] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:36:35,471] INFO in app: Skipping allocation for internal_settlement payment ID 3
+[2025-05-26 20:36:35,477] ERROR in app: Loan closure error: cannot access local variable 'interest_entry' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 3002, in settle_loan
+    db.session.add(interest_entry)
+                   ^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'interest_entry' where it is not associated with a value
+[2025-05-26 20:36:35,491] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:36:35,493] INFO in app: Customer ID: 1
+[2025-05-26 20:36:35,496] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:36:55,009] INFO in app: Skipping allocation for internal_settlement payment ID 3
+[2025-05-26 20:36:55,011] ERROR in app: Loan closure error: cannot access local variable 'interest_entry' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 3002, in settle_loan
+    db.session.add(interest_entry)
+                   ^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'interest_entry' where it is not associated with a value
+[2025-05-26 20:36:55,024] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:36:55,024] INFO in app: Customer ID: 1
+[2025-05-26 20:36:55,025] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:37:01,159] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:37:01,160] INFO in app: Customer ID: 1
+[2025-05-26 20:37:01,161] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:37:02,769] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:37:02,769] INFO in app: Customer ID: 1
+[2025-05-26 20:37:02,770] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:37:04,014] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:37:04,015] INFO in app: Customer ID: 1
+[2025-05-26 20:37:04,016] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:39:53,710] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:39:53,711] INFO in app: Customer ID: 1
+[2025-05-26 20:39:53,712] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:40:03,343] ERROR in app: Loan settlement failed: 'settlement_proof' is an invalid keyword argument for Payment
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 2952, in settle_loan
+    payment = Payment(
+        loan_id=loan.id,
+    ...<5 lines>...
+        settlement_proof=filename
+    )
+  File "<string>", line 4, in __init__
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 571, in _initialize_instance
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 569, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\decl_base.py", line 2175, in _declarative_constructor
+    raise TypeError(
+        "%r is an invalid keyword argument for %s" % (k, cls_.__name__)
+    )
+TypeError: 'settlement_proof' is an invalid keyword argument for Payment
+[2025-05-26 20:40:03,443] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:40:03,444] INFO in app: Customer ID: 1
+[2025-05-26 20:40:03,445] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 20:40:18,479] ERROR in app: Loan settlement failed: 'settlement_proof' is an invalid keyword argument for Payment
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 2952, in settle_loan
+    payment = Payment(
+        loan_id=loan.id,
+    ...<5 lines>...
+        settlement_proof=filename
+    )
+  File "<string>", line 4, in __init__
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 571, in _initialize_instance
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 569, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\decl_base.py", line 2175, in _declarative_constructor
+    raise TypeError(
+        "%r is an invalid keyword argument for %s" % (k, cls_.__name__)
+    )
+TypeError: 'settlement_proof' is an invalid keyword argument for Payment
+[2025-05-26 20:40:18,500] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 20:40:18,504] INFO in app: Customer ID: 1
+[2025-05-26 20:40:18,505] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 21:30:17,242] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 21:30:17,243] INFO in app: Customer ID: 1
+[2025-05-26 21:30:17,244] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'active')]
+[2025-05-26 21:30:29,137] INFO in app: Skipping allocation for internal_settlement payment ID 3
+[2025-05-26 21:30:29,166] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 21:30:29,166] INFO in app: Customer ID: 1
+[2025-05-26 21:30:29,167] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 21:31:10,824] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 21:31:10,826] INFO in app: Customer ID: 2
+[2025-05-26 21:31:10,827] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 21:31:14,466] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 21:31:14,467] INFO in app: Customer ID: 2
+[2025-05-26 21:31:14,468] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 21:59:14,955] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 21:59:14,955] INFO in app: Customer ID: 2
+[2025-05-26 21:59:14,959] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:00:15,697] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:00:15,698] INFO in app: Customer ID: 2
+[2025-05-26 22:00:15,698] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:00:17,913] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:00:17,914] INFO in app: Customer ID: 2
+[2025-05-26 22:00:17,914] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:00:19,415] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:00:19,416] INFO in app: Customer ID: 2
+[2025-05-26 22:00:19,417] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:00:20,696] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:00:20,696] INFO in app: Customer ID: 2
+[2025-05-26 22:00:20,698] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:00:21,280] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:00:21,281] INFO in app: Customer ID: 2
+[2025-05-26 22:00:21,281] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:07:31,048] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-26 22:07:31,049] INFO in app: Customer ID: 3
+[2025-05-26 22:07:31,049] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-26 22:07:36,710] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:07:36,711] INFO in app: Customer ID: 2
+[2025-05-26 22:07:36,711] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:07:39,152] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:07:39,156] INFO in app: Customer ID: 2
+[2025-05-26 22:07:39,158] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:24:09,640] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:24:09,642] INFO in app: Customer ID: 2
+[2025-05-26 22:24:09,643] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:24:19,006] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 22:24:19,007] INFO in app: Customer ID: 1
+[2025-05-26 22:24:19,007] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 22:24:22,609] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 22:24:22,609] INFO in app: Customer ID: 1
+[2025-05-26 22:24:22,610] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 22:24:23,453] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 22:24:23,454] INFO in app: Customer ID: 1
+[2025-05-26 22:24:23,454] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 22:24:24,485] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 22:24:24,486] INFO in app: Customer ID: 1
+[2025-05-26 22:24:24,486] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 22:24:36,685] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:24:36,686] INFO in app: Customer ID: 2
+[2025-05-26 22:24:36,686] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:24:38,477] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:24:38,478] INFO in app: Customer ID: 2
+[2025-05-26 22:24:38,478] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:25:56,612] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:25:56,616] INFO in app: Customer ID: 2
+[2025-05-26 22:25:56,617] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:26:10,236] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:26:10,237] INFO in app: Customer ID: 2
+[2025-05-26 22:26:10,238] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:26:19,965] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:26:19,966] INFO in app: Customer ID: 2
+[2025-05-26 22:26:19,966] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:26:27,050] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-26 22:26:27,051] INFO in app: Customer ID: 2
+[2025-05-26 22:26:27,054] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-26 22:26:42,285] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 22:26:42,286] INFO in app: Customer ID: 1
+[2025-05-26 22:26:42,286] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 22:27:08,731] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 22:27:08,732] INFO in app: Customer ID: 1
+[2025-05-26 22:27:08,732] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 22:27:14,732] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 22:27:14,733] INFO in app: Customer ID: 1
+[2025-05-26 22:27:14,734] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 22:27:16,931] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 22:27:16,932] INFO in app: Customer ID: 1
+[2025-05-26 22:27:16,933] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 22:27:18,157] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-26 22:27:18,158] INFO in app: Customer ID: 1
+[2025-05-26 22:27:18,159] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-26 22:27:28,325] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-26 22:27:28,326] INFO in app: Customer ID: 3
+[2025-05-26 22:27:28,327] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-26 22:27:30,947] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-26 22:27:30,948] INFO in app: Customer ID: 3
+[2025-05-26 22:27:30,949] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-26 22:27:31,970] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-26 22:27:31,970] INFO in app: Customer ID: 3
+[2025-05-26 22:27:31,971] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-26 22:27:32,637] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-26 22:27:32,638] INFO in app: Customer ID: 3
+[2025-05-26 22:27:32,639] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-27 00:43:09,727] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-27 00:43:09,732] INFO in app: Customer ID: 2
+[2025-05-27 00:43:09,734] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-27 00:43:15,346] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-27 00:43:15,349] INFO in app: Customer ID: 2
+[2025-05-27 00:43:15,351] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-27 01:05:03,092] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-27 01:05:03,093] INFO in app: Customer ID: 2
+[2025-05-27 01:05:03,094] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-27 01:05:07,561] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-27 01:05:07,562] INFO in app: Customer ID: 2
+[2025-05-27 01:05:07,563] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-27 05:32:00,777] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-27 05:32:00,778] INFO in app: Customer ID: 2
+[2025-05-27 05:32:00,779] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-27 05:32:21,437] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-27 05:32:21,437] INFO in app: Customer ID: 2
+[2025-05-27 05:32:21,438] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-27 05:32:24,582] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-27 05:32:24,583] INFO in app: Customer ID: 2
+[2025-05-27 05:32:24,583] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-27 06:18:12,072] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-27 06:18:12,074] INFO in app: Customer ID: 2
+[2025-05-27 06:18:12,074] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-27 06:18:15,892] INFO in app: Found 2 loans for customer 202505000002
+[2025-05-27 06:18:15,893] INFO in app: Customer ID: 2
+[2025-05-27 06:18:15,896] INFO in app: Found Loans: [('236000002', 'active'), ('203000004', 'active')]
+[2025-05-27 06:18:39,382] DEBUG in app: [DEBUG] Balance calc for base loan #236000002: 1779034.75
+[2025-05-27 06:18:39,415] INFO in app: Skipping allocation for internal_topup payment ID 4
+[2025-05-27 06:18:39,576] INFO in app: Found 3 loans for customer 202505000002
+[2025-05-27 06:18:39,577] INFO in app: Customer ID: 2
+[2025-05-27 06:18:39,577] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'active'), ('203000006', 'active')]
+[2025-05-27 06:18:54,890] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 06:19:23,211] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 06:19:53,040] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 06:20:02,344] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 06:20:14,623] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-27 06:20:14,624] INFO in app: Customer ID: 1
+[2025-05-27 06:20:14,625] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-27 06:20:16,475] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-27 06:20:16,476] INFO in app: Customer ID: 1
+[2025-05-27 06:20:16,476] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-27 06:20:28,107] INFO in app: Found 3 loans for customer 202505000002
+[2025-05-27 06:20:28,108] INFO in app: Customer ID: 2
+[2025-05-27 06:20:28,109] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'active'), ('203000006', 'active')]
+[2025-05-27 06:20:29,204] INFO in app: Found 3 loans for customer 202505000002
+[2025-05-27 06:20:29,205] INFO in app: Customer ID: 2
+[2025-05-27 06:20:29,206] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'active'), ('203000006', 'active')]
+[2025-05-27 07:31:38,430] INFO in app: Found 3 loans for customer 202505000002
+[2025-05-27 07:31:38,432] INFO in app: Customer ID: 2
+[2025-05-27 07:31:38,432] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'active'), ('203000006', 'active')]
+[2025-05-27 07:31:50,596] INFO in app: Found 3 loans for customer 202505000002
+[2025-05-27 07:31:50,596] INFO in app: Customer ID: 2
+[2025-05-27 07:31:50,598] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'active'), ('203000006', 'active')]
+[2025-05-27 07:32:16,927] DEBUG in app: [DEBUG] Balance calc for base loan #203000004: 1491199.62
+[2025-05-27 07:32:16,955] INFO in app: Skipping allocation for internal_topup payment ID 5
+[2025-05-27 07:32:16,985] INFO in app: Found 4 loans for customer 202505000002
+[2025-05-27 07:32:16,985] INFO in app: Customer ID: 2
+[2025-05-27 07:32:16,986] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'active'), ('203000007', 'active')]
+[2025-05-27 07:32:22,951] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:39:29,930] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:39:31,028] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:39:31,596] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:39:45,414] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:40:01,730] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-27 07:40:01,731] INFO in app: Customer ID: 3
+[2025-05-27 07:40:01,732] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-27 07:40:05,235] INFO in app: Found 1 loans for customer 202505000003
+[2025-05-27 07:40:05,236] INFO in app: Customer ID: 3
+[2025-05-27 07:40:05,236] INFO in app: Found Loans: [('124000003', 'active')]
+[2025-05-27 07:40:27,343] DEBUG in app: [DEBUG] Balance calc for base loan #124000003: 3411559.66
+[2025-05-27 07:40:27,357] INFO in app: Skipping allocation for internal_topup payment ID 6
+[2025-05-27 07:40:27,385] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 07:40:27,385] INFO in app: Customer ID: 3
+[2025-05-27 07:40:27,386] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 07:40:35,488] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:42:18,262] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:42:20,125] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:42:24,435] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-27 07:42:24,436] INFO in app: Customer ID: 1
+[2025-05-27 07:42:24,439] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-27 07:42:26,980] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-27 07:42:26,981] INFO in app: Customer ID: 1
+[2025-05-27 07:42:26,982] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client')]
+[2025-05-27 07:42:56,502] DEBUG in app: [DEBUG] Balance calc for base loan #224000005: 0.0
+[2025-05-27 07:42:56,549] INFO in app: Found 3 loans for customer 202505000001
+[2025-05-27 07:42:56,549] INFO in app: Customer ID: 1
+[2025-05-27 07:42:56,549] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'active')]
+[2025-05-27 07:43:21,956] INFO in app: Found 3 loans for customer 202505000001
+[2025-05-27 07:43:21,958] INFO in app: Customer ID: 1
+[2025-05-27 07:43:21,958] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'active')]
+[2025-05-27 07:43:52,160] DEBUG in app: [DEBUG] Balance calc for base loan #203000009: 1243201.75
+[2025-05-27 07:43:52,185] INFO in app: Skipping allocation for internal_topup payment ID 7
+[2025-05-27 07:43:52,213] INFO in app: Found 4 loans for customer 202505000001
+[2025-05-27 07:43:52,215] INFO in app: Customer ID: 1
+[2025-05-27 07:43:52,215] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'active')]
+[2025-05-27 07:43:59,311] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:44:04,388] INFO in app: Found 4 loans for customer 202505000001
+[2025-05-27 07:44:04,392] INFO in app: Customer ID: 1
+[2025-05-27 07:44:04,392] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'active')]
+[2025-05-27 07:44:11,349] INFO in app: Found 4 loans for customer 202505000001
+[2025-05-27 07:44:11,350] INFO in app: Customer ID: 1
+[2025-05-27 07:44:11,351] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'active')]
+[2025-05-27 07:44:24,908] INFO in app: Found 4 loans for customer 202505000001
+[2025-05-27 07:44:24,909] INFO in app: Customer ID: 1
+[2025-05-27 07:44:24,909] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'active')]
+[2025-05-27 07:57:07,645] INFO in app: Found 4 loans for customer 202505000001
+[2025-05-27 07:57:07,646] INFO in app: Customer ID: 1
+[2025-05-27 07:57:07,647] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'active')]
+[2025-05-27 07:57:09,984] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 07:57:12,686] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 10:53:15,716] INFO in app: Found 4 loans for customer 202505000001
+[2025-05-27 10:53:15,718] INFO in app: Customer ID: 1
+[2025-05-27 10:53:15,719] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'active')]
+[2025-05-27 10:53:29,236] INFO in app: Found 4 loans for customer 202505000001
+[2025-05-27 10:53:29,236] INFO in app: Customer ID: 1
+[2025-05-27 10:53:29,237] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'active')]
+[2025-05-27 10:54:00,977] DEBUG in app: [DEBUG] Balance calc for base loan #203000010: 2483191.09
+[2025-05-27 10:54:01,033] INFO in app: Skipping allocation for internal_topup payment ID 8
+[2025-05-27 10:54:01,079] INFO in app: Found 5 loans for customer 202505000001
+[2025-05-27 10:54:01,080] INFO in app: Customer ID: 1
+[2025-05-27 10:54:01,081] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'active')]
+[2025-05-27 10:54:17,103] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 10:58:18,175] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 10:58:32,882] INFO in app: Found 5 loans for customer 202505000001
+[2025-05-27 10:58:32,883] INFO in app: Customer ID: 1
+[2025-05-27 10:58:32,884] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'active')]
+[2025-05-27 10:58:39,328] INFO in app: Found 5 loans for customer 202505000001
+[2025-05-27 10:58:39,330] INFO in app: Customer ID: 1
+[2025-05-27 10:58:39,331] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'active')]
+[2025-05-27 10:58:42,545] INFO in app: Found 5 loans for customer 202505000001
+[2025-05-27 10:58:42,546] INFO in app: Customer ID: 1
+[2025-05-27 10:58:42,546] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'active')]
+[2025-05-27 11:00:13,554] DEBUG in app: [DEBUG] Balance calc for base loan #203000011: 4963169.78
+[2025-05-27 11:00:13,604] INFO in app: Skipping allocation for internal_topup payment ID 9
+[2025-05-27 11:00:13,643] INFO in app: Found 6 loans for customer 202505000001
+[2025-05-27 11:00:13,643] INFO in app: Customer ID: 1
+[2025-05-27 11:00:13,644] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'active')]
+[2025-05-27 11:00:57,904] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 12:09:06,201] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 12:09:17,977] INFO in app: Found 4 loans for customer 202505000002
+[2025-05-27 12:09:17,978] INFO in app: Customer ID: 2
+[2025-05-27 12:09:17,978] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'active'), ('203000007', 'active')]
+[2025-05-27 12:09:23,649] INFO in app: Found 4 loans for customer 202505000002
+[2025-05-27 12:09:23,649] INFO in app: Customer ID: 2
+[2025-05-27 12:09:23,651] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'active'), ('203000007', 'active')]
+[2025-05-27 12:09:54,847] DEBUG in app: [DEBUG] Balance calc for base loan #203000006: 6203159.12
+[2025-05-27 12:09:54,913] INFO in app: Skipping allocation for internal_topup payment ID 10
+[2025-05-27 12:09:54,963] INFO in app: Found 5 loans for customer 202505000002
+[2025-05-27 12:09:54,965] INFO in app: Customer ID: 2
+[2025-05-27 12:09:54,965] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active')]
+[2025-05-27 12:10:09,271] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 12:10:14,199] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 12:23:43,733] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 12:23:51,143] INFO in app: Found 6 loans for customer 202505000001
+[2025-05-27 12:23:51,144] INFO in app: Customer ID: 1
+[2025-05-27 12:23:51,145] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'active')]
+[2025-05-27 12:23:55,708] INFO in app: Found 6 loans for customer 202505000001
+[2025-05-27 12:23:55,710] INFO in app: Customer ID: 1
+[2025-05-27 12:23:55,711] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'active')]
+[2025-05-27 12:24:25,116] DEBUG in app: [DEBUG] Balance calc for base loan #203000012: 9923127.15
+[2025-05-27 12:24:25,169] INFO in app: Skipping allocation for internal_topup payment ID 11
+[2025-05-27 12:24:25,222] INFO in app: Found 7 loans for customer 202505000001
+[2025-05-27 12:24:25,222] INFO in app: Customer ID: 1
+[2025-05-27 12:24:25,223] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'active')]
+[2025-05-27 12:24:49,717] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 12:36:40,785] INFO in app: Found 7 loans for customer 202505000001
+[2025-05-27 12:36:40,788] INFO in app: Customer ID: 1
+[2025-05-27 12:36:40,789] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'active')]
+[2025-05-27 13:57:40,517] INFO in app: Found 7 loans for customer 202505000001
+[2025-05-27 13:57:40,520] INFO in app: Customer ID: 1
+[2025-05-27 13:57:40,521] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'active')]
+[2025-05-27 13:57:46,033] INFO in app: Found 7 loans for customer 202505000001
+[2025-05-27 13:57:46,035] INFO in app: Customer ID: 1
+[2025-05-27 13:57:46,036] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'active')]
+[2025-05-27 13:57:54,335] INFO in app: Found 7 loans for customer 202505000001
+[2025-05-27 13:57:54,335] INFO in app: Customer ID: 1
+[2025-05-27 13:57:54,336] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'active')]
+[2025-05-27 13:58:20,797] DEBUG in app: [DEBUG] Balance calc for base loan #203000014: 14883084.53
+[2025-05-27 13:58:20,856] INFO in app: Skipping allocation for internal_topup payment ID 12
+[2025-05-27 13:58:20,900] INFO in app: Found 8 loans for customer 202505000001
+[2025-05-27 13:58:20,900] INFO in app: Customer ID: 1
+[2025-05-27 13:58:20,901] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+[2025-05-27 13:58:54,597] INFO in app: [DISBURSEMENT] Route triggered
+[2025-05-27 14:12:09,959] INFO in app: Found 8 loans for customer 202505000001
+[2025-05-27 14:12:09,959] INFO in app: Customer ID: 1
+[2025-05-27 14:12:09,960] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+[2025-05-27 14:12:13,647] INFO in app: Found 8 loans for customer 202505000001
+[2025-05-27 14:12:13,649] INFO in app: Customer ID: 1
+[2025-05-27 14:12:13,651] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+[2025-05-27 14:14:01,121] INFO in app: Found 8 loans for customer 202505000001
+[2025-05-27 14:14:01,122] INFO in app: Customer ID: 1
+[2025-05-27 14:14:01,123] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+[2025-05-27 14:14:01,934] INFO in app: Found 8 loans for customer 202505000001
+[2025-05-27 14:14:01,935] INFO in app: Customer ID: 1
+[2025-05-27 14:14:01,936] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+[2025-05-27 14:15:14,198] INFO in app: Found 8 loans for customer 202505000001
+[2025-05-27 14:15:14,199] INFO in app: Customer ID: 1
+[2025-05-27 14:15:14,199] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+[2025-05-27 14:15:17,415] INFO in app: Found 8 loans for customer 202505000001
+[2025-05-27 14:15:17,417] INFO in app: Customer ID: 1
+[2025-05-27 14:15:17,417] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+[2025-05-27 14:15:21,478] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:15:21,479] INFO in app: Customer ID: 3
+[2025-05-27 14:15:21,479] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:15:23,534] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:15:23,535] INFO in app: Customer ID: 3
+[2025-05-27 14:15:23,536] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:15:24,654] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:15:24,655] INFO in app: Customer ID: 3
+[2025-05-27 14:15:24,657] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:16:33,952] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:16:33,952] INFO in app: Customer ID: 3
+[2025-05-27 14:16:33,953] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:16:41,884] ERROR in app: Failed to close loan 8: Settlement proof document is required
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 2945, in settle_loan
+    return redirect(request.referrer)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Settlement proof document is required
+[2025-05-27 14:16:41,898] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:16:41,899] INFO in app: Customer ID: 3
+[2025-05-27 14:16:41,899] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:16:49,613] ERROR in app: Failed to close loan 8: Settlement proof document is required
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 2945, in settle_loan
+    return redirect(request.referrer)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Settlement proof document is required
+[2025-05-27 14:16:49,622] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:16:49,623] INFO in app: Customer ID: 3
+[2025-05-27 14:16:49,624] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:49:39,007] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:49:39,009] INFO in app: Customer ID: 3
+[2025-05-27 14:49:39,010] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:49:39,893] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:49:39,894] INFO in app: Customer ID: 3
+[2025-05-27 14:49:39,894] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:49:40,620] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:49:40,620] INFO in app: Customer ID: 3
+[2025-05-27 14:49:40,621] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:49:41,819] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:49:41,819] INFO in app: Customer ID: 3
+[2025-05-27 14:49:41,820] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:51:20,114] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:51:20,115] INFO in app: Customer ID: 3
+[2025-05-27 14:51:20,117] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:52:47,546] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:52:47,546] INFO in app: Customer ID: 3
+[2025-05-27 14:52:47,547] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:53:22,718] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:53:22,718] INFO in app: Customer ID: 3
+[2025-05-27 14:53:22,719] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:53:25,852] INFO in app: Found 2 loans for customer 202505000003
+[2025-05-27 14:53:25,853] INFO in app: Customer ID: 3
+[2025-05-27 14:53:25,853] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active')]
+[2025-05-27 14:53:42,345] INFO in app: Found 3 loans for customer 202505000003
+[2025-05-27 14:53:42,345] INFO in app: Customer ID: 3
+[2025-05-27 14:53:42,346] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active'), ('103000016', 'active')]
+[2025-05-27 15:13:26,869] INFO in app: Found 8 loans for customer 202505000001
+[2025-05-27 15:13:26,872] INFO in app: Customer ID: 1
+[2025-05-27 15:13:26,872] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+[2025-05-27 15:13:32,395] INFO in app: Found 8 loans for customer 202505000001
+[2025-05-27 15:13:32,396] INFO in app: Customer ID: 1
+[2025-05-27 15:13:32,397] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active')]
+[2025-05-27 15:13:47,003] INFO in app: Found 9 loans for customer 202505000001
+[2025-05-27 15:13:47,004] INFO in app: Customer ID: 1
+[2025-05-27 15:13:47,004] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+[2025-05-27 15:23:57,082] INFO in app: Found 1 loans for customer 202505000004
+[2025-05-27 15:23:57,082] INFO in app: Customer ID: 4
+[2025-05-27 15:23:57,083] INFO in app: Found Loans: [('218000018', 'active')]
+[2025-05-27 15:23:58,850] INFO in app: Found 1 loans for customer 202505000004
+[2025-05-27 15:23:58,850] INFO in app: Customer ID: 4
+[2025-05-27 15:23:58,854] INFO in app: Found Loans: [('218000018', 'active')]
+[2025-05-27 15:23:59,643] INFO in app: Found 1 loans for customer 202505000004
+[2025-05-27 15:23:59,644] INFO in app: Customer ID: 4
+[2025-05-27 15:23:59,645] INFO in app: Found Loans: [('218000018', 'active')]
+[2025-05-27 15:24:00,259] INFO in app: Found 1 loans for customer 202505000004
+[2025-05-27 15:24:00,259] INFO in app: Customer ID: 4
+[2025-05-27 15:24:00,260] INFO in app: Found Loans: [('218000018', 'active')]
+[2025-05-27 15:24:01,010] INFO in app: Found 1 loans for customer 202505000004
+[2025-05-27 15:24:01,011] INFO in app: Customer ID: 4
+[2025-05-27 15:24:01,011] INFO in app: Found Loans: [('218000018', 'active')]
+[2025-05-27 16:05:58,042] INFO in app: Found 3 loans for customer 202505000003
+[2025-05-27 16:05:58,043] INFO in app: Customer ID: 3
+[2025-05-27 16:05:58,044] INFO in app: Found Loans: [('124000003', 'topped_up'), ('103000008', 'active'), ('103000016', 'active')]
+[2025-05-27 16:05:58,094] ERROR in app: Account view error: Encountered unknown tag 'endblock'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.
+[2025-05-27 16:06:01,951] INFO in app: Found 9 loans for customer 202505000001
+[2025-05-27 16:06:01,953] INFO in app: Customer ID: 1
+[2025-05-27 16:06:01,953] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+[2025-05-27 16:06:01,978] ERROR in app: Account view error: Encountered unknown tag 'endblock'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.
+[2025-05-27 16:09:34,418] INFO in app: Found 9 loans for customer 202505000001
+[2025-05-27 16:09:34,418] INFO in app: Customer ID: 1
+[2025-05-27 16:09:34,419] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+[2025-05-27 16:09:37,495] INFO in app: Found 9 loans for customer 202505000001
+[2025-05-27 16:09:37,495] INFO in app: Customer ID: 1
+[2025-05-27 16:09:37,496] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active')]
+[2025-05-27 16:09:52,907] INFO in app: Found 10 loans for customer 202505000001
+[2025-05-27 16:09:52,907] INFO in app: Customer ID: 1
+[2025-05-27 16:09:52,908] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'active')]
+[2025-05-27 16:09:56,754] INFO in app: Found 10 loans for customer 202505000001
+[2025-05-27 16:09:56,755] INFO in app: Customer ID: 1
+[2025-05-27 16:09:56,755] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'active')]
+[2025-05-27 16:10:24,049] INFO in app: [TOPUP] Submit route hit for loan 19
+[2025-05-27 16:10:24,061] DEBUG in app: [DEBUG] Balance calc for base loan #203000019: 1243201.75
+[2025-05-27 16:10:24,088] INFO in app: Skipping allocation for internal_topup payment ID 13
+[2025-05-27 16:10:24,118] INFO in app: Found 11 loans for customer 202505000001
+[2025-05-27 16:10:24,118] INFO in app: Customer ID: 1
+[2025-05-27 16:10:24,119] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'application')]
+[2025-05-27 18:09:46,865] INFO in app: Found 11 loans for customer 202505000001
+[2025-05-27 18:09:46,866] INFO in app: Customer ID: 1
+[2025-05-27 18:09:46,870] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+[2025-05-27 20:33:27,152] INFO in app: Found 11 loans for customer 202505000001
+[2025-05-27 20:33:27,153] INFO in app: Customer ID: 1
+[2025-05-27 20:33:27,154] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+[2025-05-27 20:33:27,589] INFO in app: Found 11 loans for customer 202505000001
+[2025-05-27 20:33:27,590] INFO in app: Customer ID: 1
+[2025-05-27 20:33:27,591] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+[2025-05-27 20:33:31,999] INFO in app: Found 11 loans for customer 202505000001
+[2025-05-27 20:33:31,999] INFO in app: Customer ID: 1
+[2025-05-27 20:33:32,000] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'active')]
+[2025-05-27 20:34:01,126] INFO in app: [TOPUP] Submit route hit for loan 20
+[2025-05-27 20:34:01,144] DEBUG in app: [DEBUG] Balance calc for base loan #203000020: 3723180.44
+[2025-05-27 20:34:01,176] INFO in app: Skipping allocation for internal_topup payment ID 14
+[2025-05-27 20:34:01,204] INFO in app: Found 12 loans for customer 202505000001
+[2025-05-27 20:34:01,206] INFO in app: Customer ID: 1
+[2025-05-27 20:34:01,207] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'topped_up'), ('203000021', 'application')]
+[2025-05-28 02:58:27,098] INFO in app: Found 5 loans for customer 202505000002
+[2025-05-28 02:58:27,099] INFO in app: Customer ID: 2
+[2025-05-28 02:58:27,100] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active')]
+[2025-05-28 02:58:32,658] INFO in app: Found 5 loans for customer 202505000002
+[2025-05-28 02:58:32,659] INFO in app: Customer ID: 2
+[2025-05-28 02:58:32,662] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active')]
+[2025-05-28 02:58:52,066] INFO in app: Found 6 loans for customer 202505000002
+[2025-05-28 02:58:52,067] INFO in app: Customer ID: 2
+[2025-05-28 02:58:52,068] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'active')]
+[2025-05-28 02:59:11,694] INFO in app: [DISBURSEMENT] Loan #203000022 | Top-up of: None | Cash to Client: 1000000.0
+[2025-05-28 02:59:35,502] INFO in app: Found 1 loans for customer 202505000004
+[2025-05-28 02:59:35,503] INFO in app: Customer ID: 4
+[2025-05-28 02:59:35,503] INFO in app: Found Loans: [('218000018', 'active')]
+[2025-05-28 02:59:43,573] INFO in app: Found 1 loans for customer 202505000004
+[2025-05-28 02:59:43,573] INFO in app: Customer ID: 4
+[2025-05-28 02:59:43,574] INFO in app: Found Loans: [('218000018', 'active')]
+[2025-05-28 03:00:07,416] INFO in app: [TOPUP] Submit route hit for loan 18
+[2025-05-28 03:00:07,425] DEBUG in app: [DEBUG] Balance calc for base loan #218000018: 2043603.28
+[2025-05-28 03:00:07,442] INFO in app: Skipping allocation for internal_topup payment ID 15
+[2025-05-28 03:00:07,470] INFO in app: Found 2 loans for customer 202505000004
+[2025-05-28 03:00:07,470] INFO in app: Customer ID: 4
+[2025-05-28 03:00:07,471] INFO in app: Found Loans: [('218000018', 'topped_up'), ('203000023', 'application')]
+[2025-05-28 03:00:13,738] INFO in app: [DISBURSEMENT] Loan #203000023 | Top-up of: 18 | Cash to Client: 4000000.0
+[2025-05-28 03:40:40,069] INFO in app: [DISBURSEMENT] Loan #203000023 | Top-up of: 18 | Cash to Client: 1956396.72
+[2025-05-28 03:42:51,480] INFO in app: Found 6 loans for customer 202505000002
+[2025-05-28 03:42:51,481] INFO in app: Customer ID: 2
+[2025-05-28 03:42:51,483] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'active')]
+[2025-05-28 03:42:55,319] INFO in app: Found 6 loans for customer 202505000002
+[2025-05-28 03:42:55,320] INFO in app: Customer ID: 2
+[2025-05-28 03:42:55,322] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'active')]
+[2025-05-28 03:43:27,422] INFO in app: [TOPUP] Submit route hit for loan 22
+[2025-05-28 03:43:27,437] DEBUG in app: [DEBUG] Balance calc for base loan #203000022: 1243201.75
+[2025-05-28 03:43:27,480] INFO in app: Skipping allocation for internal_topup payment ID 16
+[2025-05-28 03:43:27,504] INFO in app: Found 7 loans for customer 202505000002
+[2025-05-28 03:43:27,505] INFO in app: Customer ID: 2
+[2025-05-28 03:43:27,506] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'application')]
+[2025-05-28 03:43:36,151] INFO in app: [DISBURSEMENT] Loan #203000023 | Top-up of: 18 | Cash to Client: 1956396.72
+[2025-05-28 03:43:36,153] INFO in app: [DISBURSEMENT] Loan #224000024 | Top-up of: 22 | Cash to Client: 3756798.25
+[2025-05-28 04:32:59,851] INFO in app: Found 12 loans for customer 202505000001
+[2025-05-28 04:32:59,853] INFO in app: Customer ID: 1
+[2025-05-28 04:32:59,854] INFO in app: Found Loans: [('236000001', 'closed'), ('224000005', 'settled_client'), ('203000009', 'topped_up'), ('203000010', 'topped_up'), ('203000011', 'topped_up'), ('203000012', 'topped_up'), ('203000014', 'topped_up'), ('203000015', 'active'), ('203000017', 'active'), ('203000019', 'topped_up'), ('203000020', 'topped_up'), ('203000021', 'active')]
+[2025-05-28 04:51:13,478] INFO in app: Found 7 loans for customer 202505000002
+[2025-05-28 04:51:13,479] INFO in app: Customer ID: 2
+[2025-05-28 04:51:13,481] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active')]
+[2025-05-28 04:51:16,104] INFO in app: Found 7 loans for customer 202505000002
+[2025-05-28 04:51:16,105] INFO in app: Customer ID: 2
+[2025-05-28 04:51:16,107] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active')]
+[2025-05-28 04:51:37,267] INFO in app: Found 8 loans for customer 202505000002
+[2025-05-28 04:51:37,270] INFO in app: Customer ID: 2
+[2025-05-28 04:51:37,272] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'active')]
+[2025-05-28 04:51:41,875] INFO in app: [DISBURSEMENT] Loan #203000025 | Top-up of: None | Cash to Client: 1000000.0
+[2025-05-28 04:52:02,136] INFO in app: Found 8 loans for customer 202505000002
+[2025-05-28 04:52:02,137] INFO in app: Customer ID: 2
+[2025-05-28 04:52:02,139] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'active')]
+[2025-05-28 04:52:03,576] INFO in app: Found 8 loans for customer 202505000002
+[2025-05-28 04:52:03,577] INFO in app: Customer ID: 2
+[2025-05-28 04:52:03,579] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'active')]
+[2025-05-28 04:52:30,528] INFO in app: [TOPUP] Submit route hit for loan 25
+[2025-05-28 04:52:30,540] DEBUG in app: [DEBUG] Balance calc for base loan #203000025: 1243201.75
+[2025-05-28 04:52:30,555] INFO in app: Skipping allocation for internal_topup payment ID 17
+[2025-05-28 04:52:30,581] INFO in app: Found 9 loans for customer 202505000002
+[2025-05-28 04:52:30,581] INFO in app: Customer ID: 2
+[2025-05-28 04:52:30,582] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'topped_up'), ('203000026', 'application')]
+[2025-05-28 04:52:37,784] INFO in app: [DISBURSEMENT] Loan #203000026 | Top-up of: 25 | Cash to Client: 1756798.25
