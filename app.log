@@ -1,0 +1,252 @@
+2025-05-29 18:34:27,895 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-29 18:34:27,896 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-29 18:34:43,239 - INFO - 127.0.0.1 - - [29/May/2025 18:34:43] "[32mGET /login?next=/ HTTP/1.1[0m" 302 -
+2025-05-29 18:34:43,324 - INFO - 127.0.0.1 - - [29/May/2025 18:34:43] "GET / HTTP/1.1" 200 -
+2025-05-29 18:34:47,611 - INFO - 127.0.0.1 - - [29/May/2025 18:34:47] "GET /register HTTP/1.1" 200 -
+2025-05-29 18:34:48,388 - INFO - 127.0.0.1 - - [29/May/2025 18:34:48] "GET /approve_customers HTTP/1.1" 200 -
+2025-05-29 18:34:49,315 - INFO - 127.0.0.1 - - [29/May/2025 18:34:49] "GET /customers HTTP/1.1" 200 -
+2025-05-29 18:34:50,046 - INFO - 127.0.0.1 - - [29/May/2025 18:34:50] "GET /loans HTTP/1.1" 200 -
+2025-05-29 18:34:51,390 - INFO - 127.0.0.1 - - [29/May/2025 18:34:51] "GET /disbursements HTTP/1.1" 200 -
+2025-05-29 18:34:52,915 - INFO - 127.0.0.1 - - [29/May/2025 18:34:52] "GET /payments HTTP/1.1" 200 -
+2025-05-29 18:34:53,887 - INFO - 127.0.0.1 - - [29/May/2025 18:34:53] "GET /loanbook HTTP/1.1" 200 -
+2025-05-29 19:05:12,889 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-29 19:05:12,890 - INFO - [33mPress CTRL+C to quit[0m
+[2025-05-29 19:18:58,665] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 19:18:58,665 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 19:18:58,666] INFO in app: Customer ID: 1
+2025-05-29 19:18:58,666 - INFO - Customer ID: 1
+[2025-05-29 19:18:58,669] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 19:18:58,669 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 19:18:58,797 - INFO - 127.0.0.1 - - [29/May/2025 19:18:58] "GET /customer/202505000001/account HTTP/1.1" 200 -
+[2025-05-29 19:19:00,971] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 19:19:00,971 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 19:19:00,975] INFO in app: Customer ID: 1
+2025-05-29 19:19:00,975 - INFO - Customer ID: 1
+[2025-05-29 19:19:00,978] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 19:19:00,978 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 19:19:00,982 - INFO - 127.0.0.1 - - [29/May/2025 19:19:00] "GET /customer/202505000001/account?section=additional HTTP/1.1" 200 -
+[2025-05-29 19:19:01,929] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 19:19:01,929 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 19:19:01,931] INFO in app: Customer ID: 1
+2025-05-29 19:19:01,931 - INFO - Customer ID: 1
+[2025-05-29 19:19:01,932] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 19:19:01,932 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 19:19:01,936 - INFO - 127.0.0.1 - - [29/May/2025 19:19:01] "GET /customer/202505000001/account?section=topup HTTP/1.1" 200 -
+[2025-05-29 19:19:26,633] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 19:19:26,633 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 19:19:26,635] INFO in app: Customer ID: 1
+2025-05-29 19:19:26,635 - INFO - Customer ID: 1
+[2025-05-29 19:19:26,639] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 19:19:26,639 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 19:19:26,643 - INFO - 127.0.0.1 - - [29/May/2025 19:19:26] "GET /customer/202505000001/account?section=settlement HTTP/1.1" 200 -
+[2025-05-29 19:19:49,408] ERROR in app: Failed to close loan 1: Settlement proof document is required
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 2981, in settle_loan
+    raise ValueError("Settlement proof document is required")
+ValueError: Settlement proof document is required
+2025-05-29 19:19:49,408 - ERROR - Failed to close loan 1: Settlement proof document is required
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 2981, in settle_loan
+    raise ValueError("Settlement proof document is required")
+ValueError: Settlement proof document is required
+2025-05-29 19:19:49,415 - INFO - 127.0.0.1 - - [29/May/2025 19:19:49] "[32mPOST /settle_loan/1 HTTP/1.1[0m" 302 -
+[2025-05-29 19:19:49,705] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 19:19:49,705 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 19:19:49,707] INFO in app: Customer ID: 1
+2025-05-29 19:19:49,707 - INFO - Customer ID: 1
+[2025-05-29 19:19:49,708] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 19:19:49,708 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 19:19:49,712 - INFO - 127.0.0.1 - - [29/May/2025 19:19:49] "GET /customer/202505000001/account?section=settlement HTTP/1.1" 200 -
+2025-05-29 19:57:27,019 - INFO - 127.0.0.1 - - [29/May/2025 19:57:27] "GET / HTTP/1.1" 200 -
+2025-05-29 19:57:30,415 - INFO - 127.0.0.1 - - [29/May/2025 19:57:30] "GET /register HTTP/1.1" 200 -
+2025-05-29 19:57:31,116 - INFO - 127.0.0.1 - - [29/May/2025 19:57:31] "GET /approve_customers HTTP/1.1" 200 -
+2025-05-29 19:57:31,825 - INFO - 127.0.0.1 - - [29/May/2025 19:57:31] "GET /customers HTTP/1.1" 200 -
+2025-05-29 19:57:32,416 - INFO - 127.0.0.1 - - [29/May/2025 19:57:32] "GET /loans HTTP/1.1" 200 -
+2025-05-29 19:57:33,029 - INFO - 127.0.0.1 - - [29/May/2025 19:57:33] "GET /disbursements HTTP/1.1" 200 -
+2025-05-29 19:57:33,536 - INFO - 127.0.0.1 - - [29/May/2025 19:57:33] "GET /payments HTTP/1.1" 200 -
+2025-05-29 19:57:34,116 - INFO - 127.0.0.1 - - [29/May/2025 19:57:34] "GET /loanbook HTTP/1.1" 200 -
+2025-05-29 19:57:35,465 - INFO - 127.0.0.1 - - [29/May/2025 19:57:35] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-05-29 19:57:36,979 - INFO - 127.0.0.1 - - [29/May/2025 19:57:36] "GET /admin/notifications HTTP/1.1" 200 -
+2025-05-29 19:57:37,767 - INFO - 127.0.0.1 - - [29/May/2025 19:57:37] "GET /admin/permissions HTTP/1.1" 200 -
+2025-05-29 19:57:38,959 - INFO - 127.0.0.1 - - [29/May/2025 19:57:38] "GET /admin/reports HTTP/1.1" 200 -
+2025-05-29 20:20:16,892 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-29 20:20:16,892 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-29 21:11:48,523 - INFO - 127.0.0.1 - - [29/May/2025 21:11:48] "GET / HTTP/1.1" 200 -
+2025-05-29 21:11:50,570 - INFO - 127.0.0.1 - - [29/May/2025 21:11:50] "GET /register HTTP/1.1" 200 -
+2025-05-29 21:11:51,719 - INFO - 127.0.0.1 - - [29/May/2025 21:11:51] "GET /approve_customers HTTP/1.1" 200 -
+2025-05-29 21:11:53,145 - INFO - 127.0.0.1 - - [29/May/2025 21:11:53] "GET /customers HTTP/1.1" 200 -
+2025-05-29 21:11:54,052 - INFO - 127.0.0.1 - - [29/May/2025 21:11:54] "GET /loans HTTP/1.1" 200 -
+2025-05-29 21:11:54,981 - INFO - 127.0.0.1 - - [29/May/2025 21:11:54] "GET /disbursements HTTP/1.1" 200 -
+2025-05-29 21:11:57,596 - INFO - 127.0.0.1 - - [29/May/2025 21:11:57] "GET /payments HTTP/1.1" 200 -
+2025-05-29 21:11:59,209 - INFO - 127.0.0.1 - - [29/May/2025 21:11:59] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-29 21:12:05,179] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 21:12:05,179 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 21:12:05,182] INFO in app: Customer ID: 1
+2025-05-29 21:12:05,182 - INFO - Customer ID: 1
+[2025-05-29 21:12:05,183] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 21:12:05,183 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 21:12:05,293 - INFO - 127.0.0.1 - - [29/May/2025 21:12:05] "GET /customer/202505000001/account HTTP/1.1" 200 -
+[2025-05-29 21:12:14,595] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 21:12:14,595 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 21:12:14,596] INFO in app: Customer ID: 1
+2025-05-29 21:12:14,596 - INFO - Customer ID: 1
+[2025-05-29 21:12:14,607] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 21:12:14,607 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 21:12:14,611 - INFO - 127.0.0.1 - - [29/May/2025 21:12:14] "GET /customer/202505000001/account?section=additional HTTP/1.1" 200 -
+[2025-05-29 21:12:15,514] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 21:12:15,514 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 21:12:15,516] INFO in app: Customer ID: 1
+2025-05-29 21:12:15,516 - INFO - Customer ID: 1
+[2025-05-29 21:12:15,521] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 21:12:15,521 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 21:12:15,524 - INFO - 127.0.0.1 - - [29/May/2025 21:12:15] "GET /customer/202505000001/account?section=topup HTTP/1.1" 200 -
+[2025-05-29 21:12:17,025] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 21:12:17,025 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 21:12:17,026] INFO in app: Customer ID: 1
+2025-05-29 21:12:17,026 - INFO - Customer ID: 1
+[2025-05-29 21:12:17,027] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 21:12:17,027 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 21:12:17,031 - INFO - 127.0.0.1 - - [29/May/2025 21:12:17] "GET /customer/202505000001/account?section=settlement HTTP/1.1" 200 -
+2025-05-29 21:26:55,151 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-29 21:26:55,151 - INFO - [33mPress CTRL+C to quit[0m
+[2025-05-29 21:27:17,758] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 21:27:17,758 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 21:27:17,759] INFO in app: Customer ID: 1
+2025-05-29 21:27:17,759 - INFO - Customer ID: 1
+[2025-05-29 21:27:17,760] INFO in app: Found Loans: [('136000001', 'active')]
+2025-05-29 21:27:17,760 - INFO - Found Loans: [('136000001', 'active')]
+2025-05-29 21:27:17,868 - INFO - 127.0.0.1 - - [29/May/2025 21:27:17] "GET /customer/202505000001/account?section=settlement HTTP/1.1" 200 -
+2025-05-29 21:27:24,154 - INFO - 127.0.0.1 - - [29/May/2025 21:27:24] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-29 21:27:32,132 - INFO - 127.0.0.1 - - [29/May/2025 21:27:32] "[32mPOST /settle_loan/1 HTTP/1.1[0m" 302 -
+[2025-05-29 21:27:32,364] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 21:27:32,364 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 21:27:32,365] INFO in app: Customer ID: 1
+2025-05-29 21:27:32,365 - INFO - Customer ID: 1
+[2025-05-29 21:27:32,366] INFO in app: Found Loans: [('136000001', 'settled_client')]
+2025-05-29 21:27:32,366 - INFO - Found Loans: [('136000001', 'settled_client')]
+2025-05-29 21:27:32,370 - INFO - 127.0.0.1 - - [29/May/2025 21:27:32] "GET /customer/202505000001/account?section=settlement HTTP/1.1" 200 -
+[2025-05-29 21:27:37,752] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 21:27:37,752 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 21:27:37,753] INFO in app: Customer ID: 1
+2025-05-29 21:27:37,753 - INFO - Customer ID: 1
+[2025-05-29 21:27:37,754] INFO in app: Found Loans: [('136000001', 'settled_client')]
+2025-05-29 21:27:37,754 - INFO - Found Loans: [('136000001', 'settled_client')]
+2025-05-29 21:27:37,761 - INFO - 127.0.0.1 - - [29/May/2025 21:27:37] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+[2025-05-29 21:27:46,724] INFO in app: Found 1 loans for customer 202505000001
+2025-05-29 21:27:46,724 - INFO - Found 1 loans for customer 202505000001
+[2025-05-29 21:27:46,726] INFO in app: Customer ID: 1
+2025-05-29 21:27:46,726 - INFO - Customer ID: 1
+[2025-05-29 21:27:46,727] INFO in app: Found Loans: [('136000001', 'settled_client')]
+2025-05-29 21:27:46,727 - INFO - Found Loans: [('136000001', 'settled_client')]
+2025-05-29 21:27:46,731 - INFO - 127.0.0.1 - - [29/May/2025 21:27:46] "GET /customer/202505000001/account?section=additional HTTP/1.1" 200 -
+2025-05-29 21:28:07,092 - INFO - 127.0.0.1 - - [29/May/2025 21:28:07] "[32mPOST /apply_additional/1 HTTP/1.1[0m" 302 -
+[2025-05-29 21:28:07,375] INFO in app: Found 2 loans for customer 202505000001
+2025-05-29 21:28:07,375 - INFO - Found 2 loans for customer 202505000001
+[2025-05-29 21:28:07,376] INFO in app: Customer ID: 1
+2025-05-29 21:28:07,376 - INFO - Customer ID: 1
+[2025-05-29 21:28:07,378] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'active')]
+2025-05-29 21:28:07,378 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'active')]
+2025-05-29 21:28:07,389 - INFO - 127.0.0.1 - - [29/May/2025 21:28:07] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+2025-05-29 21:28:11,916 - INFO - 127.0.0.1 - - [29/May/2025 21:28:11] "GET /customers HTTP/1.1" 200 -
+2025-05-29 21:28:13,036 - INFO - 127.0.0.1 - - [29/May/2025 21:28:13] "GET /loans HTTP/1.1" 200 -
+2025-05-29 21:28:24,633 - INFO - 127.0.0.1 - - [29/May/2025 21:28:24] "[32mPOST /process_loan/2/approve HTTP/1.1[0m" 302 -
+2025-05-29 21:28:24,930 - INFO - 127.0.0.1 - - [29/May/2025 21:28:24] "GET /loans HTTP/1.1" 200 -
+[2025-05-29 21:28:31,695] INFO in app: [DISBURSEMENT] Loan #103000002 | Top-up of: None | Cash to Client: 1000000.0
+2025-05-29 21:28:31,695 - INFO - [DISBURSEMENT] Loan #103000002 | Top-up of: None | Cash to Client: 1000000.0
+2025-05-29 21:28:31,716 - INFO - 127.0.0.1 - - [29/May/2025 21:28:31] "GET /disbursements HTTP/1.1" 200 -
+2025-05-29 21:28:49,008 - INFO - 127.0.0.1 - - [29/May/2025 21:28:49] "[32mPOST /disbursements HTTP/1.1[0m" 302 -
+2025-05-29 21:28:49,019 - INFO - 127.0.0.1 - - [29/May/2025 21:28:49] "GET /disbursements HTTP/1.1" 200 -
+2025-05-29 21:31:36,914 - INFO - 127.0.0.1 - - [29/May/2025 21:31:36] "GET /payments HTTP/1.1" 200 -
+2025-05-29 21:31:38,220 - INFO - 127.0.0.1 - - [29/May/2025 21:31:38] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-29 21:31:41,152] INFO in app: Found 2 loans for customer 202505000001
+2025-05-29 21:31:41,152 - INFO - Found 2 loans for customer 202505000001
+[2025-05-29 21:31:41,153] INFO in app: Customer ID: 1
+2025-05-29 21:31:41,153 - INFO - Customer ID: 1
+[2025-05-29 21:31:41,154] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'active')]
+2025-05-29 21:31:41,154 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'active')]
+2025-05-29 21:31:41,161 - INFO - 127.0.0.1 - - [29/May/2025 21:31:41] "GET /customer/202505000001/account HTTP/1.1" 200 -
+[2025-05-29 21:31:45,282] INFO in app: Found 2 loans for customer 202505000001
+2025-05-29 21:31:45,282 - INFO - Found 2 loans for customer 202505000001
+[2025-05-29 21:31:45,283] INFO in app: Customer ID: 1
+2025-05-29 21:31:45,283 - INFO - Customer ID: 1
+[2025-05-29 21:31:45,284] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'active')]
+2025-05-29 21:31:45,284 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'active')]
+2025-05-29 21:31:45,293 - INFO - 127.0.0.1 - - [29/May/2025 21:31:45] "GET /customer/202505000001/account?section=settlement HTTP/1.1" 200 -
+2025-05-29 21:32:01,852 - INFO - 127.0.0.1 - - [29/May/2025 21:32:01] "[32mPOST /settle_loan/2 HTTP/1.1[0m" 302 -
+[2025-05-29 21:32:02,138] INFO in app: Found 2 loans for customer 202505000001
+2025-05-29 21:32:02,138 - INFO - Found 2 loans for customer 202505000001
+[2025-05-29 21:32:02,139] INFO in app: Customer ID: 1
+2025-05-29 21:32:02,139 - INFO - Customer ID: 1
+[2025-05-29 21:32:02,139] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client')]
+2025-05-29 21:32:02,139 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client')]
+2025-05-29 21:32:02,158 - INFO - 127.0.0.1 - - [29/May/2025 21:32:02] "GET /customer/202505000001/account?section=settlement HTTP/1.1" 200 -
+[2025-05-29 21:32:06,159] INFO in app: Found 2 loans for customer 202505000001
+2025-05-29 21:32:06,159 - INFO - Found 2 loans for customer 202505000001
+[2025-05-29 21:32:06,160] INFO in app: Customer ID: 1
+2025-05-29 21:32:06,160 - INFO - Customer ID: 1
+[2025-05-29 21:32:06,161] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client')]
+2025-05-29 21:32:06,161 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client')]
+2025-05-29 21:32:06,172 - INFO - 127.0.0.1 - - [29/May/2025 21:32:06] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+[2025-05-29 21:32:10,591] INFO in app: Found 2 loans for customer 202505000001
+2025-05-29 21:32:10,591 - INFO - Found 2 loans for customer 202505000001
+[2025-05-29 21:32:10,595] INFO in app: Customer ID: 1
+2025-05-29 21:32:10,595 - INFO - Customer ID: 1
+[2025-05-29 21:32:10,602] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client')]
+2025-05-29 21:32:10,602 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client')]
+2025-05-29 21:32:10,611 - INFO - 127.0.0.1 - - [29/May/2025 21:32:10] "GET /customer/202505000001/account?section=additional HTTP/1.1" 200 -
+2025-05-29 21:32:36,248 - INFO - 127.0.0.1 - - [29/May/2025 21:32:36] "[32mPOST /apply_additional/1 HTTP/1.1[0m" 302 -
+[2025-05-29 21:32:36,515] INFO in app: Found 3 loans for customer 202505000001
+2025-05-29 21:32:36,515 - INFO - Found 3 loans for customer 202505000001
+[2025-05-29 21:32:36,516] INFO in app: Customer ID: 1
+2025-05-29 21:32:36,516 - INFO - Customer ID: 1
+[2025-05-29 21:32:36,518] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'active')]
+2025-05-29 21:32:36,518 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'active')]
+2025-05-29 21:32:36,533 - INFO - 127.0.0.1 - - [29/May/2025 21:32:36] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+2025-05-29 21:32:49,009 - INFO - 127.0.0.1 - - [29/May/2025 21:32:49] "GET /loans HTTP/1.1" 200 -
+2025-05-29 21:32:50,916 - INFO - 127.0.0.1 - - [29/May/2025 21:32:50] "[32mPOST /process_loan/3/approve HTTP/1.1[0m" 302 -
+2025-05-29 21:32:50,932 - INFO - 127.0.0.1 - - [29/May/2025 21:32:50] "GET /loans HTTP/1.1" 200 -
+[2025-05-29 21:32:55,839] INFO in app: [DISBURSEMENT] Loan #103000003 | Top-up of: None | Cash to Client: 1000000.0
+2025-05-29 21:32:55,839 - INFO - [DISBURSEMENT] Loan #103000003 | Top-up of: None | Cash to Client: 1000000.0
+2025-05-29 21:32:55,841 - INFO - 127.0.0.1 - - [29/May/2025 21:32:55] "GET /disbursements HTTP/1.1" 200 -
+2025-05-29 21:33:04,262 - INFO - 127.0.0.1 - - [29/May/2025 21:33:04] "[32mPOST /disbursements HTTP/1.1[0m" 302 -
+2025-05-29 21:33:04,272 - INFO - 127.0.0.1 - - [29/May/2025 21:33:04] "GET /disbursements HTTP/1.1" 200 -
+2025-05-29 21:47:17,208 - INFO - 127.0.0.1 - - [29/May/2025 21:47:17] "GET /loanbook HTTP/1.1" 200 -
+[2025-05-29 21:47:19,001] INFO in app: Found 3 loans for customer 202505000001
+2025-05-29 21:47:19,001 - INFO - Found 3 loans for customer 202505000001
+[2025-05-29 21:47:19,002] INFO in app: Customer ID: 1
+2025-05-29 21:47:19,002 - INFO - Customer ID: 1
+[2025-05-29 21:47:19,006] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'active')]
+2025-05-29 21:47:19,006 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'active')]
+2025-05-29 21:47:19,019 - INFO - 127.0.0.1 - - [29/May/2025 21:47:19] "GET /customer/202505000001/account HTTP/1.1" 200 -
+[2025-05-29 21:47:21,138] INFO in app: Found 3 loans for customer 202505000001
+2025-05-29 21:47:21,138 - INFO - Found 3 loans for customer 202505000001
+[2025-05-29 21:47:21,138] INFO in app: Customer ID: 1
+2025-05-29 21:47:21,138 - INFO - Customer ID: 1
+[2025-05-29 21:47:21,141] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'active')]
+2025-05-29 21:47:21,141 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'active')]
+2025-05-29 21:47:21,151 - INFO - 127.0.0.1 - - [29/May/2025 21:47:21] "GET /customer/202505000001/account?section=settlement HTTP/1.1" 200 -
+2025-05-29 21:47:30,940 - INFO - 127.0.0.1 - - [29/May/2025 21:47:30] "[32mPOST /settle_loan/3 HTTP/1.1[0m" 302 -
+[2025-05-29 21:47:31,221] INFO in app: Found 3 loans for customer 202505000001
+2025-05-29 21:47:31,221 - INFO - Found 3 loans for customer 202505000001
+[2025-05-29 21:47:31,222] INFO in app: Customer ID: 1
+2025-05-29 21:47:31,222 - INFO - Customer ID: 1
+[2025-05-29 21:47:31,224] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'settled_client')]
+2025-05-29 21:47:31,224 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'settled_client')]
+2025-05-29 21:47:31,246 - INFO - 127.0.0.1 - - [29/May/2025 21:47:31] "GET /customer/202505000001/account?section=settlement HTTP/1.1" 200 -
+[2025-05-29 21:47:36,193] INFO in app: Found 3 loans for customer 202505000001
+2025-05-29 21:47:36,193 - INFO - Found 3 loans for customer 202505000001
+[2025-05-29 21:47:36,194] INFO in app: Customer ID: 1
+2025-05-29 21:47:36,194 - INFO - Customer ID: 1
+[2025-05-29 21:47:36,194] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'settled_client')]
+2025-05-29 21:47:36,194 - INFO - Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'settled_client')]
+2025-05-29 21:47:36,209 - INFO - 127.0.0.1 - - [29/May/2025 21:47:36] "GET /customer/202505000001/account?section=statement HTTP/1.1" 200 -
+2025-05-29 22:17:10,547 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-29 22:17:10,547 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-29 23:22:20,560 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-29 23:22:20,561 - INFO - [33mPress CTRL+C to quit[0m
