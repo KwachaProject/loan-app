@@ -269,6 +269,8 @@ class User(db.Model, UserMixin):
     active = db.Column(db.Boolean, default=True, nullable=False)  # ✅
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id', name='fk_users_role_id'))
 
+    role = db.relationship('Role', backref='users')
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -282,6 +284,18 @@ class User(db.Model, UserMixin):
         db.UniqueConstraint('username', name='uq_users_username'),
         db.UniqueConstraint('email', name='uq_users_email'),
     )
+
+    def __init__(self, **kwargs):
+        role = kwargs.pop('role', None)  # handle it explicitly
+        super(User, self).__init__(**kwargs)
+
+        if role:
+            self.role = role
+        elif self.role is None:
+            default_role = Role.query.filter_by(default=True).first()
+            if default_role:
+                self.role = default_role
+
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -867,26 +881,38 @@ from flask.cli import with_appcontext
 @click.command("create-admin")
 @with_appcontext
 def create_admin():
-    """Simple admin creation without relationships"""
     email = os.getenv("ADMIN_EMAIL")
     password = os.getenv("ADMIN_PASSWORD")
     
     if not email or not password:
         raise click.ClickException("ADMIN_EMAIL and ADMIN_PASSWORD must be set")
 
-    if User.query.filter_by(email=email).first():
-        click.echo(f"ℹ️  Admin exists: {email}")
-        return
+    # Find or create the admin role
+    admin_role = Role.query.filter_by(name='admin').first()
+    if not admin_role:
+        click.echo("⚠️ Admin role not found. Creating it...")
+        admin_role = Role(name='admin', permissions=0xff)  # All permissions
+        db.session.add(admin_role)
+        db.session.commit()
 
-    try:
-        admin = User(email=email, role="admin")
+    existing = User.query.filter_by(email=email).first()
+    if existing:
+        # Update existing user to admin
+        existing.role_id = admin_role.id
+        existing.set_password(password)
+        db.session.commit()
+        click.echo(f"🛡️ User promoted to admin: {email}")
+    else:
+        # Create new admin
+        admin = User(
+            email=email,
+            role_id=admin_role.id,  # Use role_id instead of role
+            is_active=True
+        )
         admin.set_password(password)
         db.session.add(admin)
         db.session.commit()
         click.echo(f"✅ Admin created: {email}")
-    except Exception as e:
-        click.echo(f"❌ Error creating admin: {str(e)}")
-        db.session.rollback()
 
 def register_cli_commands(app):
     app.cli.add_command(create_admin)
