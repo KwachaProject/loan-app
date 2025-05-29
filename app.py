@@ -262,7 +262,7 @@ class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True)  # ✅
-    password_hash = db.Column(db.String(128), nullable=False)  # ✅
+    password_hash = db.Column(db.String(512), nullable=False)  # ✅
     email = db.Column(db.String(150), nullable=False)  # ✅
     active = db.Column(db.Boolean, default=True, nullable=False)  # ✅
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)  # ✅
@@ -819,31 +819,32 @@ def create_roles_and_permissions():
     
     db.session.commit()
 
-@app.cli.command("create-admin")
+import os
+from flask.cli import with_appcontext
+import click
+from app import db, User
+
+@click.command("create-admin")
+@with_appcontext
 def create_admin():
-    """Create the initial admin user"""
-    admin_role = Role.query.filter_by(name='admin').first()
-    
-    if not admin_role:
-        print("Admin role not found! Running init-rbac first...")
-        init_rbac()
-        admin_role = Role.query.filter_by(name='admin').first()
-    
-    if not User.query.filter_by(username='admin').first():
-        admin_password = os.getenv('ADMIN_PASSWORD', 'admin123')
-        
-        admin = User(
-            username='admin',
-            email=os.getenv('ADMIN_EMAIL', 'admin@example.com'),
-            role=admin_role,
-            active=True
-        )
-        admin.set_password(admin_password)
+    email = os.getenv("ADMIN_EMAIL")
+    password = os.getenv("ADMIN_PASSWORD")
+    if not email or not password:
+        raise click.ClickException("ADMIN_EMAIL or ADMIN_PASSWORD not set in environment.")
+
+    existing = User.query.filter_by(email=email).first()
+    if existing:
+        click.echo(f"ℹ️ Admin user already exists: {email}")
+    else:
+        admin = User(email=email, role="admin")
+        admin.set_password(password)
         db.session.add(admin)
         db.session.commit()
-        print(f"Admin user created with password: {admin_password}")
-    else:
-        print("Admin user already exists")
+        click.echo(f"✅ Admin user created: {email}")
+
+def register_cli_commands(app):
+    app.cli.add_command(create_admin)
+
     
 @property
 def full_name(self):
@@ -2975,93 +2976,101 @@ def debug_loans():
 @login_required
 @role_required('finance_officer', 'admin')
 def settle_loan(loan_id):
+    loan = LoanApplication.query.get_or_404(loan_id)
+    closure_type = request.form.get('closure_type', 'settlement')
+    
+    if not loan or loan.loan_state != 'active':
+        flash('Loan is not active', 'danger')
+        return redirect(request.referrer)
+    
+    # Get settlement file
+    if 'settle_file' not in request.files:
+        flash('No settlement proof provided', 'danger')
+        return redirect(request.referrer)
+    
+    file = request.files['settle_file']
+    if file.filename == '':
+        flash('No selected file', 'danger')
+        return redirect(request.referrer)
+    
     try:
-        loan = LoanApplication.query.get_or_404(loan_id)
-        closure_type = request.form.get('closure_type', 'settlement').lower()
+        # Save settlement file
+        filename = secure_filename(f"settlement_{loan.loan_number}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}{os.path.splitext(file.filename)[1]}")
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'settlements', filename)
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        file.save(filepath)
         
-        # Validate required fields
-        if 'settle_file' not in request.files:
-            raise ValueError("Settlement proof document is required")
-            
-        settlement_file = request.files['settle_file']
-        if settlement_file.filename == '':
-            raise ValueError("No file selected")
-
-        # Calculate settlement amount based on type
-        if closure_type == 'settlement':
-            amount = loan.settlement_balance  # Principal + interest
-        elif closure_type in ['insurance', 'write_off']:
-            amount = loan.current_balance  # Principal only
-        else:
-            raise ValueError("Invalid settlement type")
-
-        # Save settlement proof
-        timestamp = datetime.utcnow().strftime('%Y%m%d%H%M%S')
-        filename = secure_filename(f"{loan.loan_number}_{closure_type}_{timestamp}_{settlement_file.filename}")
-        settlement_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'settlements')
-        os.makedirs(settlement_dir, exist_ok=True)
-        filepath = os.path.join(settlement_dir, filename)
-        settlement_file.save(filepath)
-
         # Update loan status
-        loan.status = 'closed'
         loan.loan_state = 'settled_client' if closure_type == 'settlement' else closure_type
         loan.closure_type = closure_type
         loan.closure_date = datetime.utcnow()
-        loan.settlement_amount = amount
-        loan.settlement_proof = filename
-
-        # Create settlement payment record
+        
+        # Create settlement payment
+        if closure_type == 'settlement':
+            amount = loan.settlement_balance
+        else:
+            amount = loan.current_balance
+        
         payment = Payment(
             loan_id=loan.id,
             amount=amount,
             method='settlement',
             status='completed',
-            reference=f"{closure_type.replace('_', ' ').title()} Settlement",
-            created_at=datetime.utcnow()
+            reference=f"{closure_type} settlement for {loan.loan_number}",
+            settlement_proof=filename
         )
+        
         db.session.add(payment)
-
+        db.session.add(loan)
         db.session.commit()
-        flash(f"Loan {loan.loan_number} successfully closed via {closure_type.replace('_', ' ')}", "success")
-        return redirect(url_for('customer_account', file_number=loan.customer.file_number))
-
+        
+        flash(f'Loan {loan.loan_number} settled successfully', 'success')
     except Exception as e:
         db.session.rollback()
-        app.logger.error(f"Failed to close loan {loan_id}: {str(e)}", exc_info=True)
-        flash(f"Failed to close loan: {str(e)}", "danger")
-        return redirect(request.referrer or url_for('loanbook'))
+        flash(f'Error settling loan: {str(e)}', 'danger')
+    
+    return redirect(request.referrer)
 
-def process_csv_writeoffs(csv_file):
-    try:
-        if not allowed_file(csv_file.filename, {'csv'}):
-            raise ValueError("Only CSV files are allowed")
-
-        stream = io.StringIO(csv_file.stream.read().decode("UTF8"))
-        csv_reader = csv.DictReader(stream)
-        
-        processed = 0
-        for row in csv_reader:
-            try:
-                loan = LoanApplication.query.filter_by(loan_number=row['loan_number']).first()
-                if loan and loan.loan_state == 'active':
+@app.route('/batch_write_off', methods=['POST'])
+@login_required
+@role_required('finance_officer', 'admin')
+def batch_write_off():
+    if 'csv_file' not in request.files:
+        flash('No file part', 'danger')
+        return redirect(request.referrer)
+    
+    file = request.files['csv_file']
+    if file.filename == '':
+        flash('No selected file', 'danger')
+        return redirect(request.referrer)
+    
+    if file and allowed_file(file.filename):
+        try:
+            stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+            csv_reader = csv.DictReader(stream)
+            
+            processed = 0
+            for row in csv_reader:
+                loan_number = row.get('loan_number')
+                reason = row.get('reason', 'No reason provided')
+                
+                loan = LoanApplication.query.filter_by(loan_number=loan_number).first()
+                if loan:
                     loan.loan_state = 'written_off'
                     loan.closure_type = 'write_off'
                     loan.closure_date = datetime.utcnow()
-                    loan.settlement_amount = loan.current_balance
                     db.session.add(loan)
                     processed += 1
-            except Exception as e:
-                app.logger.error(f"Error processing loan {row.get('loan_number')}: {str(e)}")
-                
-        db.session.commit()
-        flash(f"Successfully processed {processed} write-offs from CSV", "success")
-        return redirect(url_for('loanbook'))
-        
-    except Exception as e:
-        db.session.rollback()
-        flash(f"CSV processing failed: {str(e)}", "danger")
-        return redirect(request.referrer)
+            
+            db.session.commit()
+            flash(f'Successfully processed {processed} loans', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error processing CSV: {str(e)}', 'danger')
+    else:
+        flash('Invalid file type', 'danger')
+    
+    return redirect(request.referrer)
     
 def validate_journal_entries(loan: LoanApplication):
     try:
