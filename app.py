@@ -3077,10 +3077,15 @@ def initialize_roles_permissions():
 
 import socket
 
-@app.route('/server-info')
+@app.route("/server-info")
 def server_info():
-    hostname = socket.gethostname()
-    return f"Running on server: {hostname}"
+    import socket
+    db_uri = app.config['SQLALCHEMY_DATABASE_URI']
+    return {
+        "hostname": socket.gethostname(),
+        "database_uri": db_uri,
+        "environment": os.getenv("FLASK_ENV", "development")
+    }
 
 
 
