@@ -184,11 +184,10 @@ app = Flask(__name__)
 
 
 # Use Postgres in production, SQLite locally
-env = os.getenv("FLASK_ENV", "development")  # Default to 'development' if not set
+uri = os.getenv("DATABASE_URL")
 
-if env == "production":
-    uri = os.getenv("DATABASE_URL")
-    if uri and uri.startswith("postgres://"):
+if uri:
+    if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
 else:
     uri = "sqlite:///customers.db"
