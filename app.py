@@ -267,8 +267,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(512), nullable=False)  # ✅
     email = db.Column(db.String(150), nullable=False)  # ✅
     active = db.Column(db.Boolean, default=True, nullable=False)  # ✅
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)  # ✅
-    role = db.relationship('Role')  # ✅ Relationship
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id', name='fk_users_role_id'))
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -280,7 +279,8 @@ class User(db.Model, UserMixin):
         return f'<User {self.username} - Role: {self.role.name}>'  # Access role.name
 
     __table_args__ = (
-        db.UniqueConstraint('email', name='uq_users_email'),  # ✅ Now works
+        db.UniqueConstraint('username', name='uq_users_username'),
+        db.UniqueConstraint('email', name='uq_users_email'),
     )
 
 class Role(db.Model):
@@ -867,20 +867,26 @@ from flask.cli import with_appcontext
 @click.command("create-admin")
 @with_appcontext
 def create_admin():
+    """Simple admin creation without relationships"""
     email = os.getenv("ADMIN_EMAIL")
     password = os.getenv("ADMIN_PASSWORD")
+    
     if not email or not password:
-        raise click.ClickException("ADMIN_EMAIL or ADMIN_PASSWORD not set in environment.")
+        raise click.ClickException("ADMIN_EMAIL and ADMIN_PASSWORD must be set")
 
-    existing = User.query.filter_by(email=email).first()
-    if existing:
-        click.echo(f"ℹ️ Admin user already exists: {email}")
-    else:
+    if User.query.filter_by(email=email).first():
+        click.echo(f"ℹ️  Admin exists: {email}")
+        return
+
+    try:
         admin = User(email=email, role="admin")
         admin.set_password(password)
         db.session.add(admin)
         db.session.commit()
-        click.echo(f"✅ Admin user created: {email}")
+        click.echo(f"✅ Admin created: {email}")
+    except Exception as e:
+        click.echo(f"❌ Error creating admin: {str(e)}")
+        db.session.rollback()
 
 def register_cli_commands(app):
     app.cli.add_command(create_admin)
