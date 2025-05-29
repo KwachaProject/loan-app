@@ -184,18 +184,20 @@ app = Flask(__name__)
 
 
 # Use Postgres in production, SQLite locally
-uri = os.getenv("DATABASE_URL")
+# Database configuration
+database_url = os.getenv("DATABASE_URL", "")
 
-if uri:
-    if uri.startswith("postgres://"):
-        uri = uri.replace("postgres://", "postgresql://", 1)
+if database_url:
+    # Fix PostgreSQL URL format if needed
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    print(f"Connected to PRODUCTION DB: PostgreSQL")
 else:
-    uri = "sqlite:///customers.db"
-
-app.config['SQLALCHEMY_DATABASE_URI'] = uri
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-print("Connected to DB:", app.config['SQLALCHEMY_DATABASE_URI'])
+    # Fallback to SQLite for development
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///customers.db"
+    print("Connected to DEVELOPMENT DB: sqlite:///customers.db")
 
 # Email config (example: Gmail — replace with your own)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -2064,7 +2066,8 @@ import logging
 # -------- Disbursement Routes --------
 
 @app.route('/disbursements', methods=['GET', 'POST'])
-@role_required("admin")
+@login_required
+@role_required("admin", "finance_officer")
 def disbursements():
     from sqlalchemy.orm import joinedload
     from datetime import datetime
@@ -2275,6 +2278,7 @@ Please find below the list of beneficiaries for funds transfer from our account:
         download_name='funds_transfer_instruction.pdf',
         mimetype='application/pdf'
     )
+
 
 @app.route('/payments', methods=['GET', 'POST'], endpoint='payments')
 @role_required("finance_officer", "admin")
