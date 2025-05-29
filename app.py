@@ -37,7 +37,7 @@ from typing import Dict, Union
 import logging
 from logging.handlers import RotatingFileHandler
 import sys
-
+from flask_migrate import upgrade
 
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
 if not os.path.exists(log_dir):
@@ -182,10 +182,10 @@ mail = Mail()
 # Create Flask app
 app = Flask(__name__)
 
-# Set environment
-env = os.getenv("FLASK_ENV", "development")
 
 # Use Postgres in production, SQLite locally
+env = os.getenv("FLASK_ENV", "development")  # Default to 'development' if not set
+
 if env == "production":
     uri = os.getenv("DATABASE_URL")
     if uri and uri.startswith("postgres://"):
@@ -195,6 +195,7 @@ else:
 
 app.config['SQLALCHEMY_DATABASE_URI'] = uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 print("Connected to DB:", app.config['SQLALCHEMY_DATABASE_URI'])
 
 # Email config (example: Gmail — replace with your own)
@@ -3079,18 +3080,23 @@ def validate_journal_entries(loan: LoanApplication):
         app.logger.error(f"Validation error: {str(e)}")
         raise AccountingError("General accounting validation failure") from e
 
-def create_tables():
-    with app.app_context():
-        db.create_all()
+from app import app, db
 
 def initialize_roles_permissions():
     with app.app_context():
         create_roles_and_permissions()
 
+def deploy():
+    with app.app_context():
+        # Apply any pending migrations
+        upgrade()
 
 if __name__ == '__main__':
-    # Only create tables if they don't exist
-    if not os.path.exists('instance/customers.db'):
-        create_tables()
-        initialize_roles_permissions()
+    try:
+        deploy()
+    except Exception as e:
+        print(f"Migration failed: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    initialize_roles_permissions()
     app.run(debug=True)
