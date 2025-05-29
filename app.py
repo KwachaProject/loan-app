@@ -39,7 +39,6 @@ from logging.handlers import RotatingFileHandler
 import sys
 
 
-
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
@@ -174,34 +173,59 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
     )
-# Configure the app to use a SQLite database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///customers.db'
+
+# Determine the environment: "production" or "development"
+db = SQLAlchemy()
+migrate = Migrate()
+mail = Mail()
+
+# Create Flask app
+app = Flask(__name__)
+
+# Set environment
+env = os.getenv("FLASK_ENV", "development")
+
+# Use Postgres in production, SQLite locally
+if env == "production":
+    uri = os.getenv("DATABASE_URL")
+    if uri and uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+else:
+    uri = "sqlite:///customers.db"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+print("Connected to DB:", app.config['SQLALCHEMY_DATABASE_URI'])
+
+# Email config (example: Gmail — replace with your own)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'youremail@example.com'
-app.config['MAIL_PASSWORD'] = 'your_app_password'  # Use App Passwords if Gmail
+app.config['MAIL_USERNAME'] = 'youremail@example.com'      # ✅ Replace!
+app.config['MAIL_PASSWORD'] = 'your_app_password_here'     # ✅ Replace!
 app.config['MAIL_DEFAULT_SENDER'] = 'youremail@example.com'
-app.config['DATABASE'] = os.path.join(app.instance_path, 'customers.db')
 
-mail = Mail(app)
-import os
+# File upload settings
+app.config['UPLOAD_FOLDER'] = 'uploads/documents'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'pdf', 'doc', 'docx'}
+
+# Security
+app.config['SECRET_KEY'] = 'your-secret-key-123'  # ✅ Change this in production!
+
+# Initialize extensions with app
+db.init_app(app)
+migrate.init_app(app, db)
+mail.init_app(app)
+
+login_manager = LoginManager(app)
+# Import models after initializing the db instance
+from app import db
 
 UPLOAD_FOLDER = 'uploads/documents'
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max upload size
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf', 'doc', 'docx'}
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'your-secret-key-123'  # Change this!
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
-# Initialize SQLAlchemy and Migrate instances
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-# Import models after initializing the db instance
-from app import db
 
 PRICING = {
     3:  {'rate': 0.035, 'origination': 0.15,  'insurance': 0.008,  'collection': 0.0025,  'crb': 3000},
