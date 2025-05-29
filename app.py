@@ -226,6 +226,18 @@ UPLOAD_FOLDER = 'uploads/documents'
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max upload size
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf', 'doc', 'docx'}
 
+import socket
+
+@app.route("/server-info")
+def server_info():
+    db_uri = app.config['SQLALCHEMY_DATABASE_URI']
+    env = os.getenv("FLASK_ENV", "development")
+    return {
+        "hostname": socket.gethostname(),
+        "database_uri": db_uri,
+        "environment": env
+    }
+
 
 PRICING = {
     3:  {'rate': 0.035, 'origination': 0.15,  'insurance': 0.008,  'collection': 0.0025,  'crb': 3000},
@@ -3074,19 +3086,6 @@ def create_tables():
 def initialize_roles_permissions():
     with app.app_context():
         create_roles_and_permissions()
-
-import socket
-
-@app.route("/server-info")
-def server_info():
-    import socket
-    db_uri = app.config['SQLALCHEMY_DATABASE_URI']
-    return {
-        "hostname": socket.gethostname(),
-        "database_uri": db_uri,
-        "environment": os.getenv("FLASK_ENV", "development")
-    }
-
 
 
 if __name__ == '__main__':
