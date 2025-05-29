@@ -821,26 +821,29 @@ def create_roles_and_permissions():
 
 @app.cli.command("create-admin")
 def create_admin():
-    """Create admin user"""
+    """Create the initial admin user"""
     admin_role = Role.query.filter_by(name='admin').first()
+    
     if not admin_role:
-        print("Admin role not found! Run 'flask init-rbac' first")
-        return
-
+        print("Admin role not found! Running init-rbac first...")
+        init_rbac()
+        admin_role = Role.query.filter_by(name='admin').first()
+    
     if not User.query.filter_by(username='admin').first():
+        admin_password = os.getenv('ADMIN_PASSWORD', 'admin123')
+        
         admin = User(
             username='admin',
-            email='admin@example.com',
+            email=os.getenv('ADMIN_EMAIL', 'admin@example.com'),
             role=admin_role,
             active=True
         )
-        admin.set_password('admin123')
+        admin.set_password(admin_password)
         db.session.add(admin)
         db.session.commit()
-        print("Admin user created with password 'admin123'")
+        print(f"Admin user created with password: {admin_password}")
     else:
         print("Admin user already exists")
-
     
 @property
 def full_name(self):
@@ -3088,6 +3091,14 @@ from app import app, db
 def initialize_roles_permissions():
     with app.app_context():
         create_roles_and_permissions()
+
+@app.route('/db-check')
+def db_check():
+    try:
+        db.engine.connect()
+        return "Database connection successful!", 200
+    except Exception as e:
+        return f"Database connection failed: {str(e)}", 500
 
 def deploy():
     with app.app_context():
