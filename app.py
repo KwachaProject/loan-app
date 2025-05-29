@@ -552,6 +552,30 @@ class LoanApplication(db.Model):
 
         return round(capitalized - paid_principal, 2)
 
+    def recalculate_balance(self):
+        """Recalculate loan balance after settlement"""
+        config = PRICING.get(self.term_months, {})
+        loan_amount = self.loan_amount or 0
+        
+        # Calculate capitalized amount
+        capitalized = (
+            loan_amount
+            + (loan_amount * config.get('origination', 0))
+            + (loan_amount * config.get('insurance', 0))
+            + config.get('crb', 0)
+        )
+        
+        # Calculate paid principal
+        paid_principal = sum(
+            p.allocation.principal for p in self.payments 
+            if p.allocation and p.method != 'settlement'
+        )
+        
+        # Update balance fields
+        self.current_balance = max(round(capitalized - paid_principal, 2), 0)
+        self.settlement_balance = self.current_balance
+        self.top_up_balance = self.current_balance
+
 class Disbursement(db.Model):
     __tablename__ = 'disbursements'
 
@@ -614,6 +638,12 @@ from sqlalchemy import event
 @event.listens_for(Payment, 'after_insert')
 def allocate_payment_listener(mapper, connection, target):
     session = object_session(target)
+    
+    if target.method in ('settlement', 'internal_topup', 'internal_settlement'):
+        app.logger.info(f"Skipping allocation for {target.method} payment")
+        return
+    
+    
     if not session:
         raise RuntimeError("No active session found for payment allocation.")
 
@@ -639,6 +669,10 @@ def allocate_payment_listener(mapper, connection, target):
 
 def allocate_payment(payment: Payment, loan: LoanApplication):
     session = object_session(payment)
+    
+    if payment.method == 'settlement':
+        return
+    
     if not session:
         raise RuntimeError("No active session for allocation")
 
@@ -2983,7 +3017,6 @@ def settle_loan(loan_id):
         flash('Loan is not active', 'danger')
         return redirect(request.referrer)
     
-    # Get settlement file
     if 'settle_file' not in request.files:
         flash('No settlement proof provided', 'danger')
         return redirect(request.referrer)
@@ -3000,17 +3033,17 @@ def settle_loan(loan_id):
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         file.save(filepath)
         
-        # Update loan status
-        loan.loan_state = 'settled_client' if closure_type == 'settlement' else closure_type
-        loan.closure_type = closure_type
-        loan.closure_date = datetime.utcnow()
-        
-        # Create settlement payment
+        # Calculate amounts
         if closure_type == 'settlement':
             amount = loan.settlement_balance
-        else:
+            principal = loan.current_balance
+            interest = amount - principal
+        else:  # insurance or write_off
             amount = loan.current_balance
+            principal = amount
+            interest = 0
         
+        # Create payment with manual allocation
         payment = Payment(
             loan_id=loan.id,
             amount=amount,
@@ -3019,15 +3052,37 @@ def settle_loan(loan_id):
             reference=f"{closure_type} settlement for {loan.loan_number}",
             settlement_proof=filename
         )
-        
         db.session.add(payment)
-        db.session.add(loan)
-        db.session.commit()
+        db.session.flush()  # Get payment ID
         
-        flash(f'Loan {loan.loan_number} settled successfully', 'success')
+        # Manual allocation for settlement
+        allocation = PaymentAllocation(
+            payment_id=payment.id,
+            principal=principal,
+            interest=interest,
+            fees=0.0
+        )
+        db.session.add(allocation)
+        
+        # Update loan status
+        loan.loan_state = 'settled_client' if closure_type == 'settlement' else closure_type
+        loan.closure_type = closure_type
+        loan.closure_date = datetime.utcnow()
+        
+        # Clear repayment schedules
+        for schedule in loan.repayment_schedules:
+            if schedule.status != 'paid':
+                schedule.status = 'settled'
+        
+        # Recalculate loan balance
+        loan.recalculate_balance()
+
+        db.session.commit()
+        flash(f'Loan {loan.loan_number} settled successfully. Balance cleared.', 'success')
     except Exception as e:
         db.session.rollback()
         flash(f'Error settling loan: {str(e)}', 'danger')
+        app.logger.error(f"Settlement error: {str(e)}", exc_info=True)
     
     return redirect(request.referrer)
 
