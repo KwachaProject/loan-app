@@ -3075,6 +3075,15 @@ def initialize_roles_permissions():
     with app.app_context():
         create_roles_and_permissions()
 
+import socket
+
+@app.route('/server-info')
+def server_info():
+    hostname = socket.gethostname()
+    return f"Running on server: {hostname}"
+
+
+
 if __name__ == '__main__':
     # Only create tables if they don't exist
     if not os.path.exists('instance/customers.db'):
