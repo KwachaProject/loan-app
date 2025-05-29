@@ -1,0 +1,49 @@
+{% elif section == 'settlement' %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        Settlement Details
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Financial Breakdown</h5>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Outstanding Principal</th>
+                        <td>MWK {{ "%.2f"|format(loan.calculated.current_balance) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Settlement Interest</th>
+                        <td>MWK {{ "%.2f"|format(loan.calculated.settlement_interest) }}</td>
+                    </tr>
+                    <tr class="table-success">
+                        <th>Total Settlement Amount</th>
+                        <td>MWK {{ "%.2f"|format(loan.calculated.settlement_balance) }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h5>Accounting Impact</h5>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>GL Account</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr>
+                        <td>Loan Receivable</td>
+                        <td class="text-danger">-MWK {{ "%.2f"|format(loan.calculated.current_balance) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Interest Income</td>
+                        <td class="text-success">+MWK {{ "%.2f"|format(loan.calculated.settlement_interest) }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <form method="POST" action="{{ url_for('settle_loan', loan_id=loan.id) }}">
+            <!-- Existing form elements -->
+        </form>
+    </div>
+</div>
+{% endif %}

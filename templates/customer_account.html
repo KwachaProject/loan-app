@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Account - {{ customer.first_name }} {{ customer.last_name }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="card border-primary shadow">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">
+        <i class="bi bi-person-badge me-2"></i>Customer Account
+      </h2>
+      <p class="mb-0 mt-2">
+        <strong>Name:</strong> {{ customer.first_name }} {{ customer.last_name }} |
+        <strong>File Number:</strong> {{ customer.file_number }}
+      </p>
+    </div>
+
+    <div class="card-body">
+      <!-- Nav Tabs -->
+      <ul class="nav nav-tabs mb-4" id="customerTabs">
+        {% for label, key in [('Statement', 'statement'), ('Additional Loan', 'additional'), ('Top up', 'topup'), ('Settlement', 'settlement')] %}
+        <li class="nav-item">
+          <a class="nav-link {% if section == key or (not section and key == 'statement') %}active{% endif %}"
+             href="{{ url_for('customer_account', file_number=customer.file_number, section=key) }}">
+            <i class="bi bi-{% if key == 'statement' %}file-text{% elif key == 'additional' %}plus-circle{% elif key == 'topup' %}arrow-up-circle{% else %}check-circle{% endif %} me-1"></i>
+            {{ label }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content bg-light p-4 rounded">
+        {% if section == 'statement' or not section %}
+          <div class="card border-primary">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">
+                <i class="bi bi-file-text me-2"></i>Loan Statements
+              </h4>
+            </div>
+            <div class="card-body">
+              {% if loans %}
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead class="bg-primary text-white">
+                    <tr>
+                      <th>Loan Statement</th>
+                      <th>Status</th>
+                      <th>Current Balance</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for loan in loans %}
+                    <tr>
+                      <td>
+                        {% if loan.loan_number %}
+                          <a href="{{ url_for('loan_statement', loan_number=loan.loan_number) }}" class="text-primary">
+                            <i class="bi bi-file-earmark-text me-1"></i>Statement #{{ loan.loan_number }}
+                          </a>
+                        {% else %}
+                          N/A
+                        {% endif %}
+                      </td>
+                      <td>
+                        <span class="badge 
+                          {% if loan.loan_state == 'active' %}bg-primary
+                          {% elif loan.loan_state == 'settled_client' %}bg-success
+                          {% elif loan.loan_state == 'written_off' %}bg-danger
+                          {% elif loan.loan_state == 'closed' %}bg-secondary
+                          {% else %}bg-warning{% endif %}">
+                          {{ loan.loan_state|upper|replace('_', ' ') }}
+                        </span>
+                      </td>
+                      <td>MWK {{ "%.2f"|format(loan.current_balance or 0.0) }}</td>
+                      <td>
+                        {% if loan.loan_number %}
+                          <a href="{{ url_for('loan_statement', loan_number=loan.loan_number) }}" 
+                             class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye me-1"></i>View
+                          </a>
+                        {% else %}
+                          <button class="btn btn-sm btn-outline-secondary" disabled>N/A</button>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i>No loans found for this customer.
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+        {% elif section == 'additional' %}
+          <div class="card border-primary">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">
+                <i class="bi bi-plus-circle me-2"></i>Additional Loan Application
+              </h4>
+            </div>
+            <div class="card-body">
+              {% if loans %}
+              <form method="POST" action="{{ url_for('apply_additional_loan', loan_id=loans[0].id) }}" enctype="multipart/form-data">
+                <div class="row mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Amount Requested</label>
+                    <input type="number" name="amount_requested" step="0.01" class="form-control" required>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Tenure (months)</label>
+                    <select name="tenure" class="form-select" required>
+                      {% for months in [3, 6, 9, 12, 18, 24, 36, 48] %}
+                      <option value="{{ months }}">{{ months }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label"><i class="bi bi-file-earmark-text me-1"></i>Loan Form</label>
+                  <input type="file" name="loan_form" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label"><i class="bi bi-receipt me-1"></i>Bank Payslip</label>
+                  <input type="file" name="bank_payslip" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label"><i class="bi bi-camera me-1"></i>Live Photo</label>
+                  <input type="file" name="live_photo" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="bi bi-send me-1"></i>Submit Additional Loan
+                </button>
+              </form>
+              {% else %}
+                <div class="alert alert-warning">
+                  <i class="bi bi-exclamation-triangle me-2"></i>No loans eligible for additional funding.
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+        {% elif section == 'topup' %}
+        <div class="card border-primary">
+          <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+              <i class="bi bi-arrow-up-circle me-2"></i>Top-Up Loan
+            </h4>
+          </div>
+          <div class="card-body">
+            {% if loans %}
+            <form id="topupForm" method="POST" enctype="multipart/form-data" action="#">
+              <div class="mb-3">
+                <label class="form-label">Select Existing Loan</label>
+                <select id="existingLoanSelect" name="existing_loan_id" class="form-select" required>
+                  <option disabled selected>-- Choose Loan --</option>
+                  {% for loan in loans %}
+                  <option value="{{ loan.id }}" data-balance="{{ loan.top_up_balance or 0 }}">
+                    Loan #{{ loan.loan_number or 'N/A' }} | Balance: MWK {{ "%.2f"|format(loan.top_up_balance or 0.0) }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-4">
+                  <label class="form-label">Amount Requested</label>
+                  <input type="number" step="0.01" name="amount_requested" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Top-Up Balance</label>
+                  <input type="number" id="topUpBalance" class="form-control" readonly>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Cash to Client</label>
+                  <input type="number" id="cashToClient" class="form-control" readonly>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Tenure (months)</label>
+                <select name="tenure" class="form-select" required>
+                  {% for months in [3, 6, 9, 12, 18, 24, 36, 48] %}
+                  <option value="{{ months }}">{{ months }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label"><i class="bi bi-file-earmark-text me-1"></i>Loan Form</label>
+                <input type="file" name="loan_form" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label"><i class="bi bi-receipt me-1"></i>Bank Payslip</label>
+                <input type="file" name="bank_payslip" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label"><i class="bi bi-camera me-1"></i>Live Photo</label>
+                <input type="file" name="live_photo" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-send me-1"></i>Submit Top-Up
+              </button>
+            </form>
+        {% endif %}
+
+        {% elif section == 'settlement' %}
+          <div class="card border-primary">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">
+                <i class="bi bi-check-circle me-2"></i>Loan Settlement
+              </h4>
+            </div>
+            <div class="card-body">
+              <!-- CSV Batch Write-Off Section -->
+              <div class="card mb-4 border-danger">
+                <div class="card-header bg-danger text-white">
+                  <h5 class="mb-0">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i>Batch Write-Off (CSV Upload)
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <form method="POST" action="{{ url_for('settle_loan', loan_id=0) }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                      <label class="form-label">Upload CSV File</label>
+                      <input type="file" name="csv_file" class="form-control" accept=".csv" required>
+                      <small class="text-muted">CSV format: loan_number,reason (must include header row)</small>
+                    </div>
+                    <button type="submit" class="btn btn-danger">
+                      <i class="bi bi-upload me-1"></i>Process Batch Write-Off
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Individual Loan Settlement -->
+              {% set active_loans = loans | selectattr('loan_state', 'equalto', 'active') | list %}
+              {% if active_loans %}
+              <form method="POST" enctype="multipart/form-data">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead class="bg-primary text-white">
+                      <tr>
+                        <th>Loan Number</th>
+                        <th>Settlement Type</th>
+                        <th>Settlement Amount</th>
+                        <th>Proof Document</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for loan in active_loans %}
+                      <tr>
+                        <td>{{ loan.loan_number or 'N/A' }}</td>
+                        <td>
+                          <select name="closure_type_{{ loan.loan_number }}" class="form-select form-select-sm settlement-type-select" data-loan-number="{{ loan.loan_number }}" required>
+                            <option value="settlement" data-amount="{{ loan.settlement_balance }}">
+                              Normal (MWK {{ "%.2f"|format(loan.settlement_balance) }})
+                            </option>
+                            <option value="insurance" data-amount="{{ loan.current_balance }}">
+                              Insurance (MWK {{ "%.2f"|format(loan.current_balance) }})
+                            </option>
+                            <option value="write_off" data-amount="{{ loan.current_balance }}">
+                              Write-Off (MWK {{ "%.2f"|format(loan.current_balance) }})
+                            </option>
+                          </select>
+                        </td>
+                        <td>
+                          <input type="text" name="settlement_amount_{{ loan.loan_number }}" 
+                                 id="amount-{{ loan.loan_number }}"
+                                 value="MWK {{ '%.2f'|format(loan.settlement_balance) }}"
+                                 class="form-control-plaintext" readonly>
+                        </td>
+                        <td>
+                          <input type="file" name="settle_file_{{ loan.loan_number }}" class="form-control form-control-sm" required>
+                        </td>
+                        <td>
+                          <button type="submit" formaction="{{ url_for('settle_loan', loan_id=loan.id) }}" class="btn btn-sm btn-success">
+                            <i class="bi bi-check-circle me-1"></i>Settle
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </form>
+              {% else %}
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i>No active loans available for settlement.
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('topupForm');
+        const loanSelect = document.getElementById('existingLoanSelect');
+        const amountInput = form.querySelector('input[name="amount_requested"]');
+        const topUpInput = document.getElementById('topUpBalance');
+        const cashInput = document.getElementById('cashToClient');
+
+
+  // Handle form submission to dynamic URL
+      form.addEventListener('submit', function (e) {
+          const selectedLoanId = loanSelect.value;
+          if (!selectedLoanId) {
+            e.preventDefault();
+            alert('Please select an existing loan.');
+            return;
+          }
+          form.action = '/topup/' + selectedLoanId;
+        });
+
+  if (loanSelect && amountInput && topUpInput && cashInput) {
+    loanSelect.addEventListener('change', function () {
+      const selectedOption = loanSelect.options[loanSelect.selectedIndex];
+      const balance = parseFloat(selectedOption.getAttribute('data-balance')) || 0;
+      topUpInput.value = balance.toFixed(2);
+      updateCashToClient();
+    });
+
+    amountInput.addEventListener('input', updateCashToClient);
+
+    function updateCashToClient() {
+      const amount = parseFloat(amountInput.value) || 0;
+      const balance = parseFloat(topUpInput.value) || 0;
+      const cash = amount - balance;
+      cashInput.value = cash > 0 ? cash.toFixed(2) : '0.00';
+    }
+  }
+
+  // Settlement type selector updates settlement amount display
+  const settlementSelects = document.querySelectorAll('.settlement-type-select');
+  settlementSelects.forEach(select => {
+    select.addEventListener('change', function () {
+      const selectedOption = this.options[this.selectedIndex];
+      const amount = selectedOption.getAttribute('data-amount');
+      const loanNumber = this.getAttribute('data-loan-number');
+      const amountInput = document.getElementById('amount-' + loanNumber);
+      if (amountInput) {
+        amountInput.value = 'MWK ' + parseFloat(amount).toFixed(2);
+      }
+    });
+  });
+});
+</script>
+
+<style>
+  .card {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  }
+  .card-header {
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+  }
+  .nav-tabs .nav-link {
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 0.75rem 1.25rem;
+  }
+  .nav-tabs .nav-link.active {
+    background-color: #f8f9fa;
+    border-bottom-color: #f8f9fa;
+  }
+  .form-control-plaintext {
+    background-color: transparent;
+    border: none;
+    font-weight: 500;
+  }
+</style>
+{% endblock %}

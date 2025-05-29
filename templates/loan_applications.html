@@ -1,38 +1,46 @@
 {% extends "base.html" %}
 
+{% block title %}Loan Applications{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
-    <h2>Loan Applications</h2>
-    <table class="table table-bordered table-striped mt-3">
-        <thead>
-            <tr>
-                <th>Customer Name</th>
-                <th>Amount Requested</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for loan in loans %}
-            <tr>
-                <td>{{ loan.customer.first_name }} {{ loan.customer.last_name }}</td>
-                <td>${{ loan.amount }}</td>
-                <td>{{ loan.status }}</td>
-                <td>
-                    {% if loan.status == 'pending' %}
-                        <form action="{{ url_for('process_loan', loan_id=loan.id, action='approve') }}" method="post" style="display:inline;">
-                            <button class="btn btn-success btn-sm" type="submit">Approve</button>
-                        </form>
-                        <form action="{{ url_for('process_loan', loan_id=loan.id, action='reject') }}" method="post" style="display:inline;">
-                            <button class="btn btn-danger btn-sm" type="submit">Reject</button>
-                        </form>
-                    {% else %}
-                        {{ loan.status.capitalize() }}
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <h2 class="mb-4">Loan Applications</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Amount Requested</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in loans %}
+                <tr>
+                    <td>{{ loan.customer.first_name }} {{ loan.customer.last_name }}</td>
+                    <td>MWK {{ "%.2f"|format(loan.amount) }}</td>
+                    <td>{{ loan.status }}</td>
+                    <td>
+                        {% if loan.status == 'pending' %}
+                            <form action="{{ url_for('process_loan', loan_id=loan.id, action='approve') }}" method="post" style="display:inline;">
+                                <button class="btn btn-success btn-sm" type="submit">
+                                    <i class="bi bi-check-circle"></i> Approve
+                                </button>
+                            </form>
+                            <form action="{{ url_for('process_loan', loan_id=loan.id, action='reject') }}" method="post" style="display:inline;">
+                                <button class="btn btn-danger btn-sm" type="submit">
+                                    <i class="bi bi-x-circle"></i> Reject
+                                </button>
+                            </form>
+                        {% else %}
+                            <span class="badge bg-secondary text-capitalize">{{ loan.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

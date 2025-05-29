@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Loan Officer Dashboard</h2>
+<div class="notifications">
+    {% for notification in notifications %}
+    <div class="notification {% if not notification.read %}unread{% endif %}">
+        <a href="{{ url_for('mark_notification_read', notification_id=notification.id) }}">
+            {{ notification.message }}
+        </a>
+        <small>{{ notification.created_at|datetimeformat }}</small>
+    </div>
+    {% endfor %}
+</div>
+<!-- Add loan-specific content -->
+{% endblock %}

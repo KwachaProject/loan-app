@@ -1,15 +1,166 @@
 {% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
 {% block content %}
-<h2>Loan Officer Dashboard</h2>
-<div class="notifications">
-    {% for notification in notifications %}
-    <div class="notification {% if not notification.read %}unread{% endif %}">
-        <a href="{{ url_for('mark_notification_read', notification_id=notification.id) }}">
-            {{ notification.message }}
-        </a>
-        <small>{{ notification.created_at|datetimeformat }}</small>
-    </div>
-    {% endfor %}
+<div class="container-fluid">
+    <h2 class="mb-4 text-primary">Admin Dashboard</h2>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'users' %}active{% endif %}" href="{{ url_for('admin_users') }}">Users</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'permissions' %}active{% endif %}" href="{{ url_for('admin_permissions') }}">Permissions</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'notifications' %}active{% endif %}" href="{{ url_for('admin_notifications') }}">
+                Notifications
+                {% if unread_count and unread_count > 0 %}
+                    <span class="badge bg-danger ms-1">{{ unread_count }}</span>
+                {% endif %}
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'reports' %}active{% endif %}" href="{{ url_for('admin_reports') }}">Reports</a>
+        </li>
+    </ul>
+
+    <!-- Tab content -->
+    {% if section == 'users' %}
+        <h5 class="mb-3">Create New User</h5>
+        <form action="{{ url_for('create_user') }}" method="POST" class="row g-3 mb-4">
+            <div class="col-md-3">
+                <input type="text" name="username" class="form-control" placeholder="Username" required>
+            </div>
+            <div class="col-md-3">
+                <input type="email" name="email" class="form-control" placeholder="Email" required>
+            </div>
+            <div class="col-md-2">
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <div class="col-md-2">
+                <select name="role_id" class="form-select" required>
+                    <option value="">Select Role</option>
+                    {% for role in roles %}
+                        <option value="{{ role.id }}">{{ role.name|title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Create</button>
+            </div>
+        </form>
+
+        <h5>Existing Users</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <form action="{{ url_for('update_user_role') }}" method="POST" class="d-flex">
+                                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                                    <select name="role" class="form-select form-select-sm me-2" required>
+                                        {% for role in roles %}
+                                            <option value="{{ role.id }}" {% if user.role.id == role.id %}selected{% endif %}>{{ role.name|title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('toggle_user_status') }}" method="POST">
+                                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                                    <button type="submit" class="btn btn-sm {% if user.active %}btn-success{% else %}btn-secondary{% endif %}">
+                                        {{ 'Active' if user.active else 'Inactive' }}
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="text-center">
+                                <form action="{{ url_for('delete_user') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% elif section == 'permissions' %}
+        <h5 class="mb-3">Manage Role Permissions</h5>
+        <form action="{{ url_for('update_permissions') }}" method="POST">
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Role</th>
+                            {% for page in pages %}
+                                {% for action in actions %}
+                                    <th>{{ page|title }}<br><small>{{ action|title }}</small></th>
+                                {% endfor %}
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for role in roles %}
+                            <tr>
+                                <td>{{ role.name|title }}</td>
+                                {% for page in pages %}
+                                    {% for action in actions %}
+                                        <td>
+                                            <input type="checkbox" name="perm_{{ role.id }}_{{ page }}_{{ action }}"
+                                            {% if role.has_permission(page, action) %}checked{% endif %}>
+                                        </td>
+                                    {% endfor %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Update Permissions</button>
+        </form>
+
+    {% elif section == 'notifications' %}
+        <h5>Notifications</h5>
+        {% if notifications %}
+            <ul class="list-group">
+                {% for note in notifications %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center {% if not note.is_read %}fw-bold{% endif %}">
+                        <a href="{{ url_for('mark_notification_read', notification_id=note.id) }}"
+                           class="stretched-link text-decoration-none text-reset">
+                            {{ note.message }}
+                        </a>
+                        <span class="badge bg-light text-muted ms-3">
+                            {{ note.timestamp.strftime('%Y-%m-%d %H:%M') }}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No notifications at this time.</p>
+        {% endif %}
+
+    {% elif section == 'reports' %}
+        <h5>Reports & Metrics</h5>
+        <p class="text-muted">Coming soon. This section will include performance metrics and insights.</p>
+
+    {% else %}
+        <div class="alert alert-warning">Invalid section. Please check your route.</div>
+    {% endif %}
 </div>
-<!-- Add loan-specific content -->
 {% endblock %}

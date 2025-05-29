@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Loan for Existing Customer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Create Loan for Existing Customer</h2>
+
+  <form method="POST">
+    <div class="mb-3">
+      <label for="customer_id" class="form-label">Customer ID</label>
+      <input type="number" class="form-control" id="customer_id" name="customer_id" required>
+    </div>
+    <div class="mb-3">
+      <label for="loan_amount" class="form-label">Loan Amount</label>
+      <input type="number" step="0.01" class="form-control" id="loan_amount" name="loan_amount" required>
+    </div>
+    <div class="mb-3">
+      <label for="loan_term" class="form-label">Loan Term (Months)</label>
+      <input type="number" class="form-control" id="loan_term" name="loan_term" required>
+    </div>
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <select class="form-control" id="category" name="category" required>
+        <option value="civil_servant">Civil Servant</option>
+        <option value="private_sector">Private Sector</option>
+        <option value="sme">SME</option>
+        <option value="private">Private</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Loan</button>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

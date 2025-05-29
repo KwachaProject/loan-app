@@ -4,64 +4,175 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="fw-bold">Loan Disbursements</h2>
-    </div>
+    <div class="card border-primary shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="fw-bold mb-0">
+                <i class="bi bi-cash-coin me-2"></i>Loan Disbursements
+            </h2>
+        </div>
 
-    <p class="text-muted">Select one or more approved loans to generate a disbursement letter for the chosen bank.</p>
+        <div class="card-body">
+            <p class="lead text-muted mb-4">
+                <i class="bi bi-info-circle me-2"></i>Select approved loans to disburse and generate disbursement letters
+            </p>
 
-    <!-- Disbursement Form -->
-    <form method="POST" action="{{ url_for('disbursements') }}">
-        <!-- CSRF token if using Flask-WTF -->
-        {{ form.hidden_tag() if form else '' }}
-
-        <!-- Bank Dropdown -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="bank" class="form-label">Select Paying Bank</label>
-                <select id="bank" name="bank" class="form-select" required>
-                    <option value="">-- Select Bank --</option>
-                    <option value="NBS Bank" {% if selected_bank == 'NBS Bank' %}selected{% endif %}>NBS Bank</option>
-                    <option value="National Bank" {% if selected_bank == 'National Bank' %}selected{% endif %}>National Bank</option>
-                    <option value="Standard Bank" {% if selected_bank == 'Standard Bank' %}selected{% endif %}>Standard Bank</option>
-                    <option value="First Capital Bank" {% if selected_bank == 'First Capital Bank' %}selected{% endif %}>First Capital Bank</option>
-                </select>                
+            {% if selected_bank %}
+            <div class="alert alert-info d-flex align-items-center mt-3">
+                <i class="bi bi-bank2 me-2 fs-5"></i>
+                <div>
+                    Disbursing via: <strong>{{ selected_bank }}</strong>
+                </div>
             </div>
-        </div>
+            {% endif %}
 
-        <!-- Loan Table -->
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col">Select</th>
-                        <th scope="col">Customer Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Loan Amount</th>
-                        <th scope="col">Bank Account</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for loan in loans %}
-                        <tr>
-                            <td>
-                                <input class="form-check-input" type="checkbox" name="loan_ids[]" value="{{ loan.id }}">
-                            </td>
-                            <td>{{ loan.customer.first_name }} {{ loan.customer.last_name }}</td>
-                            <td>{{ loan.customer.email }}</td>
-                            <td>{{ "{:,.2f}".format(loan.loan_amount or 0) }}</td>
-                            <td>{{ loan.customer.bank_account }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            <form method="POST" action="{{ url_for('disbursements') }}">
+                {{ form.hidden_tag() if form else '' }}
 
-        <div class="mt-3 d-flex justify-content-end">
-            <button type="submit" class="btn btn-success">
-                <i class="bi bi-file-earmark-pdf"></i> Generate Disbursement Letter
-            </button>
+                <!-- Bank Selection Card -->
+                <div class="card border-primary mb-4 bg-primary-soft">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-md-8">
+                                <label for="bank" class="form-label fs-5 text-primary">
+                                    <i class="bi bi-bank2 me-2"></i>Paying Bank
+                                </label>
+                                <select id="bank" name="bank" class="form-select form-select-lg" required>
+                                    <option value="">-- Select Bank --</option>
+                                    <option value="NBS Bank" {% if selected_bank == 'NBS Bank' %}selected{% endif %}>NBS Bank</option>
+                                    <option value="National Bank" {% if selected_bank == 'National Bank' %}selected{% endif %}>National Bank</option>
+                                    <option value="Standard Bank" {% if selected_bank == 'Standard Bank' %}selected{% endif %}>Standard Bank</option>
+                                    <option value="First Capital Bank" {% if selected_bank == 'First Capital Bank' %}selected{% endif %}>First Capital Bank</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loans Table Card -->
+                <div class="card border-primary">
+                    <div class="card-header bg-light-primary">
+                        <h5 class="mb-0 text-primary">
+                            <i class="bi bi-list-check me-2"></i>Approved Loans
+                        </h5>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light-primary">
+                                    <tr>
+                                        <th class="text-center">
+                                            <input type="checkbox" id="selectAll" class="form-check-input">
+                                        </th>
+                                        <th class="text-primary">Loan #</th>
+                                        <th class="text-primary"><i class="bi bi-person me-1"></i>Customer</th>
+                                        <th class="text-primary"><i class="bi bi-envelope me-1"></i>Email</th>
+                                        <th class="text-primary">Cash to Client (MWK)</th>
+                                        <th class="text-primary"><i class="bi bi-credit-card me-1"></i>Bank Account</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if loans %}
+                                        {% for loan in loans %}
+                                            <tr>
+                                                <td class="text-center">
+                                                    <input class="form-check-input loan-checkbox" 
+                                                           type="checkbox" 
+                                                           name="loan_ids[]" 
+                                                           value="{{ loan.id }}">
+                                                </td>
+                                                <td>{{ loan.loan_number }}</td>
+                                                <td class="fw-medium">{{ loan.customer.first_name }} {{ loan.customer.last_name }}</td>
+                                                <td>{{ loan.customer.email }}</td>
+                                                <td class="fw-bold text-success">
+                                                    {{ "K{:,}".format(loan.cash_to_client|float) if loan.cash_to_client else "N/A" }}
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-primary-soft text-primary">
+                                                        {{ loan.customer.bank_account }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4">
+                                                <div class="text-muted">
+                                                    <i class="bi bi-info-circle fs-4"></i>
+                                                    <p class="mt-2 mb-0">No approved loans available for disbursement</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary & Submit Section -->
+                <div class="mt-4 d-flex justify-content-between align-items-center">
+                    <div class="text-primary">
+                        <span id="selectedCount">0</span> loans selected • 
+                        Total: MWK <span id="totalAmount">0.00</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg px-4">
+                        <i class="bi bi-currency-exchange me-2"></i>Disburse Selected Loans
+                    </button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
+
+<style>
+    .bg-primary-soft { background-color: #e3f2fd; }
+    .bg-light-primary { background-color: #f0f7ff; }
+    .form-check-input:checked { border-color: #0d6efd; }
+</style>
+
+<script>
+    const submitButton = document.querySelector('button[type="submit"]');
+
+    document.getElementById('selectAll').addEventListener('change', function(e) {
+        const checkboxes = document.querySelectorAll('.loan-checkbox');
+        checkboxes.forEach(cb => cb.checked = e.target.checked);
+        updateTotals();
+        toggleSubmitButton();
+    });
+
+    function updateTotals() {
+        const checked = document.querySelectorAll('.loan-checkbox:checked');
+        let total = 0;
+
+        checked.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const amountText = row.querySelector('td:nth-child(5)').textContent.replace(/[^\d.-]/g, '');
+            const amount = parseFloat(amountText) || 0;
+            total += amount;
+        });
+
+        document.getElementById('selectedCount').textContent = checked.length;
+        document.getElementById('totalAmount').textContent = total.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function toggleSubmitButton() {
+        const checked = document.querySelectorAll('.loan-checkbox:checked').length;
+        submitButton.disabled = checked === 0;
+    }
+
+    document.querySelectorAll('.loan-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            updateTotals();
+            toggleSubmitButton();
+        });
+    });
+
+    // Initialize on page load
+    updateTotals();
+    toggleSubmitButton();
+</script>
 {% endblock %}

@@ -3,50 +3,64 @@
 {% block title %}Dashboard - Kwacha Access Finance{% endblock %}
 
 {% block content %}
-    <div class="mb-4">
-        <h2>Kwacha Access Finance Loan Management System</h2>
-        <p class="lead">Welcome to the central dashboard. Choose a task based on your role:</p>
-    </div>
+<div class="mb-5">
+    <h2 class="text-primary fw-bold">Kwacha Access Finance</h2>
+    <p class="lead text-muted">Welcome to your dashboard. Select an action below based on your role.</p>
+</div>
 
-    <div class="row">
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Register Customer</h5>
-                    <p class="card-text">Create new customer profiles in the system.</p>
-                    <a href="{{ url_for('register_customer_debug') }}" class="btn btn-outline-primary">Register</a>
+<div class="row g-4">
+    <!-- Card: Register Customer -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow h-100">
+            <div class="card-body">
+                <div class="mb-3 text-primary">
+                    <i class="bi bi-person-plus-fill fs-2"></i>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Approve Customers</h5>
-                    <p class="card-text">Checker role for reviewing registrations.</p>
-                    <a href="{{ url_for('approve_customers') }}" class="btn btn-outline-primary">Approve</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Loan Applications</h5>
-                    <p class="card-text">Manage borrower loan submissions and disbursements.</p>
-                    <a href="{{ url_for('view_loans') }}" class="btn btn-outline-primary">View Loans</a>
-                </div>
+                <h5 class="card-title">Register Customer</h5>
+                <p class="card-text text-muted">Create and onboard new customers into the loan system.</p>
+                <a href="{{ url_for('register_customer_debug') }}" class="btn btn-primary">Register</a>
             </div>
         </div>
     </div>
 
-    <hr class="my-5">
+    <!-- Card: Approve Customers -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow h-100">
+            <div class="card-body">
+                <div class="mb-3 text-primary">
+                    <i class="bi bi-person-check-fill fs-2"></i>
+                </div>
+                <h5 class="card-title">Approve Customers</h5>
+                <p class="card-text text-muted">Checker role for verifying new registrations before activation.</p>
+                <a href="{{ url_for('approve_customers') }}" class="btn btn-primary">Approve</a>
+            </div>
+        </div>
+    </div>
 
-    <h5>User Roles Overview</h5>
-    <ul>
-        <li><strong>Makers:</strong> Register customers</li>
-        <li><strong>Checkers:</strong> Review and approve customers</li>
-        <li><strong>Admins:</strong> Manage records and deletions</li>
-        <li><strong>Applicants:</strong> Submit borrower loan applications</li>
+    <!-- Card: Loan Applications -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow h-100">
+            <div class="card-body">
+                <div class="mb-3 text-primary">
+                    <i class="bi bi-cash-coin fs-2"></i>
+                </div>
+                <h5 class="card-title">Loan Applications</h5>
+                <p class="card-text text-muted">Oversee applications and handle disbursements.</p>
+                <a href="{{ url_for('view_loans') }}" class="btn btn-primary">View Loans</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="my-5">
+
+<div class="mt-4">
+    <h5 class="fw-bold text-primary">User Role Responsibilities</h5>
+    <ul class="text-muted">
+        <li><strong>Makers:</strong> Register and submit customer profiles</li>
+        <li><strong>Checkers:</strong> Verify and approve customer registrations</li>
+        <li><strong>Admins:</strong> Manage and maintain system records</li>
+        <li><strong>Applicants:</strong> Submit and manage loan applications</li>
     </ul>
+</div>
 {% endblock %}

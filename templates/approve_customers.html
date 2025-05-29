@@ -1,55 +1,170 @@
+<!-- approve_customers.html -->
 {% extends "base.html" %}
 
 {% block title %}Approve Customers{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Approve Customers</h2>
-    
-    <!-- Debug Output -->
-    <div class="alert alert-secondary">
-        <strong>System Status:</strong> 
-        Found {{ customers|length }} customers pending approval
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0"><i class="bi bi-person-check me-2"></i>Customer Approvals</h2>
+        <div class="badge bg-primary-subtle text-primary fs-6">
+            <i class="bi bi-people me-1"></i>{{ customers|length }} Pending
+        </div>
     </div>
 
     {% if customers %}
     <form method="POST" action="{{ url_for('approve_customers') }}">
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">Select</th>
-                        <th scope="col">Full Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">National ID</th>
-                        <th scope="col">Amount Requested</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for customer in customers %}
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="form-check-input" 
-                                   name="customer_ids" 
-                                   value="{{ customer.id }}">
-                        </td>
-                        <td>{{ customer.first_name }} {{ customer.last_name }}</td>
-                        <td>{{ customer.email }}</td>
-                        <td>{{ customer.national_id }}</td>
-                        <td>MWK {{ "%.2f"|format(customer.amount_requested) }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list-task me-2"></i>Pending Approval Queue
+                    </h5>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" 
+                               id="selectAll" style="transform: scale(1.3)">
+                        <label class="form-check-label small ms-2" for="selectAll">
+                            Select All
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                <div class="table-responsive rounded-3">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 40px;"></th>
+                                <th>Customer Details</th>
+                                <th>Contact Information</th>
+                                <th>Financial Details</th>
+                                <th>Documents</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for customer in customers %}
+                            <tr class="{% if not loop.last %}border-bottom{% endif %}">
+                                <td>
+                                    <input type="checkbox" class="form-check-input customer-checkbox" 
+                                           name="customer_ids" value="{{ customer.id }}">
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px me-3">
+                                            <span class="symbol-label bg-primary-subtle text-primary">
+                                                {{ customer.first_name[0]|upper }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">{{ customer.first_name }} {{ customer.last_name }}</div>
+                                            <div class="text-muted small">ID: {{ customer.national_id }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <a href="mailto:{{ customer.email }}" class="text-dark">
+                                            <i class="bi bi-envelope me-2"></i>{{ customer.email }}
+                                        </a>
+                                        <span class="small text-muted mt-1">
+                                            <i class="bi bi-phone me-2"></i>{{ customer.phone }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span class="badge bg-success-subtle text-success mb-1">
+                                            MWK {{ "{:,.2f}".format(customer.amount_requested) }}
+                                        </span>
+                                        <span class="small text-muted">
+                                            <i class="bi bi-clock-history me-2"></i>
+                                            Submitted {{ customer.created_at }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                            data-bs-toggle="modal" data-bs-target="#docsModal{{ customer.id }}">
+                                        <i class="bi bi-file-earmark-text me-2"></i>View Docs
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-success mt-3">
-            <i class="bi bi-check-circle"></i> Approve Selected
-        </button>
+
+        <div class="sticky-bottom bg-white py-3 border-top shadow-sm">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    <span id="selectedCount">0</span> customers selected
+                </div>
+                <button type="submit" class="btn btn-success px-5 rounded-2">
+                    <i class="bi bi-check2-circle me-2"></i> Approve Selected
+                </button>
+            </div>
+        </div>
     </form>
     {% else %}
-    <div class="alert alert-warning">
-        No customers currently pending approval.
+    <div class="alert alert-primary d-flex align-items-center mt-4" role="alert">
+        <i class="bi bi-check2-all fs-4 me-3"></i>
+        <div>
+            <h5 class="alert-heading mb-1">All caught up!</h5>
+            <p class="mb-0">No customers currently pending approval.</p>
+        </div>
     </div>
     {% endif %}
 </div>
+
+<!-- Document Modals -->
+{% for customer in customers %}
+<div class="modal fade" id="docsModal{{ customer.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ customer.first_name }}'s Documents</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Add document viewing logic here -->
+                <div class="alert alert-info">
+                    Document preview feature coming soon!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.customer-checkbox');
+    const selectedCount = document.getElementById('selectedCount');
+
+    function updateSelection() {
+        const checked = document.querySelectorAll('.customer-checkbox:checked');
+        selectedCount.textContent = checked.length;
+    }
+
+    selectAll?.addEventListener('change', function() {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAll.checked;
+        });
+        updateSelection();
+    });
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelection);
+    });
+
+    // Initial count
+    updateSelection();
+});
+</script>
 {% endblock %}
