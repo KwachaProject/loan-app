@@ -37,7 +37,7 @@ from typing import Dict, Union
 import logging
 from logging.handlers import RotatingFileHandler
 import sys
-
+from flask_migrate import upgrade
 
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
 if not os.path.exists(log_dir):
@@ -182,20 +182,22 @@ mail = Mail()
 # Create Flask app
 app = Flask(__name__)
 
-# Set environment
-env = os.getenv("FLASK_ENV", "development")
 
 # Use Postgres in production, SQLite locally
-if env == "production":
-    uri = os.getenv("DATABASE_URL")
-    if uri and uri.startswith("postgres://"):
-        uri = uri.replace("postgres://", "postgresql://", 1)
-else:
-    uri = "sqlite:///customers.db"
+# Database configuration
+database_url = os.getenv("DATABASE_URL", "")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = uri
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-print("Connected to DB:", app.config['SQLALCHEMY_DATABASE_URI'])
+if database_url:
+    # Fix PostgreSQL URL format if needed
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    print(f"Connected to PRODUCTION DB: PostgreSQL")
+else:
+    # Fallback to SQLite for development
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///customers.db"
+    print("Connected to DEVELOPMENT DB: sqlite:///customers.db")
 
 # Email config (example: Gmail — replace with your own)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -2064,7 +2066,8 @@ import logging
 # -------- Disbursement Routes --------
 
 @app.route('/disbursements', methods=['GET', 'POST'])
-@role_required("admin")
+@login_required
+@role_required("admin", "finance_officer")
 def disbursements():
     from sqlalchemy.orm import joinedload
     from datetime import datetime
@@ -2275,6 +2278,7 @@ Please find below the list of beneficiaries for funds transfer from our account:
         download_name='funds_transfer_instruction.pdf',
         mimetype='application/pdf'
     )
+
 
 @app.route('/payments', methods=['GET', 'POST'], endpoint='payments')
 @role_required("finance_officer", "admin")
@@ -3079,18 +3083,23 @@ def validate_journal_entries(loan: LoanApplication):
         app.logger.error(f"Validation error: {str(e)}")
         raise AccountingError("General accounting validation failure") from e
 
-def create_tables():
-    with app.app_context():
-        db.create_all()
+from app import app, db
 
 def initialize_roles_permissions():
     with app.app_context():
         create_roles_and_permissions()
 
+def deploy():
+    with app.app_context():
+        # Apply any pending migrations
+        upgrade()
 
 if __name__ == '__main__':
-    # Only create tables if they don't exist
-    if not os.path.exists('instance/customers.db'):
-        create_tables()
-        initialize_roles_permissions()
+    try:
+        deploy()
+    except Exception as e:
+        print(f"Migration failed: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    initialize_roles_permissions()
     app.run(debug=True)
