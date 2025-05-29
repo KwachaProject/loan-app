@@ -38,6 +38,9 @@ import logging
 from logging.handlers import RotatingFileHandler
 import sys
 from flask_migrate import upgrade
+from flask.cli import with_appcontext
+
+
 
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
 if not os.path.exists(log_dir):
@@ -181,7 +184,6 @@ mail = Mail()
 
 # Create Flask app
 app = Flask(__name__)
-
 
 # Use Postgres in production, SQLite locally
 # Database configuration
@@ -858,6 +860,10 @@ from flask.cli import with_appcontext
 import click
 from app import db, User
 
+import os
+import click
+from flask.cli import with_appcontext
+
 @click.command("create-admin")
 @with_appcontext
 def create_admin():
@@ -878,6 +884,9 @@ def create_admin():
 
 def register_cli_commands(app):
     app.cli.add_command(create_admin)
+
+# Register CLI commands
+register_cli_commands(app)
 
     
 @property
