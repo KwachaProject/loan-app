@@ -2479,3 +2479,82 @@ ValueError: Settlement proof document is required
 [2025-05-28 04:52:30,582] INFO in app: Found Loans: [('236000002', 'topped_up'), ('203000004', 'topped_up'), ('203000006', 'topped_up'), ('203000007', 'active'), ('203000013', 'active'), ('203000022', 'topped_up'), ('224000024', 'active'), ('203000025', 'topped_up'), ('203000026', 'application')]
 [2025-05-28 04:52:37,784] INFO in app: [DISBURSEMENT] Loan #203000026 | Top-up of: 25 | Cash to Client: 1756798.25
 [2025-05-28 15:54:59,162] INFO in app: [DISBURSEMENT] Loan #136000001 | Top-up of: None | Cash to Client: 700000.0
+[2025-05-29 19:18:58,665] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 19:18:58,666] INFO in app: Customer ID: 1
+[2025-05-29 19:18:58,669] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 19:19:00,971] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 19:19:00,975] INFO in app: Customer ID: 1
+[2025-05-29 19:19:00,978] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 19:19:01,929] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 19:19:01,931] INFO in app: Customer ID: 1
+[2025-05-29 19:19:01,932] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 19:19:26,633] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 19:19:26,635] INFO in app: Customer ID: 1
+[2025-05-29 19:19:26,639] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 19:19:49,408] ERROR in app: Failed to close loan 1: Settlement proof document is required
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 2981, in settle_loan
+    raise ValueError("Settlement proof document is required")
+ValueError: Settlement proof document is required
+[2025-05-29 19:19:49,705] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 19:19:49,707] INFO in app: Customer ID: 1
+[2025-05-29 19:19:49,708] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 21:12:05,179] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 21:12:05,182] INFO in app: Customer ID: 1
+[2025-05-29 21:12:05,183] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 21:12:14,595] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 21:12:14,596] INFO in app: Customer ID: 1
+[2025-05-29 21:12:14,607] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 21:12:15,514] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 21:12:15,516] INFO in app: Customer ID: 1
+[2025-05-29 21:12:15,521] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 21:12:17,025] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 21:12:17,026] INFO in app: Customer ID: 1
+[2025-05-29 21:12:17,027] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 21:27:17,758] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 21:27:17,759] INFO in app: Customer ID: 1
+[2025-05-29 21:27:17,760] INFO in app: Found Loans: [('136000001', 'active')]
+[2025-05-29 21:27:32,364] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 21:27:32,365] INFO in app: Customer ID: 1
+[2025-05-29 21:27:32,366] INFO in app: Found Loans: [('136000001', 'settled_client')]
+[2025-05-29 21:27:37,752] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 21:27:37,753] INFO in app: Customer ID: 1
+[2025-05-29 21:27:37,754] INFO in app: Found Loans: [('136000001', 'settled_client')]
+[2025-05-29 21:27:46,724] INFO in app: Found 1 loans for customer 202505000001
+[2025-05-29 21:27:46,726] INFO in app: Customer ID: 1
+[2025-05-29 21:27:46,727] INFO in app: Found Loans: [('136000001', 'settled_client')]
+[2025-05-29 21:28:07,375] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-29 21:28:07,376] INFO in app: Customer ID: 1
+[2025-05-29 21:28:07,378] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'active')]
+[2025-05-29 21:28:31,695] INFO in app: [DISBURSEMENT] Loan #103000002 | Top-up of: None | Cash to Client: 1000000.0
+[2025-05-29 21:31:41,152] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-29 21:31:41,153] INFO in app: Customer ID: 1
+[2025-05-29 21:31:41,154] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'active')]
+[2025-05-29 21:31:45,282] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-29 21:31:45,283] INFO in app: Customer ID: 1
+[2025-05-29 21:31:45,284] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'active')]
+[2025-05-29 21:32:02,138] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-29 21:32:02,139] INFO in app: Customer ID: 1
+[2025-05-29 21:32:02,139] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client')]
+[2025-05-29 21:32:06,159] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-29 21:32:06,160] INFO in app: Customer ID: 1
+[2025-05-29 21:32:06,161] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client')]
+[2025-05-29 21:32:10,591] INFO in app: Found 2 loans for customer 202505000001
+[2025-05-29 21:32:10,595] INFO in app: Customer ID: 1
+[2025-05-29 21:32:10,602] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client')]
+[2025-05-29 21:32:36,515] INFO in app: Found 3 loans for customer 202505000001
+[2025-05-29 21:32:36,516] INFO in app: Customer ID: 1
+[2025-05-29 21:32:36,518] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'active')]
+[2025-05-29 21:32:55,839] INFO in app: [DISBURSEMENT] Loan #103000003 | Top-up of: None | Cash to Client: 1000000.0
+[2025-05-29 21:47:19,001] INFO in app: Found 3 loans for customer 202505000001
+[2025-05-29 21:47:19,002] INFO in app: Customer ID: 1
+[2025-05-29 21:47:19,006] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'active')]
+[2025-05-29 21:47:21,138] INFO in app: Found 3 loans for customer 202505000001
+[2025-05-29 21:47:21,138] INFO in app: Customer ID: 1
+[2025-05-29 21:47:21,141] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'active')]
+[2025-05-29 21:47:31,221] INFO in app: Found 3 loans for customer 202505000001
+[2025-05-29 21:47:31,222] INFO in app: Customer ID: 1
+[2025-05-29 21:47:31,224] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'settled_client')]
+[2025-05-29 21:47:36,193] INFO in app: Found 3 loans for customer 202505000001
+[2025-05-29 21:47:36,194] INFO in app: Customer ID: 1
+[2025-05-29 21:47:36,194] INFO in app: Found Loans: [('136000001', 'settled_client'), ('103000002', 'settled_client'), ('103000003', 'settled_client')]
