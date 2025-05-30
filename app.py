@@ -268,6 +268,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), nullable=False)  # ✅
     active = db.Column(db.Boolean, default=True, nullable=False)  # ✅
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id', name='fk_users_role_id'))
+  
 
     role = db.relationship('Role', backref='users')
 
@@ -907,7 +908,6 @@ def create_admin():
         admin = User(
             email=email,
             role_id=admin_role.id,  # Use role_id instead of role
-            is_active=True
         )
         admin.set_password(password)
         db.session.add(admin)
