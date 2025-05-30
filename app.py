@@ -268,8 +268,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), nullable=False)  # ✅
     active = db.Column(db.Boolean, default=True, nullable=False)  # ✅
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id', name='fk_users_role_id'))
-  
-
+    
     role = db.relationship('Role', backref='users')
 
     def set_password(self, password):
@@ -285,17 +284,6 @@ class User(db.Model, UserMixin):
         db.UniqueConstraint('username', name='uq_users_username'),
         db.UniqueConstraint('email', name='uq_users_email'),
     )
-
-    def __init__(self, **kwargs):
-        role = kwargs.pop('role', None)  # handle it explicitly
-        super(User, self).__init__(**kwargs)
-
-        if role:
-            self.role = role
-        elif self.role is None:
-            default_role = Role.query.filter_by(default=True).first()
-            if default_role:
-                self.role = default_role
 
 
 class Role(db.Model):
