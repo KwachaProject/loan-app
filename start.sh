@@ -40,7 +40,9 @@ fi
 
 # Verify admin creation
 echo "Verifying admin account..."
-if ! flask create-admin | grep -q -E "created|promoted|updated"; then
+if flask create-admin | grep -q -E "created|promoted|exists"; then
+    echo "✅ Admin account verified"
+else
     echo "❌ CRITICAL: Admin account setup failed"
     exit 1
 fi

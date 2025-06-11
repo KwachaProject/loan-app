@@ -115,9 +115,17 @@
               <input type="text" name="employment_number" class="form-control">
             </div>
             <div class="col-md-4">
-              <label class="form-label">Job Title</label>
-              <input type="text" name="job_title" class="form-control">
+              <label class="form-label">Job Title Level</label>
+              <select name="job_title" class="form-select" required>
+                <option value="">Select...</option>
+                <option value="C-Suite Executive">C-Suite Executive</option>
+                <option value="Senior Management">Senior Management</option>
+                <option value="Middle Management">Middle Management</option>
+                <option value="Junior Staff">Junior Staff</option>
+                <option value="Entry Level / Intern">Entry Level / Intern</option>
+              </select>
             </div>
+
             <div class="col-md-4">
               <label class="form-label">Monthly Salary</label>
               <input type="number" name="salary" step="0.01" class="form-control" required>
@@ -160,6 +168,58 @@
                 <option value="No">No</option>
               </select>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: Marketing & R&D Fields -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">Additional Information</div>
+        <div class="card-body">
+          <div class="row g-3">
+
+            <div class="col-md-3">
+              <label class="form-label">Purpose of Use</label>
+              <select name="purpose" class="form-select" required>
+                <option value="">Select…</option>
+                <option value="Education">Education</option>
+                <option value="Business">Business</option>
+                <option value="Personal">Personal</option>
+                <option value="Medical">Medical</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">How did you hear about us?</label>
+              <select name="marketing_source" class="form-select" required>
+                <option value="">Select…</option>
+                <option value="Agent">Agent</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Referral">Referral</option>
+                <option value="Influencer">Influencer</option>
+                <option value="Ad">Ad</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Industry</label>
+              <select name="industry" class="form-select" required>
+                <option value="">Select…</option>
+                <option value="Education">Education</option>
+                <option value="Finance">Finance</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Retail">Retail</option>
+                <option value="Technology">Technology</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Referral Code (optional)</label>
+              <input type="text" name="referral_code" class="form-control">
+            </div>
+
           </div>
         </div>
       </div>

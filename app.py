@@ -39,8 +39,17 @@ from logging.handlers import RotatingFileHandler
 import sys
 from flask_migrate import upgrade
 from flask.cli import with_appcontext
+from dotenv import load_dotenv
+from sqlalchemy import Column, String, Enum, ForeignKey
+from sqlalchemy.orm import validates
+import enum
+
+class SettlementTypeEnum(enum.Enum):
+    self_settlement = "self"
+    third_party = "third_party"
 
 
+load_dotenv()
 
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
 if not os.path.exists(log_dir):
@@ -293,14 +302,35 @@ class Role(db.Model):
     permissions = db.relationship('Permission', secondary='role_permissions')
 
     def has_permission(self, resource, action):
-        return db.session.query(Permission)\
-            .join(role_permissions)\
-            .filter(
-                Permission.resource == resource,
-                Permission.action == action,
-                role_permissions.c.role_id == self.id
-            )\
-            .first() is not None
+        print(f"\nChecking permission for {resource}:{action}")
+        print(f"Role '{self.name}' has {len(self.permissions)} permissions:")
+        
+        found = False
+        for perm in self.permissions:
+            print(f" - {perm.resource}:{perm.action}")
+            
+            # Wildcard match
+            if perm.resource == '*' and perm.action == '*':
+                print("   WILDCARD PERMISSION FOUND - ACCESS GRANTED")
+                found = True
+                # Don't return yet to see all permissions
+            
+            # Exact match
+            if perm.resource == resource and perm.action == action:
+                print(f"   EXACT MATCH FOUND FOR {resource}:{action}")
+                found = True
+        
+        # Also check for partial wildcards
+        for perm in self.permissions:
+            if perm.resource == '*' and perm.action == action:
+                print(f"   RESOURCE WILDCARD MATCH FOR *:{action}")
+                found = True
+            if perm.resource == resource and perm.action == '*':
+                print(f"   ACTION WILDCARD MATCH FOR {resource}:*")
+                found = True
+        
+        print(f"ACCESS {'GRANTED' if found else 'DENIED'}")
+        return found
 
 
 class Permission(db.Model):
@@ -457,8 +487,11 @@ class LoanApplication(db.Model):
     performance_status = db.Column(db.String(20), nullable=False, default='performing')
     top_up_balance = db.Column(db.Float, default=0.0)
     settlement_balance = db.Column(db.Float, default=0.0)
-    
-    
+    current_balance = db.Column(db.Float, default=0.0)
+    settlement_type = Column(Enum(SettlementTypeEnum), nullable=True)
+    settling_institution = Column(String(255), nullable=True)  # only if third_party
+    settlement_reason = db.Column(db.String(255), nullable=True)
+
     parent_loan_id = db.Column(
         db.Integer, 
         db.ForeignKey('loan_applications.id'),
@@ -481,6 +514,18 @@ class LoanApplication(db.Model):
         cascade='all, delete-orphan',
         foreign_keys='RepaymentSchedule.loan_id'
         )
+    @validates('settlement_reason')
+    def validate_reason(self, key, value):
+        allowed_reasons = {"price", "stay debt free", "consolidation", "better terms", "other"}
+        if value.lower() not in allowed_reasons:
+            raise ValueError(f"Invalid settlement reason: {value}")
+        return value.lower()
+
+    @validates('settlement_type')
+    def validate_type(self, key, value):
+        if not isinstance(value, SettlementTypeEnum):
+            raise ValueError("Invalid settlement type")
+        return value
 
     # In your LoanApplication model
     @property
@@ -537,9 +582,56 @@ class LoanApplication(db.Model):
                 expected_fees=round(collection_fee, 2),
                 status='due'
             )
-            
+    
+    
+    @property
+    def computed_current_balance(self):
+        from datetime import datetime
+
+        if self.loan_state in ('settled_client', 'write_off', 'insurance'):
+            return 0.0    
+
+        config = PRICING.get(self.term_months, {})
+        if not config:
+            return 0.0
+
+        def calculate_capitalized_amount(loan_amount: float, config: dict) -> float:
+            try:
+                origination = loan_amount * config.get('origination', 0)
+                insurance = loan_amount * config.get('insurance', 0)
+                crb = config.get('crb', 0)
+                return round(loan_amount + origination + insurance + crb, 2)
+            except Exception as e:
+                app.logger.warning(f"[TOPUP] Capitalization error: {e}")
+                return loan_amount
+
+        capitalized = calculate_capitalized_amount(self.loan_amount or 0, config)
+        monthly_rate = config.get('rate', 0)
+        term = self.term_months or 0
+
+        if monthly_rate > 0 and term > 0:
+            factor = (monthly_rate * (1 + monthly_rate) ** term) / ((1 + monthly_rate) ** term - 1)
+            annuity = capitalized * factor
+        else:
+            annuity = 0
+
+        payments = sorted(self.payments, key=lambda p: p.created_at)
+        remaining_balance = capitalized
+        payments_made = 0
+
+        for p in payments:
+            if p.allocation and p.allocation.principal:
+                remaining_balance -= p.allocation.principal
+                remaining_balance = max(remaining_balance, 0)
+                payments_made += 1
+
+        return round(remaining_balance, 2)
+
     @property
     def balance(self):
+        if self.loan_state in ('settled_client', 'write_off', 'insurance'):
+            return 0.0
+        
         config = PRICING.get(self.term_months)
         if not config:
             return None
@@ -557,29 +649,100 @@ class LoanApplication(db.Model):
 
         return round(capitalized - paid_principal, 2)
 
+
+    @property
+    def calculated_balance(self):
+        if self.loan_state in ('settled_client', 'write_off', 'insurance'):
+            return 0.0
+
+        config = PRICING.get(self.term_months)
+        if not config:
+            return 0.0
+
+        capitalized = (
+                self.loan_amount +
+                (self.loan_amount * config.get('origination', 0)) +
+                (self.loan_amount * config.get('insurance', 0)) +
+                config.get('crb', 0)
+            )
+
+        paid_principal = sum(
+                alloc.principal for p in self.payments if p.allocation for alloc in [p.allocation]
+            )
+
+        return round(capitalized - paid_principal, 2)   
+
+    
     def recalculate_balance(self):
-        """Recalculate loan balance after settlement"""
+        """Recalculate loan balances after any payment"""
         config = PRICING.get(self.term_months, {})
         loan_amount = self.loan_amount or 0
-        
-        # Calculate capitalized amount
+
+        # Capitalized loan amount
         capitalized = (
             loan_amount
             + (loan_amount * config.get('origination', 0))
             + (loan_amount * config.get('insurance', 0))
             + config.get('crb', 0)
         )
-        
-        # Calculate paid principal
+
+        # Paid principal — successful + completed only
         paid_principal = sum(
-            p.allocation.principal for p in self.payments 
-            if p.allocation and p.method != 'settlement'
+            (p.allocation.principal or 0.0) for p in self.payments
+            if p.allocation and p.status in ['successful', 'completed']
         )
+
+        # Paid settlement interest (if any)
+        paid_settlement_interest = sum(
+            (getattr(p.allocation, 'settlement_interest', 0.0) or 0.0)
+            for p in self.payments
+            if p.allocation and p.status in ['successful', 'completed']
+        )
+
+        # Compute current balance (capitalized - paid principal)
+        computed_balance = max(round(capitalized - paid_principal, 2), 0)
+
+        # Business logic by loan_state
+        if self.loan_state == 'settled_client':
+            # For settled_client:
+            # → Keep existing settlement_balance (do not recompute from capitalized!)
+            # → If settlement_balance was 0 (fallback), compute based on what was paid
+            if not self.settlement_balance or self.settlement_balance == 0.0:
+                self.settlement_balance = round(paid_principal + paid_settlement_interest, 2)
+
+            # Always clear current + top_up balances for settled_client
+            self.current_balance = 0.0
+            self.top_up_balance = 0.0
+
+        elif self.loan_state in ('write_off', 'insurance'):
+            # For hard closures — everything zeroed
+            self.current_balance = 0.0
+            self.top_up_balance = 0.0
+            self.settlement_balance = 0.0
+
+        else:
+            # For active and other loans — recompute fully
+            self.current_balance = computed_balance
+            self.top_up_balance = computed_balance + self.top_up_interest
+
+            # Only update settlement_balance if not already locked
+            if not self.settlement_balance or self.loan_state == 'active':
+                self.settlement_balance = computed_balance + self.settlement_interest
+
+        # Optional debug log (keep this for now to verify correct flow!)
+        print(
+            f"[{self.loan_number}] Recalculated balances → "
+            f"capitalized={capitalized}, paid_principal={paid_principal}, "
+            f"paid_settlement_interest={paid_settlement_interest}, "
+            f"current_balance={self.current_balance}, "
+            f"top_up_balance={self.top_up_balance}, "
+            f"settlement_balance={self.settlement_balance}, "
+            f"loan_state={self.loan_state}"
+        )
+
+
+
         
-        # Update balance fields
-        self.current_balance = max(round(capitalized - paid_principal, 2), 0)
-        self.settlement_balance = self.current_balance
-        self.top_up_balance = self.current_balance
 
 class Disbursement(db.Model):
     __tablename__ = 'disbursements'
@@ -742,6 +905,7 @@ class PaymentAllocation(db.Model):
     payment_id = db.Column(db.Integer, db.ForeignKey('payments.id'), nullable=False)
     principal = db.Column(db.Float, nullable=False)
     interest = db.Column(db.Float, nullable=False)
+    settlement_interest = db.Column(db.Float, default=0.0)
     fees = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
@@ -862,7 +1026,7 @@ import os
 from flask.cli import with_appcontext
 import click
 from app import db, User
-
+from dotenv import load_dotenv
 import os
 import click
 from flask.cli import with_appcontext
@@ -870,37 +1034,65 @@ from flask.cli import with_appcontext
 @click.command("create-admin")
 @with_appcontext
 def create_admin():
+    from dotenv import load_dotenv
+    load_dotenv()  # Ensure latest values
+    
     email = os.getenv("ADMIN_EMAIL")
     password = os.getenv("ADMIN_PASSWORD")
     
     if not email or not password:
         raise click.ClickException("ADMIN_EMAIL and ADMIN_PASSWORD must be set")
 
-    # Find or create the admin role
+    essential_perms = [
+        ('*', '*'),  # Wildcard
+        ('loan', 'create'),
+        ('loan', 'approve'),
+        ('loan', 'view'),
+        ('user', 'manage'),
+        # Add other essential permissions
+    ]
+    
+    # 1. Ensure essential permissions exist
+    for res, action in essential_perms:
+        perm = Permission.query.filter_by(resource=res, action=action).first()
+        if not perm:
+            perm = Permission(resource=res, action=action)
+            db.session.add(perm)
+    
+    # 2. Create admin role with all permissions
     admin_role = Role.query.filter_by(name='admin').first()
     if not admin_role:
-        click.echo("⚠️ Admin role not found. Creating it...")
-        admin_role = Role(name='admin', permissions=0xff)  # All permissions
+        admin_role = Role(name='admin')
         db.session.add(admin_role)
+        db.session.commit()  # Need ID for relationship
+        
+        # Assign all permissions to admin role
+        all_perms = Permission.query.all()
+        for perm in all_perms:
+            admin_role.permissions.append(perm)
+    
         db.session.commit()
-
+        
+    # 3. Create or update admin user
     existing = User.query.filter_by(email=email).first()
     if existing:
         # Update existing user to admin
+        existing.username = 'admin'  # <-- Ensure username is set!
         existing.role_id = admin_role.id
         existing.set_password(password)
         db.session.commit()
-        click.echo(f"🛡️ User promoted to admin: {email}")
+        click.echo(f"🛡️ User promoted to admin: {email} (username: admin)")
     else:
         # Create new admin
         admin = User(
             email=email,
-            role_id=admin_role.id,  # Use role_id instead of role
+            username='admin',  # <-- Set username here!
+            role_id=admin_role.id,
         )
         admin.set_password(password)
         db.session.add(admin)
         db.session.commit()
-        click.echo(f"✅ Admin created: {email}")
+        click.echo(f"✅ Admin created: {email} (username: admin)")
 
 def register_cli_commands(app):
     app.cli.add_command(create_admin)
@@ -1310,110 +1502,82 @@ def calculate_capitalized_amount(loan_amount: float, config: dict) -> float:
 
 from datetime import datetime
 
-def calculate_balances(loan) -> Dict[str, Union[float, datetime]]:
-    """
-    Calculate loan balances with proper type handling and validation
-    Returns dictionary with all balance values even on error
-    """
-    DEFAULT_BALANCES = {
-        'capitalized_amount': 0.0,
-        'current_balance': 0.0,
-        'top_up_balance': 0.0,
-        'settlement_balance': 0.0,
-        'top_up_interest': 0.0,
-        'settlement_interest': 0.0,
-        'closure_date': datetime.utcnow()
+def calculate_balances(loan):
+    config = PRICING.get(loan.term_months, {})
+    if not config:
+        return {}
+
+    def calculate_capitalized_amount(loan_amount, config):
+        try:
+            origination = loan_amount * config.get('origination', 0)
+            insurance = loan_amount * config.get('insurance', 0)
+            crb = config.get('crb', 0)
+            return round(loan_amount + origination + insurance + crb, 2)
+        except Exception as e:
+            app.logger.warning(f"Capitalization error: {e}")
+            return loan_amount
+
+    capitalized = calculate_capitalized_amount(loan.loan_amount or 0, config)
+    monthly_rate = config.get('rate', 0)
+    term = loan.term_months or 0
+
+    if monthly_rate > 0 and term > 0:
+        factor = (monthly_rate * (1 + monthly_rate) ** term) / ((1 + monthly_rate) ** term - 1)
+        annuity = capitalized * factor
+    else:
+        annuity = 0
+
+    payments = sorted(loan.payments, key=lambda p: p.created_at)
+    remaining_balance = capitalized
+    payments_made = 0
+
+    # Define valid statuses:
+    VALID_PAYMENT_STATUSES = ('successful', 'completed')
+    INVALID_PAYMENT_STATUSES = ('failed', 'reversed', 'cancelled')
+
+    for p in payments:
+        payment_status = getattr(p, 'status', '').lower()
+        payment_method = getattr(p, 'method', '').lower()
+
+        # Skip invalid payments
+        if payment_status in INVALID_PAYMENT_STATUSES:
+            continue
+
+        # For computing remaining_balance — count all valid principal allocations:
+        if p.allocation and p.allocation.principal:
+            remaining_balance -= p.allocation.principal
+            remaining_balance = max(remaining_balance, 0)
+            payments_made += 1
+
+    current_balance = round(remaining_balance, 2)
+    remaining_term = max(term - payments_made, 0)
+
+    # Projected interest
+    def projected_interest(months_ahead):
+        temp_balance = current_balance
+        total_interest = 0.0
+        for _ in range(min(months_ahead, remaining_term)):
+            if temp_balance <= 0:
+                break
+            interest = temp_balance * monthly_rate
+            principal = annuity - interest
+            principal = min(principal, temp_balance)
+            total_interest += interest
+            temp_balance -= principal
+        return round(total_interest, 2)
+
+    top_up_interest = projected_interest(3)
+    settlement_interest = projected_interest(6)
+
+    return {
+        'capitalized_amount': capitalized,
+        'current_balance': current_balance,
+        'top_up_balance': round(current_balance + top_up_interest, 2),
+        'settlement_balance': round(current_balance + settlement_interest, 2),
+        'top_up_interest': top_up_interest,
+        'settlement_interest': settlement_interest,
     }
 
-    try:
-        # Validate loan object
-        if not loan or not hasattr(loan, 'term_months') or not hasattr(loan, 'payments'):
-            raise ValueError("Invalid loan object structure")
-
-        # Get pricing config with fallback
-        config = PRICING.get(loan.term_months) or {}
-        loan_amount = getattr(loan, 'loan_amount', 0.0)
-
-        # Validate essential parameters
-        if not all([
-            isinstance(loan.term_months, int),
-            loan.term_months > 0,
-            loan_amount > 0,
-            isinstance(config, dict)
-        ]):
-            return DEFAULT_BALANCES
-
-        # Calculate capitalized amount with validation
-        capitalized_amount = calculate_capitalized_amount(loan_amount, config)
-        if not isinstance(capitalized_amount, (int, float)):
-            capitalized_amount = loan_amount  # Fallback to original amount
-
-        # Core calculations
-        monthly_rate = config.get('rate', 0.0)
-        annuity = calculate_annuity_payment(
-            capitalized_amount, 
-            loan.term_months, 
-            monthly_rate
-        )
-
-        # Payment processing with type checks
-        running_balance = float(capitalized_amount)
-        payments_made = 0
-        total_paid = 0.0
-
-        for payment in sorted(loan.payments, key=lambda p: getattr(p, 'created_at', datetime.min)):
-            if getattr(payment, 'status', '') == 'successful':
-                total_paid += float(getattr(payment, 'amount', 0.0))
-
-            allocation = getattr(payment, 'allocation', None)
-            if allocation and getattr(allocation, 'principal', 0) > 0:
-                running_balance -= float(allocation.principal)
-                payments_made += 1
-                running_balance = max(running_balance, 0.0)
-
-        current_balance = round(float(max(running_balance, 0.0)), 2)
-        remaining_term = max(int(loan.term_months) - payments_made, 0)
-
-        # Interest calculations with fallbacks
-        created_date = getattr(loan, 'date_created', datetime.utcnow())
-        months_elapsed = max((datetime.utcnow() - created_date).days // 30, 0)
-        accrued_interest = monthly_rate * loan_amount * months_elapsed
-        
-        # Projected interest calculation
-        def safe_projected_interest(months: int) -> float:
-            try:
-                temp_balance = current_balance
-                total_interest = 0.0
-                monthly_rate_decimal = monthly_rate / 100 if monthly_rate > 1 else monthly_rate
-                
-                for _ in range(min(months, remaining_term)):
-                    if temp_balance <= 0:
-                        break
-                    interest = temp_balance * monthly_rate_decimal
-                    total_interest += interest
-                    temp_balance -= (annuity - interest)
-                
-                return round(float(total_interest), 2)
-            except:
-                return 0.0
-
-        next_3_interest = safe_projected_interest(3)
-        next_6_interest = safe_projected_interest(6)
-
-        return {
-            'capitalized_amount': round(float(capitalized_amount), 2),
-            'current_balance': current_balance,
-            'top_up_balance': round(current_balance + next_3_interest, 2),
-            'settlement_balance': round(current_balance + next_6_interest, 2),
-            'top_up_interest': next_3_interest,
-            'settlement_interest': next_6_interest,
-            'closure_date': datetime.utcnow()
-        }
-
-    except Exception as e:
-        # Use proper logging in production
-        print(f"Balance calculation error: {str(e)}")
-        return DEFAULT_BALANCES
 
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required
@@ -3041,79 +3205,198 @@ def debug_loans():
 def settle_loan(loan_id):
     loan = LoanApplication.query.get_or_404(loan_id)
     closure_type = request.form.get('closure_type', 'settlement')
-    
+
     if not loan or loan.loan_state != 'active':
         flash('Loan is not active', 'danger')
         return redirect(request.referrer)
-    
+
     if 'settle_file' not in request.files:
         flash('No settlement proof provided', 'danger')
         return redirect(request.referrer)
-    
+
     file = request.files['settle_file']
     if file.filename == '':
         flash('No selected file', 'danger')
         return redirect(request.referrer)
-    
+
     try:
         # Save settlement file
-        filename = secure_filename(f"settlement_{loan.loan_number}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}{os.path.splitext(file.filename)[1]}")
+        filename = secure_filename(
+            f"settlement_{loan.loan_number}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}{os.path.splitext(file.filename)[1]}"
+        )
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'settlements', filename)
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         file.save(filepath)
-        
-        # Calculate amounts
-        if closure_type == 'settlement':
-            amount = loan.settlement_balance
-            principal = loan.current_balance
-            interest = amount - principal
-        else:  # insurance or write_off
-            amount = loan.current_balance
-            principal = amount
-            interest = 0
-        
-        # Create payment with manual allocation
+
+        # Force recalculate BEFORE starting
+        loan.recalculate_balance()
+        db.session.flush()
+
+        # Compute balances first
+        balances = calculate_balances(loan)
+
+        # Determine amount to pay
+        if closure_type in ('insurance', 'write_off'):
+            principal = balances['current_balance']
+            settlement_interest = 0.0
+            amount_to_pay = principal
+
+        elif closure_type == 'settlement':
+            principal = balances['current_balance']
+            settlement_interest = balances['settlement_interest']
+            amount_to_pay = balances['settlement_balance']
+
+            if amount_to_pay is None or amount_to_pay <= 0:
+                flash('Settlement balance is not available or zero', 'danger')
+                return redirect(request.referrer)
+
+        else:
+            flash('Invalid closure type provided', 'danger')
+            return redirect(request.referrer)
+
+        # 💡 Lock in settlement balance to store later in Loan:
+        settlement_balance_paid = round(principal + settlement_interest, 2)
+
+        # 1️⃣ Create and commit Payment FIRST
         payment = Payment(
             loan_id=loan.id,
-            amount=amount,
+            amount=amount_to_pay,
             method='settlement',
             status='completed',
-            reference=f"{closure_type} settlement for {loan.loan_number}",
+            reference=f"{closure_type.replace('_', ' ').title()} for {loan.loan_number}",
             settlement_proof=filename
         )
         db.session.add(payment)
-        db.session.flush()  # Get payment ID
-        
-        # Manual allocation for settlement
+        db.session.commit()  # important: commit first!
+
+        # 2️⃣ Reload loan fresh so balances are correct
+        loan = LoanApplication.query.get(loan.id)
+        loan.recalculate_balance()
+
+        # 3️⃣ Determine allocation amounts AFTER payment included
+        # Note: loan.current_balance should now be 0, but we take principal from balances
         allocation = PaymentAllocation(
             payment_id=payment.id,
             principal=principal,
-            interest=interest,
-            fees=0.0
+            interest=0.0,
+            fees=0.0,
+            settlement_interest=settlement_interest
         )
         db.session.add(allocation)
-        
-        # Update loan status
+        db.session.commit()
+
+        # 4️⃣ Reload loan again and finalize closure state
+        loan = LoanApplication.query.get(loan.id)
         loan.loan_state = 'settled_client' if closure_type == 'settlement' else closure_type
         loan.closure_type = closure_type
         loan.closure_date = datetime.utcnow()
-        
-        # Clear repayment schedules
+
+        # 🔥 Lock in settlement_balance correctly (critical step)
+        loan.settlement_balance = settlement_balance_paid
+        loan.current_balance = 0.0
+        loan.top_up_balance = 0.0
+
+        # Recalculate balances one last time (will now RESPECT locked settlement_balance)
+        loan.recalculate_balance()
+
+        # 5️⃣ Update repayment schedules
         for schedule in loan.repayment_schedules:
             if schedule.status != 'paid':
                 schedule.status = 'settled'
-        
-        # Recalculate loan balance
-        loan.recalculate_balance()
 
         db.session.commit()
+
         flash(f'Loan {loan.loan_number} settled successfully. Balance cleared.', 'success')
+
     except Exception as e:
         db.session.rollback()
         flash(f'Error settling loan: {str(e)}', 'danger')
         app.logger.error(f"Settlement error: {str(e)}", exc_info=True)
-    
+
     return redirect(request.referrer)
+
+
+
+@app.route('/settlement_report')
+@login_required
+@role_required('finance_officer', 'admin')
+def settlement_report():
+    settled_loans = (
+        db.session.query(
+            LoanApplication.loan_number,
+            LoanApplication.loan_state,
+            LoanApplication.settlement_balance,
+            Payment.amount.label('paid_amount'),
+            PaymentAllocation.principal.label('paid_principal'),
+            PaymentAllocation.settlement_interest.label('paid_settlement_interest'),
+            Payment.created_at.label('payment_date')
+        )
+        .join(Payment, Payment.loan_id == LoanApplication.id)
+        .join(PaymentAllocation, PaymentAllocation.payment_id == Payment.id)
+        .filter(
+            LoanApplication.loan_state == 'settled_client',
+            Payment.method == 'settlement',
+            Payment.status == 'completed'
+        )
+        .order_by(Payment.created_at.desc())
+        .all()
+    )
+
+    print(f"[DEBUG] Settled loans count: {len(settled_loans)}")  # helps you debug
+
+    return render_template(
+        'settlement_report.html',
+        settled_loans=settled_loans
+    )
+
+import csv
+from io import StringIO
+from flask import Response
+
+@app.route('/export_settlement_report_csv')
+@login_required
+@role_required('finance_officer', 'admin')
+def export_settlement_report_csv():
+    settled_loans = (
+        db.session.query(
+            LoanApplication.loan_number,
+            LoanApplication.loan_state,
+            LoanApplication.settlement_balance,
+            Payment.amount.label('paid_amount'),
+            PaymentAllocation.principal.label('paid_principal'),
+            PaymentAllocation.settlement_interest.label('paid_settlement_interest'),
+            Payment.created_at.label('payment_date')
+        )
+        .join(Payment, Payment.loan_id == LoanApplication.id)
+        .join(PaymentAllocation, PaymentAllocation.payment_id == Payment.id)
+        .filter(
+            LoanApplication.loan_state == 'settled_client',
+            Payment.method == 'settlement',
+            Payment.status == 'completed'
+        )
+        .order_by(Payment.created_at.desc())
+        .all()
+    )
+
+    si = StringIO()
+    cw = csv.writer(si)
+    cw.writerow(['Loan Number', 'Loan State', 'Settlement Balance', 'Amount Paid', 'Principal Paid', 'Settlement Interest Paid', 'Payment Date'])
+    for loan in settled_loans:
+        cw.writerow([
+            loan.loan_number,
+            loan.loan_state,
+            loan.settlement_balance or 0.0,
+            loan.paid_amount or 0.0,
+            loan.paid_principal or 0.0,
+            loan.paid_settlement_interest or 0.0,
+            loan.payment_date.strftime('%Y-%m-%d %H:%M') if loan.payment_date else ''
+        ])
+
+    output = Response(si.getvalue(), mimetype='text/csv')
+    output.headers["Content-Disposition"] = "attachment; filename=settlement_report.csv"
+    return output
+
+
 
 @app.route('/batch_write_off', methods=['POST'])
 @login_required
