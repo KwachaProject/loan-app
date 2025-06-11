@@ -28,6 +28,7 @@
 
     <!-- Tab content -->
     {% if section == 'users' %}
+        <!-- Users tab content -->
         <h5 class="mb-3">Create New User</h5>
         <form action="{{ url_for('create_user') }}" method="POST" class="row g-3 mb-4">
             <div class="col-md-3">
@@ -101,6 +102,7 @@
         </div>
 
     {% elif section == 'permissions' %}
+        <!-- Permissions tab content -->
         <h5 class="mb-3">Manage Role Permissions</h5>
         <form action="{{ url_for('update_permissions') }}" method="POST">
             <div class="table-responsive">
@@ -136,6 +138,7 @@
         </form>
 
     {% elif section == 'notifications' %}
+        <!-- Notifications tab content -->
         <h5>Notifications</h5>
         {% if notifications %}
             <ul class="list-group">
@@ -155,9 +158,47 @@
             <p class="text-muted">No notifications at this time.</p>
         {% endif %}
 
+    {% elif section == 'settlements_report' %}
+        <h5 class="mb-3">Settlement Report</h5>
+
+        {% if settlements %}
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Loan Number</th>
+                            <th>Amount Paid</th>
+                            <th>Principal</th>
+                            <th>Interest</th>
+                            <th>Settlement Interest</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in settlements %}
+                            <tr>
+                                <td>{{ row.loan_number }}</td>
+                                <td>{{ row.amount }}</td>
+                                <td>{{ row.principal }}</td>
+                                <td>{{ row.interest }}</td>
+                                <td>{{ row.settlement_interest }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No settlements found.</p>
+        {% endif %}
+
     {% elif section == 'reports' %}
         <h5>Reports & Metrics</h5>
-        <p class="text-muted">Coming soon. This section will include performance metrics and insights.</p>
+
+       <div class="list-group mb-4">
+            <a href="{{ url_for('settlement_report') }}" class="list-group-item list-group-item-action">
+                Settlement Report
+            </a>
+            <!-- you can add more reports here later -->
+        </div>
 
     {% else %}
         <div class="alert alert-warning">Invalid section. Please check your route.</div>
