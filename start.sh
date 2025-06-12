@@ -22,7 +22,27 @@ fi
 echo "Applying database upgrades..."
 if ! flask db upgrade; then
     if flask db upgrade 2>&1 | grep -q "Can't locate revision identified by '5589524b5c5a'"; then
-        echo "⚠️  Detected missing migration 5589524b5c5a - starting recovery"
+        echo "⚠️  Detected missing migration 5589524b5c5a - creating placeholder"
+        
+        # Create the missing migration file dynamically
+        cat > migrations/versions/5589524b5c5a_recover_migration.py <<EOL
+from alembic import op
+
+revision = '5589524b5c5a'
+down_revision = 'ea18c3ede092'
+branch_labels = None
+depends_on = None
+
+def upgrade():
+    # Empty migration - safe placeholder
+    pass
+
+def downgrade():
+    # Empty migration - safe placeholder
+    pass
+EOL
+
+        echo "Created placeholder migration file"
         echo "Stamping database with revision 5589524b5c5a"
         flask db stamp 5589524b5c5a
         echo "Retrying database upgrade"
