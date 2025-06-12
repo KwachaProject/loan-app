@@ -1,26 +1,26 @@
 #!/bin/bash
 
 export FLASK_ENV=production
-set -e  # Exit immediately if a command exits with a non-zero status.
+set -euo pipefail  # Exit on error, undefined vars, or failed pipes
 
-echo "Starting deployment script..."
+echo "🚀 Starting deployment script..."
 
 # Validate environment variables
-echo "Checking environment variables..."
-if [[ -z "$ADMIN_EMAIL" || -z "$ADMIN_PASSWORD" ]]; then
+echo "🔍 Checking environment variables..."
+if [[ -z "${ADMIN_EMAIL:-}" || -z "${ADMIN_PASSWORD:-}" ]]; then
     echo "❌ ERROR: ADMIN_EMAIL and ADMIN_PASSWORD must be set"
     exit 1
 fi
 
 # Handle broken migration history once
-echo "Resetting migration history if needed..."
+echo "🔄 Resetting migration history if needed..."
 if [ ! -f ".migration_reset_complete" ]; then
-    echo "Performing migration reset..."
+    echo "🧹 Performing migration reset..."
 
-    # Backup migration directory
+    # Backup migration directory if it exists
     rm -rf migrations_backup
     mkdir migrations_backup
-    cp -r migrations/versions migrations_backup/ || echo "No existing versions to back up"
+    cp -r migrations/versions migrations_backup/ || echo "ℹ️ No existing versions to back up"
 
     # Reinitialize migrations
     rm -rf migrations
@@ -29,28 +29,28 @@ if [ ! -f ".migration_reset_complete" ]; then
     flask db stamp head
 
     touch .migration_reset_complete
-    echo "Migration reset complete"
+    echo "✅ Migration reset complete"
 fi
 
-# Migration folder must exist
-echo "Checking migration directory..."
+# Ensure migration folder exists
+echo "📁 Checking migration directory..."
 if [ ! -d "migrations/versions" ]; then
-    echo "Initializing migration folder..."
+    echo "📦 Initializing migration folder..."
     flask db init
 fi
 
-# Handle multiple heads (merge if necessary)
-echo "Checking for multiple Alembic heads..."
+# Handle multiple heads
+echo "🧠 Checking for multiple Alembic heads..."
 HEAD_COUNT=$(flask db heads | wc -l)
 if [ "$HEAD_COUNT" -gt 1 ]; then
-    echo "⚠️  Multiple heads detected. Merging them..."
+    echo "⚠️  Multiple heads detected. Merging..."
     flask db merge -m "Auto-merge multiple heads" $(flask db heads | tr '\n' ' ')
 fi
 
-# Try upgrading DB
-echo "Applying database upgrades..."
+# Apply DB migrations
+echo "🛠️ Applying database upgrades..."
 if ! flask db upgrade; then
-    echo "⚠️  Migration failed - attempting to stamp DB to head"
+    echo "⚠️ Migration failed - attempting to stamp DB to head"
     flask db stamp head
     flask db upgrade || {
         echo "❌ Migration still failed after stamping"
@@ -59,20 +59,20 @@ if ! flask db upgrade; then
 fi
 
 # Initialize roles and permissions
-echo "Initializing roles and permissions..."
+echo "🔑 Initializing roles and permissions..."
 python -c "from app import initialize_roles_permissions; initialize_roles_permissions()"
 
 # Create/update admin user
-echo "Configuring admin user: $ADMIN_EMAIL"
+echo "👤 Configuring admin user: $ADMIN_EMAIL"
 if flask create-admin 2>&1 | grep -q "use --force to update password"; then
-    echo "⚠️  Admin exists. Forcing password update..."
+    echo "⚠️ Admin exists. Forcing password update..."
     flask create-admin --force
 else
     flask create-admin
 fi
 
 # Verify admin creation
-echo "Verifying admin account..."
+echo "✅ Verifying admin account..."
 if flask create-admin | grep -q -E "created|promoted|exists"; then
     echo "✅ Admin account verified"
 else
@@ -81,5 +81,5 @@ else
 fi
 
 # Start the Flask app
-echo "Starting Flask application..."
-exec gunicorn --workers 4 --bind 0.0.0.0:$PORT app:app
+echo "🚀 Starting Flask application..."
+exec gunicorn --workers 4 --bind 0.0.0.0:${PORT:-5000} app:app
