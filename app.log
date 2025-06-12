@@ -4163,3 +4163,16 @@ werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'settle
 2025-06-12 05:59:15,841 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
 2025-06-12 05:59:15,842 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-12 06:00:12,513 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:12] "GET /admin/reports HTTP/1.1" 200 -
+2025-06-12 06:00:13,710 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-12 06:00:15,839 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:15] "GET /admin/notifications HTTP/1.1" 200 -
+2025-06-12 06:00:18,168 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:18] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-06-12 06:00:20,665 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:20] "GET /loanbook HTTP/1.1" 200 -
+2025-06-12 06:00:22,631 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:22] "GET /payments HTTP/1.1" 200 -
+2025-06-12 06:00:23,807 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:23] "GET /disbursements HTTP/1.1" 200 -
+2025-06-12 06:00:25,062 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:25] "GET /loans HTTP/1.1" 200 -
+2025-06-12 06:00:26,202 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:26] "GET /customers HTTP/1.1" 200 -
+2025-06-12 06:00:27,993 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:27] "GET /approve_customers HTTP/1.1" 200 -
+2025-06-12 06:00:33,164 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:33] "GET / HTTP/1.1" 200 -
+2025-06-12 06:00:34,958 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:34] "GET /register HTTP/1.1" 200 -
+2025-06-12 06:49:28,486 - INFO - 127.0.0.1 - - [12/Jun/2025 06:49:28] "GET /loanbook HTTP/1.1" 200 -
