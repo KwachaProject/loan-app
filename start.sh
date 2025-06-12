@@ -1,6 +1,8 @@
 #!/bin/bash
 
 export FLASK_ENV=production
+set -e  # Exit immediately if a command exits with a non-zero status.
+
 echo "Starting deployment script..."
 
 # Validate environment variables
@@ -10,60 +12,36 @@ if [[ -z "$ADMIN_EMAIL" || -z "$ADMIN_PASSWORD" ]]; then
     exit 1
 fi
 
+# Reset migration history if needed
+echo "Resetting migration history..."
+if [ ! -f ".migration_reset_complete" ]; then
+    echo "Performing migration reset..."
+    
+    # Backup current migration directory
+    rm -rf migrations_backup
+    mkdir migrations_backup
+    cp -r migrations/versions migrations_backup/
+    
+    # Reset the migration repository
+    rm -rf migrations
+    flask db init
+    
+    # Create a new initial migration
+    flask db migrate -m "Reset migration history"
+    
+    # Stamp the database with the new revision
+    flask db stamp head
+    
+    # Create marker file to prevent future resets
+    touch .migration_reset_complete
+    
+    echo "Migration reset complete"
+fi
+
 # Database migration handling
 echo "Handling database migrations..."
 if [ ! -d "migrations/versions" ]; then
     flask db init
-fi
-
-# Create the base migration placeholder if needed
-if [ ! -f "migrations/versions/ea18c3ede092_placeholder.py" ]; then
-    echo "Creating base migration placeholder..."
-    cat > migrations/versions/ea18c3ede092_placeholder.py <<EOL
-from alembic import op
-
-revision = 'ea18c3ede092'
-down_revision = None
-branch_labels = None
-depends_on = None
-
-def upgrade():
-    # Empty migration - safe placeholder
-    pass
-
-def downgrade():
-    # Empty migration - safe placeholder
-    pass
-EOL
-fi
-
-# Create the missing migration placeholder if needed
-if [ ! -f "migrations/versions/5589524b5c5a_placeholder.py" ]; then
-    echo "Creating missing migration placeholder..."
-    cat > migrations/versions/5589524b5c5a_placeholder.py <<EOL
-from alembic import op
-
-revision = '5589524b5c5a'
-down_revision = 'ea18c3ede092'
-branch_labels = None
-depends_on = None
-
-def upgrade():
-    # Empty migration - safe placeholder
-    pass
-
-def downgrade():
-    # Empty migration - safe placeholder
-    pass
-EOL
-fi
-
-# Resolve multiple heads issue
-echo "Resolving migration history..."
-CURRENT_HEAD=$(flask db heads | grep -v '5589524b5c5a' | head -1 | awk '{print $1}')
-if [ -n "$CURRENT_HEAD" ]; then
-    echo "Merging migration heads..."
-    flask db merge $CURRENT_HEAD 5589524b5c5a
 fi
 
 # Apply database upgrades
@@ -71,7 +49,7 @@ echo "Applying database upgrades..."
 if flask db upgrade; then
     echo "Database upgrade successful"
 else
-    echo "Stamping database with head revision"
+    echo "⚠️  Migration failed - stamping database with head revision"
     flask db stamp head
     flask db upgrade
 fi
