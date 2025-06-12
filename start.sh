@@ -18,12 +18,20 @@ if [ ! -d "migrations/versions" ]; then
     flask db init
 fi
 
-# Use head-based migration reset only if needed (safer than hard-coded version)
+# Special handling for your specific missing migration
 echo "Applying database upgrades..."
 if ! flask db upgrade; then
-    echo "⚠️  Detected missing or invalid migration revision. Forcing stamp..."
-    flask db stamp ea44e4c99b4a4  # Replace with your actual latest revision
-    flask db upgrade
+    if flask db upgrade 2>&1 | grep -q "Can't locate revision identified by '5589524b5c5a'"; then
+        echo "⚠️  Detected missing migration 5589524b5c5a - starting recovery"
+        echo "Stamping database with revision 5589524b5c5a"
+        flask db stamp 5589524b5c5a
+        echo "Retrying database upgrade"
+        flask db upgrade
+    else
+        echo "⚠️  General migration error detected. Trying head stamp..."
+        flask db stamp head
+        flask db upgrade
+    fi
 fi
 
 # Initialize roles and permissions
