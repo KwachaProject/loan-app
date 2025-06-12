@@ -21,8 +21,8 @@ fi
 # Use head-based migration reset only if needed (safer than hard-coded version)
 echo "Applying database upgrades..."
 if ! flask db upgrade; then
-    echo "⚠️  Detected missing or invalid migration revision. Stamping DB to head..."
-    flask db stamp head
+    echo "⚠️  Detected missing or invalid migration revision. Forcing stamp..."
+    flask db stamp ea44e4c99b4a4  # Replace with your actual latest revision
     flask db upgrade
 fi
 
