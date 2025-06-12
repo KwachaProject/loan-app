@@ -12,46 +12,50 @@ if [[ -z "$ADMIN_EMAIL" || -z "$ADMIN_PASSWORD" ]]; then
     exit 1
 fi
 
-# Reset migration history if needed
-echo "Resetting migration history..."
+# Handle broken migration history once
+echo "Resetting migration history if needed..."
 if [ ! -f ".migration_reset_complete" ]; then
     echo "Performing migration reset..."
-    
-    # Backup current migration directory
+
+    # Backup migration directory
     rm -rf migrations_backup
     mkdir migrations_backup
-    cp -r migrations/versions migrations_backup/
-    
-    # Reset the migration repository
+    cp -r migrations/versions migrations_backup/ || echo "No existing versions to back up"
+
+    # Reinitialize migrations
     rm -rf migrations
     flask db init
-    
-    # Create a new initial migration
     flask db migrate -m "Reset migration history"
-    
-    # Stamp the database with the new revision
     flask db stamp head
-    
-    # Create marker file to prevent future resets
+
     touch .migration_reset_complete
-    
     echo "Migration reset complete"
 fi
 
-# Database migration handling
-echo "Handling database migrations..."
+# Migration folder must exist
+echo "Checking migration directory..."
 if [ ! -d "migrations/versions" ]; then
+    echo "Initializing migration folder..."
     flask db init
 fi
 
-# Apply database upgrades
+# Handle multiple heads (merge if necessary)
+echo "Checking for multiple Alembic heads..."
+HEAD_COUNT=$(flask db heads | wc -l)
+if [ "$HEAD_COUNT" -gt 1 ]; then
+    echo "⚠️  Multiple heads detected. Merging them..."
+    flask db merge -m "Auto-merge multiple heads" $(flask db heads | tr '\n' ' ')
+fi
+
+# Try upgrading DB
 echo "Applying database upgrades..."
-if flask db upgrade; then
-    echo "Database upgrade successful"
-else
-    echo "⚠️  Migration failed - stamping database with head revision"
+if ! flask db upgrade; then
+    echo "⚠️  Migration failed - attempting to stamp DB to head"
     flask db stamp head
-    flask db upgrade
+    flask db upgrade || {
+        echo "❌ Migration still failed after stamping"
+        exit 1
+    }
 fi
 
 # Initialize roles and permissions
