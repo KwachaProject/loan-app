@@ -3501,6 +3501,23 @@ if __name__ == '__main__':
 from flask_migrate import upgrade, stamp
 import os
 
+# Add this function to your existing __init__.py
+def is_migration_reset_needed():
+    """Check if migration reset is needed"""
+    if not app.extensions.get('migrate'):
+        return True
+        
+    try:
+        # Try to get current migration
+        from flask_migrate import current
+        with app.app_context():
+            current()
+        return False
+    except Exception as e:
+            app.logger.error(f"Migration check failed: {str(e)}")
+            return True
+
+
 if os.environ.get("FLASK_ENV") == "production":
     from app import app  # or wherever your app instance is
     with app.app_context():
