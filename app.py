@@ -56,52 +56,9 @@ if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
 # Initialize the Flask application
-db = SQLAlchemy()
-migrate = Migrate()
-mail = Mail()
-
-def create_app():
-    app = Flask(__name__)
-    app.secret_key = 'supersecretkey'
-    app.logger.setLevel(logging.INFO)
-
-    database_url = os.getenv("DATABASE_URL")
-    if database_url:
-        # Fix PostgreSQL URL format if needed
-        if database_url.startswith("postgres://"):
-            database_url = database_url.replace("postgres://", "postgresql://", 1)
-        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-        print(f"Connected to PRODUCTION DB: PostgreSQL")
-    else:
-        # Fallback to SQLite for development
-        app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///customers.db"
-        print("Connected to DEVELOPMENT DB: sqlite:///customers.db")
-
-    # Email config
-    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config['MAIL_PORT'] = 587
-    app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USERNAME'] = 'youremail@example.com'
-    app.config['MAIL_PASSWORD'] = 'your_app_password_here'
-    app.config['MAIL_DEFAULT_SENDER'] = 'youremail@example.com'
-
-    # File upload settings
-    app.config['UPLOAD_FOLDER'] = 'uploads/documents'
-    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
-    app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'pdf', 'doc', 'docx'}
-
-    # Init extensions
-    db.init_app(app)
-    migrate.init_app(app, db)
-    mail.init_app(app)
-
-    return app
-
-# Optional: run directly for testing
-if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)
-
+app = Flask(__name__)
+app.secret_key = 'supersecretkey'
+app.logger.setLevel(logging.INFO)
 
 handler = RotatingFileHandler(
     'app.log',
@@ -3540,23 +3497,6 @@ if __name__ == '__main__':
 
     initialize_roles_permissions()
     app.run(debug=True)
-
-# Add this function to your existing __init__.py
-def is_migration_reset_needed():
-    """Check if migration reset is needed"""
-    if not app.extensions.get('migrate'):
-        return True
-        
-    try:
-        # Try to get current migration
-        from flask_migrate import current
-        with app.app_context():
-            current()
-        return False
-    except Exception as e:
-            app.logger.error(f"Migration check failed: {str(e)}")
-            return True
-
 
 from flask_migrate import upgrade, stamp
 import os
