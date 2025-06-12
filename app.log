@@ -4176,3 +4176,5 @@ werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'settle
 2025-06-12 06:00:33,164 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:33] "GET / HTTP/1.1" 200 -
 2025-06-12 06:00:34,958 - INFO - 127.0.0.1 - - [12/Jun/2025 06:00:34] "GET /register HTTP/1.1" 200 -
 2025-06-12 06:49:28,486 - INFO - 127.0.0.1 - - [12/Jun/2025 06:49:28] "GET /loanbook HTTP/1.1" 200 -
+2025-06-12 08:20:02,166 - ERROR - Error: Could not determine revision id from filename 5589524b5c5a_recover_migration.py. Be sure the 'revision' variable is declared inside the script (please see 'Upgrading from Alembic 0.1 to 0.2' in the documentation).
+2025-06-12 08:21:00,865 - ERROR - Error: Could not determine revision id from filename 5589524b5c5a_recover_migration.py. Be sure the 'revision' variable is declared inside the script (please see 'Upgrading from Alembic 0.1 to 0.2' in the documentation).
