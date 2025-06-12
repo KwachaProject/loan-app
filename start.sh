@@ -1,8 +1,6 @@
 #!/bin/bash
 
 export FLASK_ENV=production
-set -e  # Exit immediately if a command exits with a non-zero status.
-
 echo "Starting deployment script..."
 
 # Validate environment variables
@@ -18,18 +16,14 @@ if [ ! -d "migrations/versions" ]; then
     flask db init
 fi
 
-# Special handling for your specific missing migration
-echo "Applying database upgrades..."
-if ! flask db upgrade; then
-    if flask db upgrade 2>&1 | grep -q "Can't locate revision identified by '5589524b5c5a'"; then
-        echo "⚠️  Detected missing migration chain - creating placeholders"
-        
-        # Create the first missing migration (ea18c3ede092)
-        cat > migrations/versions/ea18c3ede092_placeholder.py <<EOL
+# Create the base migration placeholder if needed
+if [ ! -f "migrations/versions/ea18c3ede092_placeholder.py" ]; then
+    echo "Creating base migration placeholder..."
+    cat > migrations/versions/ea18c3ede092_placeholder.py <<EOL
 from alembic import op
 
 revision = 'ea18c3ede092'
-down_revision = None  # Assume it's the base migration
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -41,9 +35,12 @@ def downgrade():
     # Empty migration - safe placeholder
     pass
 EOL
+fi
 
-        # Create the second missing migration (5589524b5c5a)
-        cat > migrations/versions/5589524b5c5a_placeholder.py <<EOL
+# Create the missing migration placeholder if needed
+if [ ! -f "migrations/versions/5589524b5c5a_placeholder.py" ]; then
+    echo "Creating missing migration placeholder..."
+    cat > migrations/versions/5589524b5c5a_placeholder.py <<EOL
 from alembic import op
 
 revision = '5589524b5c5a'
@@ -59,24 +56,31 @@ def downgrade():
     # Empty migration - safe placeholder
     pass
 EOL
+fi
 
-        echo "Created placeholder migration files"
-        echo "Stamping database with revision 5589524b5c5a"
-        flask db stamp 5589524b5c5a
-        echo "Retrying database upgrade"
-        flask db upgrade
-    else
-        echo "⚠️  General migration error detected. Trying head stamp..."
-        flask db stamp head
-        flask db upgrade
-    fi
+# Resolve multiple heads issue
+echo "Resolving migration history..."
+CURRENT_HEAD=$(flask db heads | grep -v '5589524b5c5a' | head -1 | awk '{print $1}')
+if [ -n "$CURRENT_HEAD" ]; then
+    echo "Merging migration heads..."
+    flask db merge $CURRENT_HEAD 5589524b5c5a
+fi
+
+# Apply database upgrades
+echo "Applying database upgrades..."
+if flask db upgrade; then
+    echo "Database upgrade successful"
+else
+    echo "Stamping database with head revision"
+    flask db stamp head
+    flask db upgrade
 fi
 
 # Initialize roles and permissions
 echo "Initializing roles and permissions..."
 python -c "from app import initialize_roles_permissions; initialize_roles_permissions()"
 
-# Create/update admin user with safety confirmation
+# Create/update admin user
 echo "Configuring admin user: $ADMIN_EMAIL"
 if flask create-admin 2>&1 | grep -q "use --force to update password"; then
     echo "⚠️  Admin exists. Forcing password update..."
