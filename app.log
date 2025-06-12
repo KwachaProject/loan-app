@@ -4120,3 +4120,46 @@ werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'settle
 2025-06-11 10:42:28,265 - INFO - 127.0.0.1 - - [11/Jun/2025 10:42:28] "GET /customer/202506000001/account HTTP/1.1" 200 -
 2025-06-11 10:42:30,443 - INFO - 127.0.0.1 - - [11/Jun/2025 10:42:30] "GET /loanbook HTTP/1.1" 200 -
 2025-06-11 10:42:35,611 - INFO - 127.0.0.1 - - [11/Jun/2025 10:42:35] "GET /loan/203000014/statement HTTP/1.1" 200 -
+2025-06-11 10:53:01,062 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-11 10:53:01,062 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-11 10:55:57,315 - INFO - 127.0.0.1 - - [11/Jun/2025 10:55:57] "GET / HTTP/1.1" 200 -
+2025-06-11 10:55:58,916 - INFO - 127.0.0.1 - - [11/Jun/2025 10:55:58] "GET /loanbook HTTP/1.1" 200 -
+[2025-06-11 10:55:59,858] INFO in app: Found 14 loans for customer 202506000001
+2025-06-11 10:55:59,858 - INFO - Found 14 loans for customer 202506000001
+[2025-06-11 10:55:59,869] INFO in app: Customer ID: 1
+2025-06-11 10:55:59,869 - INFO - Customer ID: 1
+[2025-06-11 10:55:59,871] INFO in app: Found Loans: [('224000001', 'settled_client'), ('203000002', 'topped_up'), ('203000003', 'settled_client'), ('203000004', 'topped_up'), ('203000005', 'settled_client'), ('203000006', 'settled_client'), ('203000007', 'settled_client'), ('203000008', 'settled_client'), ('203000009', 'active'), ('203000010', 'settled_client'), ('203000011', 'settled_client'), ('203000012', 'settled_client'), ('203000013', 'active'), ('203000014', 'settled_client')]
+2025-06-11 10:55:59,871 - INFO - Found Loans: [('224000001', 'settled_client'), ('203000002', 'topped_up'), ('203000003', 'settled_client'), ('203000004', 'topped_up'), ('203000005', 'settled_client'), ('203000006', 'settled_client'), ('203000007', 'settled_client'), ('203000008', 'settled_client'), ('203000009', 'active'), ('203000010', 'settled_client'), ('203000011', 'settled_client'), ('203000012', 'settled_client'), ('203000013', 'active'), ('203000014', 'settled_client')]
+2025-06-11 10:55:59,932 - INFO - 127.0.0.1 - - [11/Jun/2025 10:55:59] "GET /customer/202506000001/account HTTP/1.1" 200 -
+2025-06-11 11:50:10,102 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-11 11:50:10,102 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-11 11:50:20,168 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:20] "[32mGET /loan/203000014/statement HTTP/1.1[0m" 302 -
+2025-06-11 11:50:20,209 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:20] "GET /loanbook HTTP/1.1" 200 -
+2025-06-11 11:50:30,145 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:30] "GET / HTTP/1.1" 200 -
+2025-06-11 11:50:31,181 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:31] "GET /register HTTP/1.1" 200 -
+2025-06-11 11:50:32,066 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:32] "GET /approve_customers HTTP/1.1" 200 -
+2025-06-11 11:50:32,651 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:32] "GET /customers HTTP/1.1" 200 -
+2025-06-11 11:50:33,313 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:33] "GET /loans HTTP/1.1" 200 -
+2025-06-11 11:50:33,813 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:33] "GET /disbursements HTTP/1.1" 200 -
+2025-06-11 11:50:34,402 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:34] "GET /payments HTTP/1.1" 200 -
+2025-06-11 11:50:35,145 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:35] "GET /loanbook HTTP/1.1" 200 -
+2025-06-11 11:50:36,608 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:36] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-06-11 11:50:38,665 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:38] "GET /admin/notifications HTTP/1.1" 200 -
+2025-06-11 11:50:39,966 - INFO - 127.0.0.1 - - [11/Jun/2025 11:50:39] "GET /admin/reports HTTP/1.1" 200 -
+2025-06-11 11:51:01,644 - INFO - 127.0.0.1 - - [11/Jun/2025 11:51:01] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-11 17:07:02,075 - INFO - 127.0.0.1 - - [11/Jun/2025 17:07:02] "GET / HTTP/1.1" 200 -
+2025-06-11 17:07:03,769 - INFO - 127.0.0.1 - - [11/Jun/2025 17:07:03] "GET /register HTTP/1.1" 200 -
+2025-06-11 17:07:04,820 - INFO - 127.0.0.1 - - [11/Jun/2025 17:07:04] "GET /approve_customers HTTP/1.1" 200 -
+2025-06-11 17:07:05,690 - INFO - 127.0.0.1 - - [11/Jun/2025 17:07:05] "GET /customers HTTP/1.1" 200 -
+2025-06-11 17:07:06,526 - INFO - 127.0.0.1 - - [11/Jun/2025 17:07:06] "GET /loans HTTP/1.1" 200 -
+2025-06-11 17:07:07,287 - INFO - 127.0.0.1 - - [11/Jun/2025 17:07:07] "GET /disbursements HTTP/1.1" 200 -
+2025-06-11 17:07:08,647 - INFO - 127.0.0.1 - - [11/Jun/2025 17:07:08] "GET /payments HTTP/1.1" 200 -
+2025-06-11 17:07:10,056 - INFO - 127.0.0.1 - - [11/Jun/2025 17:07:10] "GET /loanbook HTTP/1.1" 200 -
+2025-06-11 17:14:19,386 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-11 17:14:19,387 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-12 05:59:15,841 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-12 05:59:15,842 - INFO - [33mPress CTRL+C to quit[0m
