@@ -210,6 +210,9 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///customers.db"
     print("Connected to DEVELOPMENT DB: sqlite:///customers.db")
 
+
+
+
 # Email config (example: Gmail — replace with your own)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -3254,6 +3257,10 @@ def settle_loan(loan_id):
             flash('Invalid closure type provided', 'danger')
             return redirect(request.referrer)
 
+        loan.settlement_type = request.form.get('settlement_type')
+        loan.settling_institution = request.form.get('settling_institution')
+        loan.settlement_reason = request.form.get('settlement_reason')
+
         # 💡 Lock in settlement balance to store later in Loan:
         settlement_balance_paid = round(principal + settlement_interest, 2)
 
@@ -3490,3 +3497,16 @@ if __name__ == '__main__':
 
     initialize_roles_permissions()
     app.run(debug=True)
+
+from flask_migrate import upgrade, stamp
+import os
+
+if os.environ.get("FLASK_ENV") == "production":
+    from app import app  # or wherever your app instance is
+    with app.app_context():
+        # Only stamp if alembic_version table is missing or out of sync
+        try:
+            stamp()
+            print("✅ Successfully stamped production DB.")
+        except Exception as e:
+            print(f"⚠️ Could not stamp DB: {e}")

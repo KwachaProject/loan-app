@@ -19,11 +19,12 @@ if [ ! -d "migrations/versions" ]; then
 fi
 
 # Use head-based migration reset only if needed (safer than hard-coded version)
-echo "Resetting migration state if needed..."
-flask db stamp head 2>/dev/null || true
-
 echo "Applying database upgrades..."
-flask db upgrade
+if ! flask db upgrade; then
+    echo "⚠️  Detected missing or invalid migration revision. Stamping DB to head..."
+    flask db stamp head
+    flask db upgrade
+fi
 
 # Initialize roles and permissions
 echo "Initializing roles and permissions..."

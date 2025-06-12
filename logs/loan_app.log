@@ -3860,3 +3860,6 @@ werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'settle
 [2025-06-11 10:42:28,231] INFO in app: Found 14 loans for customer 202506000001
 [2025-06-11 10:42:28,232] INFO in app: Customer ID: 1
 [2025-06-11 10:42:28,233] INFO in app: Found Loans: [('224000001', 'settled_client'), ('203000002', 'topped_up'), ('203000003', 'settled_client'), ('203000004', 'topped_up'), ('203000005', 'settled_client'), ('203000006', 'settled_client'), ('203000007', 'settled_client'), ('203000008', 'settled_client'), ('203000009', 'active'), ('203000010', 'settled_client'), ('203000011', 'settled_client'), ('203000012', 'settled_client'), ('203000013', 'active'), ('203000014', 'settled_client')]
+[2025-06-11 10:55:59,858] INFO in app: Found 14 loans for customer 202506000001
+[2025-06-11 10:55:59,869] INFO in app: Customer ID: 1
+[2025-06-11 10:55:59,871] INFO in app: Found Loans: [('224000001', 'settled_client'), ('203000002', 'topped_up'), ('203000003', 'settled_client'), ('203000004', 'topped_up'), ('203000005', 'settled_client'), ('203000006', 'settled_client'), ('203000007', 'settled_client'), ('203000008', 'settled_client'), ('203000009', 'active'), ('203000010', 'settled_client'), ('203000011', 'settled_client'), ('203000012', 'settled_client'), ('203000013', 'active'), ('203000014', 'settled_client')]
