@@ -30,15 +30,18 @@ column_exists() {
   local column="$2"
   python -c "
 from app import app, db
+from sqlalchemy import text
 with app.app_context():
     conn = db.engine.connect()
-    result = conn.execute(f\"\"\"
-        SELECT EXISTS (
+    # Use SQLAlchemy text() for safe execution
+    result = conn.execute(
+        text(\"\"\"SELECT EXISTS (
             SELECT 1 
             FROM information_schema.columns 
-            WHERE table_name = '$table' AND column_name = '$column'
-        ) AS exists
-    \"\"\").scalar()
+            WHERE table_name = :table AND column_name = :column
+        ) AS exists\"\"\"),
+        {'table': '$table', 'column': '$column'}
+    ).scalar()
     print('exists' if result else 'missing')
 "
 }
@@ -86,9 +89,13 @@ for column in "${!loan_app_columns[@]}"; do
     echo "➕ Adding column $column to loan_applications"
     python -c "
 from app import app, db
+from sqlalchemy import text
 with app.app_context():
     conn = db.engine.connect()
-    conn.execute('ALTER TABLE loan_applications ADD COLUMN $column ${loan_app_columns[$column]}')
+    # Use parameterized query with text()
+    conn.execute(
+        text('ALTER TABLE loan_applications ADD COLUMN $column ${loan_app_columns[$column]}')
+    )
     print('✅ Added column $column')
 "
   fi
@@ -106,9 +113,13 @@ else
   echo "🆕 Creating alembic_version table"
   python -c "
 from app import app, db
+from sqlalchemy import text
 with app.app_context():
     conn = db.engine.connect()
-    conn.execute('CREATE TABLE alembic_version (version_num VARCHAR(32) NOT NULL)')
+    # Proper SQL execution with text()
+    conn.execute(
+        text('CREATE TABLE alembic_version (version_num VARCHAR(32) NOT NULL)')
+    )
     print('✅ Created alembic_version table')
 "
 fi
@@ -125,9 +136,13 @@ flask db upgrade || {
   # Handle failed migration state
   python -c "
 from app import app, db
+from sqlalchemy import text
 with app.app_context():
     conn = db.engine.connect()
-    conn.execute('DELETE FROM alembic_version')
+    # Safe SQL execution
+    conn.execute(
+        text('DELETE FROM alembic_version')
+    )
     print('✅ Reset alembic_version table')
 "
   
