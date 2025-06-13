@@ -1,153 +1,136 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# ────────────────────────────────────────────────────────────────────
+#  start.sh  –  Render deployment entry‑point for the Flask loan‑app
+# --------------------------------------------------------------------
+#  • Runs all Alembic migrations (flask db upgrade)
+#  • Adds any legacy tables / columns that might still be missing
+#  • Seeds roles / permissions
+#  • Ensures a single admin user, using $ADMIN_EMAIL / $ADMIN_PASSWORD
+#  • Finally launches Gunicorn
+# ────────────────────────────────────────────────────────────────────
 
-export FLASK_ENV=production
 set -e
+export FLASK_ENV=production
 
-echo "🚀 Starting deployment script..."
-echo "🔍 Checking environment variables..."
-
+echo "🚀  Starting deployment script..."
+echo "🔍  Checking environment variables…"
 if [[ -z "$ADMIN_EMAIL" || -z "$ADMIN_PASSWORD" ]]; then
-    echo "❌ ERROR: ADMIN_EMAIL and ADMIN_PASSWORD must be set"
-    exit 1
+  echo "❌  ADMIN_EMAIL and ADMIN_PASSWORD must be set" ; exit 1
 fi
 
-echo "🛠️  Handling database schema..."
+# ------------------------------------------------------------------
+# 1️⃣  Apply every Alembic migration
+# ------------------------------------------------------------------
+echo "🗄️  Running 'flask db upgrade'…"
+flask db upgrade
 
-# Function to check if a table exists
+# ------------------------------------------------------------------
+# 2️⃣  OPTIONAL safety‑net: create tables / columns that might still
+#     be missing (useful on very old prod DBs)
+# ------------------------------------------------------------------
+echo "🛠️   Verifying core schema…"
+
 table_exists() {
-    local table_name="$1"
-    python -c "
+  local tbl=$1
+  python - <<PY
 from app import app, db
 with app.app_context():
-    if db.engine.dialect.has_table(db.engine.connect(), '$table_name'):
-        print('exists')
-    else:
-        print('missing')
-"
+    print('exists' if db.engine.dialect.has_table(db.engine, '$tbl') else 'missing')
+PY
 }
 
-# Function to check if a column exists
 column_exists() {
-    local table_name="$1"
-    local column_name="$2"
-    python -c "
+  local tbl=$1 col=$2
+  python - <<PY
 from app import app, db
 with app.app_context():
-    conn = db.engine.connect()
-    result = conn.execute(f\"\"\"SELECT EXISTS (
-        SELECT 1 
-        FROM information_schema.columns 
-        WHERE table_name = '{table_name}' AND column_name = '{column_name}'
-    ) AS exists\"\"\").scalar()
-    print('exists' if result else 'missing')
-"
+    q = """
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = '$tbl' AND column_name = '$col'
+    """
+    print('exists' if db.session.execute(q).scalar() else 'missing')
+PY
 }
 
-# Create core tables if missing
-echo "🔍 Checking core tables..."
-for table in "user" "loan" "payment" "loan_applications"; do
-    if [ "$(table_exists $table)" = "missing" ]; then
-        echo "🛠️  Creating missing table: $table"
-        python -c "
+# Core tables we absolutely need
+for tbl in user loan payment loan_applications; do
+  if [[ "$(table_exists "$tbl")" == "missing" ]]; then
+    echo "🧱  Creating missing table: $tbl"
+    python - <<PY
 from app import app, db
 with app.app_context():
-    db.create_all()
-    print('✅ Created $table table')
-"
-    fi
+    db.create_all()        # create *any* missing table
+    print("✅  Created table: $tbl")
+PY
+  fi
 done
 
-# Create the vote table if missing
-if [ "$(table_exists vote)" = "missing" ]; then
-    echo "🛠️  Creating vote table..."
-    python -c "
-from app import app, db
-with app.app_context():
-    db.create_all()
-    print('✅ Created vote table')
-"
-fi
-
-# Add missing columns to loan_applications
-echo "🔍 Checking loan_applications schema..."
-declare -A loan_app_columns=(
-    ["current_balance"]="NUMERIC(12, 2) DEFAULT 0.0"
-    ["top_up_balance"]="NUMERIC(12, 2)"
-    ["settlement_balance"]="NUMERIC(12, 2)"
-    ["settlement_type"]="VARCHAR(50)"
-    ["settling_institution"]="VARCHAR(255)"
-    ["settlement_reason"]="TEXT"
-    ["parent_loan_id"]="INTEGER"
+# Patch legacy columns on loan_applications (only if still missing)
+declare -A PATCH_COLS=(
+  [current_balance]="NUMERIC(12,2) DEFAULT 0.0"
+  [top_up_balance]="NUMERIC(12,2)"
+  [settlement_balance]="NUMERIC(12,2)"
+  [settlement_type]="VARCHAR(50)"
+  [settling_institution]="VARCHAR(255)"
+  [settlement_reason]="TEXT"
+  [parent_loan_id]="INTEGER"
 )
 
-for column in "${!loan_app_columns[@]}"; do
-    if [ "$(column_exists loan_applications $column)" = "missing" ]; then
-        echo "🛠️  Adding column $column to loan_applications..."
-        python -c "
+for col in "${!PATCH_COLS[@]}"; do
+  if [[ "$(column_exists loan_applications "$col")" == "missing" ]]; then
+    echo "➕  Adding column '$col' to loan_applications"
+    python - <<PY
 from app import app, db
 with app.app_context():
-    conn = db.engine.connect()
-    conn.execute(f\"ALTER TABLE loan_applications ADD COLUMN {column} ${loan_app_columns[$column]}\")
-    print(f'✅ Added column {column}')
-"
-    fi
+    db.engine.execute(
+        "ALTER TABLE loan_applications ADD COLUMN $col ${PATCH_COLS[$col]}"
+    )
+    print("   ↳ added")
+PY
+  fi
 done
 
-# Initialize roles and permissions
-echo "👥 Initializing roles and permissions..."
-python -c "
+# ------------------------------------------------------------------
+# 3️⃣  Seed roles / permissions
+# ------------------------------------------------------------------
+echo "👥  Initialising roles & permissions…"
+python - <<PY
 from app import app, initialize_roles_permissions
 with app.app_context():
     initialize_roles_permissions()
-    print('✅ Roles and permissions initialized')
-"
+    print("✅  Roles & permissions ready")
+PY
 
-# Check for existing admin user
-echo "🔍 Checking admin configuration..."
-ADMIN_EXISTS=$(python -c "
-from app import app, User
+# ------------------------------------------------------------------
+# 4️⃣  Ensure exactly one admin user
+# ------------------------------------------------------------------
+echo "🔍  Ensuring admin user…"
+python - <<PY
+from app import app, db, User
+from werkzeug.security import generate_password_hash
+import os, time
+email = os.environ["ADMIN_EMAIL"]
+password = os.environ["ADMIN_PASSWORD"]
+
 with app.app_context():
-    admin = User.query.filter_by(email='$ADMIN_EMAIL').first()
+    admin = User.query.filter_by(email=email).first()
     if admin:
-        # Check if another user already has 'admin' username
-        conflict = User.query.filter(User.username=='admin', User.id != admin.id).first()
-        if conflict:
-            print('conflict')
-        else:
-            print('exists')
+        print("   ↳ Admin already exists – leaving as‑is")
     else:
-        print('missing')
-")
+        # Avoid duplicate username 'admin'
+        if User.query.filter_by(username='admin').first():
+            username = f"admin_{int(time.time())}"
+            print(f"   ↳ 'admin' username taken; using {username}")
+        else:
+            username = "admin"
+        admin = User(username=username, email=email,
+                     password_hash=generate_password_hash(password))
+        db.session.add(admin); db.session.commit()
+        print("✅  Admin user created")
+PY
 
-# Handle admin creation based on check results
-case "$ADMIN_EXISTS" in
-    "exists")
-        echo "✅ Admin user already exists - skipping creation"
-        ;;
-    "conflict")
-        echo "⚠️  Username conflict detected - updating admin username"
-        python -c "
-from app import app, User
-with app.app_context():
-    admin = User.query.filter_by(email='$ADMIN_EMAIL').first()
-    if admin:
-        # Append timestamp to make username unique
-        import time
-        new_username = f'admin_{int(time.time())}'
-        admin.username = new_username
-        db.session.commit()
-        print(f'✅ Updated admin username to: {new_username}')
-"
-        ;;
-    "missing")
-        echo "👑 Creating admin user: $ADMIN_EMAIL"
-        flask create-admin
-        ;;
-    *)
-        echo "⚠️  Unknown admin status - skipping admin creation"
-        ;;
-esac
-
-# Start the Flask app
-echo "🚀 Starting Flask application..."
-exec gunicorn --workers 4 --bind 0.0.0.0:$PORT app:app
+# ------------------------------------------------------------------
+# 5️⃣  Launch Gunicorn
+# ------------------------------------------------------------------
+echo "🚀  Starting Gunicorn…"
+exec gunicorn --workers 4 --bind 0.0.0.0:${PORT:-8000} app:app
