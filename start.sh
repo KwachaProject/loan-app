@@ -26,23 +26,33 @@ with app.app_context():
 "
 }
 
+# Function to check if a column exists
+column_exists() {
+    local table_name="$1"
+    local column_name="$2"
+    python -c "
+from app import app, db
+with app.app_context():
+    conn = db.engine.connect()
+    result = conn.execute(f\"\"\"SELECT EXISTS (
+        SELECT 1 
+        FROM information_schema.columns 
+        WHERE table_name = '{table_name}' AND column_name = '{column_name}'
+    ) AS exists\"\"\").scalar()
+    print('exists' if result else 'missing')
+"
+}
+
 # Create core tables if missing
 echo "🔍 Checking core tables..."
-for table in "user" "loan" "payment"; do
+for table in "user" "loan" "payment" "loan_applications"; do
     if [ "$(table_exists $table)" = "missing" ]; then
         echo "🛠️  Creating missing table: $table"
         python -c "
-from app import app, db, User, Loan, Payment
+from app import app, db
 with app.app_context():
-    model_map = {
-        'user': User,
-        'loan': Loan,
-        'payment': Payment
-    }
-    model = model_map.get('$table')
-    if model:
-        model.__table__.create(db.engine)
-        print('✅ Created $table table')
+    db.create_all()
+    print('✅ Created $table table')
 "
     fi
 done
@@ -57,6 +67,31 @@ with app.app_context():
     print('✅ Created vote table')
 "
 fi
+
+# Add missing columns to loan_applications
+echo "🔍 Checking loan_applications schema..."
+declare -A loan_app_columns=(
+    ["current_balance"]="NUMERIC(12, 2) DEFAULT 0.0"
+    ["top_up_balance"]="NUMERIC(12, 2)"
+    ["settlement_balance"]="NUMERIC(12, 2)"
+    ["settlement_type"]="VARCHAR(50)"
+    ["settling_institution"]="VARCHAR(255)"
+    ["settlement_reason"]="TEXT"
+    ["parent_loan_id"]="INTEGER"
+)
+
+for column in "${!loan_app_columns[@]}"; do
+    if [ "$(column_exists loan_applications $column)" = "missing" ]; then
+        echo "🛠️  Adding column $column to loan_applications..."
+        python -c "
+from app import app, db
+with app.app_context():
+    conn = db.engine.connect()
+    conn.execute(f\"ALTER TABLE loan_applications ADD COLUMN {column} ${loan_app_columns[$column]}\")
+    print(f'✅ Added column {column}')
+"
+    fi
+done
 
 # Initialize roles and permissions
 echo "👥 Initializing roles and permissions..."
