@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+fix this #!/usr/bin/env bash
 set -e
 export FLASK_ENV=production
 

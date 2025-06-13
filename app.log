@@ -4383,3 +4383,6 @@ ValueError: Invalid settlement type
 2025-06-13 11:22:47,806 - INFO - Found Loans: [('118000001', 'active')]
 2025-06-13 11:22:47,809 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:47] "GET /customer/202506000001/account?section=settlement HTTP/1.1" 200 -
 2025-06-13 11:22:52,397 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:52] "GET /loanbook HTTP/1.1" 200 -
+2025-06-13 12:57:58,923 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-13 12:57:58,923 - INFO - [33mPress CTRL+C to quit[0m
