@@ -1,91 +1,80 @@
 #!/bin/bash
+# -----------------  start.sh  -----------------
 
 export FLASK_ENV=production
 set -e
 
-echo "🚀 Starting deployment script..."
-echo "🔍 Checking environment variables..."
-
+echo "🚀  Starting deployment script..."
+echo "🔍  Checking environment variables..."
 if [[ -z "$ADMIN_EMAIL" || -z "$ADMIN_PASSWORD" ]]; then
-    echo "❌ ERROR: ADMIN_EMAIL and ADMIN_PASSWORD must be set"
-    exit 1
+  echo "❌  ADMIN_EMAIL and ADMIN_PASSWORD must be set"
+  exit 1
 fi
 
-echo "🛠️  Handling database schema..."
+echo "🛠️   Handling database schema..."
 
-# Function to check if a table exists
+# ---------- helper: does a table exist? ----------
 table_exists() {
-    local table_name="$1"
-    python -c "
+  local tbl="$1"
+  python - <<PY
 from app import app, db
 with app.app_context():
-    if db.engine.dialect.has_table(db.engine.connect(), '$table_name'):
-        print('exists')
-    else:
-        print('missing')
-"
+    print('exists' if db.engine.dialect.has_table(db.engine.connect(), '$tbl') else 'missing')
+PY
 }
 
-# Create core tables if missing
-echo "🔍 Checking core tables..."
-for table in "user" "loan" "payment"; do
-    if [ "$(table_exists $table)" = "missing" ]; then
-        echo "🛠️  Creating missing table: $table"
-        python -c "
+# ---------- create core tables if they’re missing ----------
+echo "🔍  Checking core tables..."
+for TBL in user loan payment; do
+  if [[ "$(table_exists "$TBL")" == "missing" ]]; then
+    echo "🛠️   Creating missing table: $TBL"
+    python - <<PY
 from app import app, db, User, Loan, Payment
+models = {'user': User, 'loan': Loan, 'payment': Payment}
 with app.app_context():
-    model_map = {
-        'user': User,
-        'loan': Loan,
-        'payment': Payment
-    }
-    model = model_map.get('$table')
-    if model:
-        model.__table__.create(db.engine)
-        print('✅ Created $table table')
-"
-    fi
+    models['$TBL'].__table__.create(db.engine)
+    print("✅  Created $TBL table")
+PY
+  fi
 done
 
-# Create the vote table if missing
-if [ "$(table_exists vote)" = "missing" ]; then
-    echo "🛠️  Creating vote table..."
-    python -c "
+# ---------- create ‘vote’ table if it isn’t there ----------
+if [[ "$(table_exists vote)" == "missing" ]]; then
+  echo "🛠️   Creating vote table..."
+  python - <<PY
 from app import app, db
 with app.app_context():
     db.create_all()
-    print('✅ Created vote table')
-"
+    print("✅  Created vote table")
+PY
 fi
 
-# Initialize roles and permissions
-echo "👥 Initializing roles and permissions..."
-python -c "
+# ---------- roles / permissions ----------
+echo "👥  Initializing roles and permissions..."
+python - <<PY
 from app import app, initialize_roles_permissions
 with app.app_context():
     initialize_roles_permissions()
-    print('✅ Roles and permissions initialized')
-"
+    print("✅  Roles and permissions initialized")
+PY
 
-# Check if admin user already exists
-echo "🔍 Checking for existing admin user..."
-ADMIN_EXISTS=$(python -c "
-from app import app, User
+# ---------- admin user ----------
+echo "🔍  Checking for existing admin user..."
+ADMIN_EXISTS=$(python - <<PY
+from app import app, db, User
 with app.app_context():
-    if User.query.filter_by(email='$ADMIN_EMAIL').first():
-        print('exists')
-    else:
-        print('missing')
-")
+    print('yes' if User.query.filter_by(username='admin').first() else 'no')
+PY
+)
 
-# Create admin user only if it doesn't exist
-if [ "$ADMIN_EXISTS" = "exists" ]; then
-    echo "✅ Admin user already exists - skipping creation"
+if [[ "$ADMIN_EXISTS" == "yes" ]]; then
+  echo "✅  Admin already present – skipping creation."
 else
-    echo "👑 Creating admin user: $ADMIN_EMAIL"
-    flask create-admin
+  echo "👑  Creating admin user: $ADMIN_EMAIL"
+  flask create-admin --username admin --email "$ADMIN_EMAIL" --password "$ADMIN_PASSWORD"
 fi
 
-# Start the Flask app
-echo "🚀 Starting Flask application..."
-exec gunicorn --workers 4 --bind 0.0.0.0:$PORT app:app
+# ---------- launch ----------
+echo "🚀  Starting Gunicorn..."
+exec gunicorn --workers 4 --bind "0.0.0.0:${PORT:-5000}" app:app
+# -----------------------------------------------------------
