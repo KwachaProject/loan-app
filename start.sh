@@ -32,16 +32,20 @@ column_exists() {
 from app import app, db
 from sqlalchemy import text
 with app.app_context():
-    conn = db.engine.connect()
-    result = conn.execute(
-        text(\"\"\"SELECT EXISTS (
-            SELECT 1 
-            FROM information_schema.columns 
-            WHERE table_name = :table AND column_name = :column
-        )\"\"\"),
-        {'table': '$table', 'column': '$column'}
-    ).scalar()
-    print('exists' if result else 'missing')
+    try:
+        conn = db.engine.connect()
+        result = conn.execute(
+            text(\"\"\"SELECT EXISTS (
+                SELECT 1 
+                FROM information_schema.columns 
+                WHERE table_name = :table AND column_name = :column
+            )\"\"\"),
+            {'table': '$table', 'column': '$column'}
+        ).scalar()
+        print('exists' if result else 'missing')
+    except Exception as e:
+        print(f'error: {str(e)}')
+        exit(1)
 "
 }
 
@@ -54,8 +58,12 @@ for table in user loan payment loan_applications; do
     python -c "
 from app import app, db
 with app.app_context():
-    db.create_all()
-    print('✅ Created $table table')
+    try:
+        db.create_all()
+        print('✅ Created $table table')
+    except Exception as e:
+        print(f'❌ Error creating $table table: {str(e)}')
+        exit(1)
 "
   fi
 done
@@ -66,8 +74,12 @@ if [ "$(table_exists vote)" = "missing" ]; then
   python -c "
 from app import app, db
 with app.app_context():
-    db.create_all()
-    print('✅ Created vote table')
+    try:
+        db.create_all()
+        print('✅ Created vote table')
+    except Exception as e:
+        print(f'❌ Error creating vote table: {str(e)}')
+        exit(1)
 "
 fi
 
@@ -84,19 +96,53 @@ declare -A loan_app_columns=(
 )
 
 for column in "${!loan_app_columns[@]}"; do
-  if [ "$(column_exists loan_applications "$column")" = "missing" ]; then
+  echo "🔍 Checking column: $column"
+  status=$(column_exists loan_applications "$column")
+  
+  if [ "$status" = "missing" ]; then
     echo "➕ Adding column $column to loan_applications"
     python -c "
 from app import app, db
 from sqlalchemy import text
 with app.app_context():
-    conn = db.engine.connect()
-    # Use parameterized query with text()
-    conn.execute(
-        text('ALTER TABLE loan_applications ADD COLUMN $column ${loan_app_columns[$column]}')
-    )
-    print('✅ Added column $column')
+    try:
+        conn = db.engine.connect()
+        conn.execute(
+            text('ALTER TABLE loan_applications ADD COLUMN $column ${loan_app_columns[$column]}')
+        )
+        print('✅ Added column $column')
+    except Exception as e:
+        print(f'❌ Error adding column $column: {str(e)}')
+        exit(1)
 "
+  elif [ "$status" = "exists" ]; then
+    echo "✅ Column $column already exists"
+  else
+    echo "⚠️  Unexpected status for $column: $status"
+  fi
+done
+
+# Verify critical columns
+echo "🔍 Verifying critical columns..."
+for column in current_balance top_up_balance settlement_balance; do
+  status=$(column_exists loan_applications "$column")
+  if [ "$status" != "exists" ]; then
+    echo "❌ CRITICAL: Column $column is missing!"
+    echo "🛠️  Attempting emergency column creation..."
+    python -c "
+from app import app, db
+from sqlalchemy import text
+with app.app_context():
+    try:
+        conn = db.engine.connect()
+        conn.execute(
+            text('ALTER TABLE loan_applications ADD COLUMN $column ${loan_app_columns[$column]}')
+        )
+        print('✅ Added critical column $column')
+    except Exception as e:
+        print(f'❌ EMERGENCY: Failed to add $column: {str(e)}')
+        # Continue anyway - app might still work without it
+    "
   fi
 done
 
@@ -145,8 +191,12 @@ echo "👥 Initializing roles and permissions..."
 python -c "
 from app import app, initialize_roles_permissions
 with app.app_context():
-    initialize_roles_permissions()
-    print('✅ Roles and permissions initialized')
+    try:
+        initialize_roles_permissions()
+        print('✅ Roles and permissions initialized')
+    except Exception as e:
+        print(f'❌ Error initializing roles: {str(e)}')
+        # Continue anyway - app might still work
 "
 
 # -----------------------------------------------------------
@@ -158,16 +208,19 @@ echo "🔍 Configuring admin user..."
 ADMIN_STATUS=$(python -c "
 from app import app, User
 with app.app_context():
-    admin = User.query.filter_by(email='$ADMIN_EMAIL').first()
-    if admin:
-        # Check username conflict
-        conflict = User.query.filter(User.username=='admin', User.id != admin.id).first()
-        if conflict:
-            print('conflict')
+    try:
+        admin = User.query.filter_by(email='$ADMIN_EMAIL').first()
+        if admin:
+            # Check username conflict
+            conflict = User.query.filter(User.username=='admin', User.id != admin.id).first()
+            if conflict:
+                print('conflict')
+            else:
+                print('exists')
         else:
-            print('exists')
-    else:
-        print('missing')
+            print('missing')
+    except Exception as e:
+        print(f'error: {str(e)}')
 ")
 
 case "$ADMIN_STATUS" in
@@ -180,17 +233,23 @@ case "$ADMIN_STATUS" in
 from app import app, User
 import time
 with app.app_context():
-    admin = User.query.filter_by(email='$ADMIN_EMAIL').first()
-    if admin:
-        new_username = f'admin_{int(time.time())}'
-        admin.username = new_username
-        db.session.commit()
-        print(f'✅ Updated admin username to: {new_username}')
+    try:
+        admin = User.query.filter_by(email='$ADMIN_EMAIL').first()
+        if admin:
+            new_username = f'admin_{int(time.time())}'
+            admin.username = new_username
+            db.session.commit()
+            print(f'✅ Updated admin username to: {new_username}')
+    except Exception as e:
+        print(f'❌ Error resolving conflict: {str(e)}')
 "
         ;;
     "missing")
         echo "👑 Creating admin user: $ADMIN_EMAIL"
         flask create-admin || echo "⚠️  Admin creation failed - continuing"
+        ;;
+    "error:"*)
+        echo "⚠️  Error checking admin status: ${ADMIN_STATUS#error:}"
         ;;
     *)
         echo "⚠️  Unknown admin status - skipping admin setup"
