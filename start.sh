@@ -1,4 +1,4 @@
-fix this #!/usr/bin/env bash
+#!/usr/bin/env bash
 set -e
 export FLASK_ENV=production
 
@@ -33,13 +33,12 @@ from app import app, db
 from sqlalchemy import text
 with app.app_context():
     conn = db.engine.connect()
-    # Use SQLAlchemy text() for safe execution
     result = conn.execute(
         text(\"\"\"SELECT EXISTS (
             SELECT 1 
             FROM information_schema.columns 
             WHERE table_name = :table AND column_name = :column
-        ) AS exists\"\"\"),
+        )\"\"\"),
         {'table': '$table', 'column': '$column'}
     ).scalar()
     print('exists' if result else 'missing')
@@ -102,52 +101,41 @@ with app.app_context():
 done
 
 # -----------------------------------------------------------
-# 2. Alembic Migration Recovery
+# 2. Simplified Migration Handling
 # -----------------------------------------------------------
 echo "🔄 Handling database migrations..."
 
-# Check if alembic_version table exists
-if [ "$(table_exists alembic_version)" = "exists" ]; then
-  echo "⏩ Alembic version table exists"
-else
-  echo "🆕 Creating alembic_version table"
-  python -c "
-from app import app, db
-from sqlalchemy import text
-with app.app_context():
-    conn = db.engine.connect()
-    # Proper SQL execution with text()
-    conn.execute(
-        text('CREATE TABLE alembic_version (version_num VARCHAR(32) NOT NULL)')
-    )
-    print('✅ Created alembic_version table')
-"
-fi
-
-# Stamping the head revision
+# Always stamp head to ensure version is current
 echo "🏷️  Stamping database with current Alembic head"
-flask db stamp head
+flask db stamp head || echo "⚠️  Stamping failed - continuing"
 
-# Attempt to run migrations with recovery
+# Attempt to run migrations
 echo "🆙 Attempting database upgrade..."
 flask db upgrade || {
   echo "⚠️  Upgrade failed - applying recovery measures"
   
-  # Handle failed migration state
+  # Reset migration state
   python -c "
 from app import app, db
 from sqlalchemy import text
 with app.app_context():
-    conn = db.engine.connect()
-    # Safe SQL execution
-    conn.execute(
-        text('DELETE FROM alembic_version')
-    )
-    print('✅ Reset alembic_version table')
+    # Only reset if table exists
+    if db.engine.dialect.has_table(db.engine.connect(), 'alembic_version'):
+        conn = db.engine.connect()
+        conn.execute(
+            text('DELETE FROM alembic_version')
+        )
+        print('✅ Reset alembic_version table')
+    else:
+        print('✅ alembic_version table does not exist - nothing to reset')
 "
   
   echo "🏷️  Re-stamping database head"
-  flask db stamp head
+  flask db stamp head || echo "⚠️  Re-stamping failed - continuing"
+  
+  # Retry upgrade
+  echo "🔄 Retrying database upgrade..."
+  flask db upgrade || echo "⚠️  Upgrade retry failed - continuing with current schema"
 }
 
 # -----------------------------------------------------------
@@ -202,7 +190,7 @@ with app.app_context():
         ;;
     "missing")
         echo "👑 Creating admin user: $ADMIN_EMAIL"
-        flask create-admin
+        flask create-admin || echo "⚠️  Admin creation failed - continuing"
         ;;
     *)
         echo "⚠️  Unknown admin status - skipping admin setup"
