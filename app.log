@@ -4219,3 +4219,167 @@ werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'settle
 2025-06-13 10:28:04,682 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
 2025-06-13 10:28:04,683 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-13 11:14:51,601 - INFO - 127.0.0.1 - - [13/Jun/2025 11:14:51] "GET /register HTTP/1.1" 200 -
+2025-06-13 11:17:26,455 - INFO - 127.0.0.1 - - [13/Jun/2025 11:17:26] "[32mPOST /register HTTP/1.1[0m" 302 -
+2025-06-13 11:17:26,463 - INFO - 127.0.0.1 - - [13/Jun/2025 11:17:26] "GET /register HTTP/1.1" 200 -
+2025-06-13 11:17:28,180 - INFO - 127.0.0.1 - - [13/Jun/2025 11:17:28] "GET /approve_customers HTTP/1.1" 200 -
+2025-06-13 11:17:31,567 - INFO - 127.0.0.1 - - [13/Jun/2025 11:17:31] "[32mPOST /approve_customers HTTP/1.1[0m" 302 -
+2025-06-13 11:17:31,866 - INFO - 127.0.0.1 - - [13/Jun/2025 11:17:31] "GET /approve_customers HTTP/1.1" 200 -
+2025-06-13 11:17:33,754 - INFO - 127.0.0.1 - - [13/Jun/2025 11:17:33] "GET /customers HTTP/1.1" 200 -
+2025-06-13 11:17:34,891 - INFO - 127.0.0.1 - - [13/Jun/2025 11:17:34] "GET /loans HTTP/1.1" 200 -
+2025-06-13 11:20:18,748 - INFO - 127.0.0.1 - - [13/Jun/2025 11:20:18] "[32mPOST /process_loan/1/approve HTTP/1.1[0m" 302 -
+2025-06-13 11:20:18,767 - INFO - 127.0.0.1 - - [13/Jun/2025 11:20:18] "GET /loans HTTP/1.1" 200 -
+[2025-06-13 11:20:21,289] INFO in app: [DISBURSEMENT] Loan #118000001 | Top-up of: None | Cash to Client: 1000000.0
+2025-06-13 11:20:21,289 - INFO - [DISBURSEMENT] Loan #118000001 | Top-up of: None | Cash to Client: 1000000.0
+2025-06-13 11:20:21,298 - INFO - 127.0.0.1 - - [13/Jun/2025 11:20:21] "GET /disbursements HTTP/1.1" 200 -
+2025-06-13 11:20:23,318 - INFO - 127.0.0.1 - - [13/Jun/2025 11:20:23] "GET /payments HTTP/1.1" 200 -
+2025-06-13 11:20:25,271 - INFO - 127.0.0.1 - - [13/Jun/2025 11:20:25] "GET /loanbook HTTP/1.1" 200 -
+2025-06-13 11:20:30,873 - INFO - 127.0.0.1 - - [13/Jun/2025 11:20:30] "GET /loan/118000001/statement HTTP/1.1" 200 -
+2025-06-13 11:21:13,048 - INFO - 127.0.0.1 - - [13/Jun/2025 11:21:13] "GET /payments HTTP/1.1" 200 -
+2025-06-13 11:21:15,924 - INFO - 127.0.0.1 - - [13/Jun/2025 11:21:15] "GET /api/verify_loan/118000001 HTTP/1.1" 200 -
+2025-06-13 11:21:43,781 - INFO - 127.0.0.1 - - [13/Jun/2025 11:21:43] "[32mPOST /payments HTTP/1.1[0m" 302 -
+2025-06-13 11:21:43,797 - INFO - 127.0.0.1 - - [13/Jun/2025 11:21:43] "GET /payments HTTP/1.1" 200 -
+2025-06-13 11:21:46,109 - INFO - 127.0.0.1 - - [13/Jun/2025 11:21:46] "GET /loanbook HTTP/1.1" 200 -
+2025-06-13 11:21:48,065 - INFO - 127.0.0.1 - - [13/Jun/2025 11:21:48] "GET /loan/118000001/statement HTTP/1.1" 200 -
+2025-06-13 11:22:15,283 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:15] "GET /loanbook HTTP/1.1" 200 -
+2025-06-13 11:22:17,907 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:17] "GET /loan/118000001/statement HTTP/1.1" 200 -
+2025-06-13 11:22:19,227 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:19] "GET /loanbook HTTP/1.1" 200 -
+[2025-06-13 11:22:20,315] INFO in app: Found 1 loans for customer 202506000001
+2025-06-13 11:22:20,315 - INFO - Found 1 loans for customer 202506000001
+[2025-06-13 11:22:20,316] INFO in app: Customer ID: 1
+2025-06-13 11:22:20,316 - INFO - Customer ID: 1
+[2025-06-13 11:22:20,317] INFO in app: Found Loans: [('118000001', 'active')]
+2025-06-13 11:22:20,317 - INFO - Found Loans: [('118000001', 'active')]
+2025-06-13 11:22:20,357 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:20] "GET /customer/202506000001/account HTTP/1.1" 200 -
+[2025-06-13 11:22:21,901] INFO in app: Found 1 loans for customer 202506000001
+2025-06-13 11:22:21,901 - INFO - Found 1 loans for customer 202506000001
+[2025-06-13 11:22:21,902] INFO in app: Customer ID: 1
+2025-06-13 11:22:21,902 - INFO - Customer ID: 1
+[2025-06-13 11:22:21,903] INFO in app: Found Loans: [('118000001', 'active')]
+2025-06-13 11:22:21,903 - INFO - Found Loans: [('118000001', 'active')]
+2025-06-13 11:22:21,908 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:21] "GET /customer/202506000001/account?section=settlement HTTP/1.1" 200 -
+[2025-06-13 11:22:30,596] ERROR in app: Settlement error: Invalid settlement type
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 3254, in settle_loan
+    loan.settlement_type = request.form.get('settlement_type')
+    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 537, in __set__
+    self.impl.set(
+    ~~~~~~~~~~~~~^
+        instance_state(instance), instance_dict(instance), value, None
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1277, in set
+    value = self.fire_replace_event(
+        state, dict_, value, old, initiator
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1292, in fire_replace_event
+    value = fn(
+        state, value, previous, initiator or self._replace_token
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\events.py", line 2579, in wrap
+    return fn(target, *arg)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\util.py", line 307, in set_
+    return validator(state.obj(), key, value)
+  File "C:\Users\pc\loan-app\app.py", line 524, in validate_type
+    raise ValueError("Invalid settlement type")
+ValueError: Invalid settlement type
+2025-06-13 11:22:30,596 - ERROR - Settlement error: Invalid settlement type
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 3254, in settle_loan
+    loan.settlement_type = request.form.get('settlement_type')
+    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 537, in __set__
+    self.impl.set(
+    ~~~~~~~~~~~~~^
+        instance_state(instance), instance_dict(instance), value, None
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1277, in set
+    value = self.fire_replace_event(
+        state, dict_, value, old, initiator
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1292, in fire_replace_event
+    value = fn(
+        state, value, previous, initiator or self._replace_token
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\events.py", line 2579, in wrap
+    return fn(target, *arg)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\util.py", line 307, in set_
+    return validator(state.obj(), key, value)
+  File "C:\Users\pc\loan-app\app.py", line 524, in validate_type
+    raise ValueError("Invalid settlement type")
+ValueError: Invalid settlement type
+2025-06-13 11:22:30,650 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:30] "[32mPOST /settle_loan/1 HTTP/1.1[0m" 302 -
+[2025-06-13 11:22:30,887] INFO in app: Found 1 loans for customer 202506000001
+2025-06-13 11:22:30,887 - INFO - Found 1 loans for customer 202506000001
+[2025-06-13 11:22:30,889] INFO in app: Customer ID: 1
+2025-06-13 11:22:30,889 - INFO - Customer ID: 1
+[2025-06-13 11:22:30,891] INFO in app: Found Loans: [('118000001', 'active')]
+2025-06-13 11:22:30,891 - INFO - Found Loans: [('118000001', 'active')]
+2025-06-13 11:22:30,897 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:30] "GET /customer/202506000001/account?section=settlement HTTP/1.1" 200 -
+[2025-06-13 11:22:47,771] ERROR in app: Settlement error: Invalid settlement type
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 3254, in settle_loan
+    loan.settlement_type = request.form.get('settlement_type')
+    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 537, in __set__
+    self.impl.set(
+    ~~~~~~~~~~~~~^
+        instance_state(instance), instance_dict(instance), value, None
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1277, in set
+    value = self.fire_replace_event(
+        state, dict_, value, old, initiator
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1292, in fire_replace_event
+    value = fn(
+        state, value, previous, initiator or self._replace_token
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\events.py", line 2579, in wrap
+    return fn(target, *arg)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\util.py", line 307, in set_
+    return validator(state.obj(), key, value)
+  File "C:\Users\pc\loan-app\app.py", line 524, in validate_type
+    raise ValueError("Invalid settlement type")
+ValueError: Invalid settlement type
+2025-06-13 11:22:47,771 - ERROR - Settlement error: Invalid settlement type
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\app.py", line 3254, in settle_loan
+    loan.settlement_type = request.form.get('settlement_type')
+    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 537, in __set__
+    self.impl.set(
+    ~~~~~~~~~~~~~^
+        instance_state(instance), instance_dict(instance), value, None
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1277, in set
+    value = self.fire_replace_event(
+        state, dict_, value, old, initiator
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1292, in fire_replace_event
+    value = fn(
+        state, value, previous, initiator or self._replace_token
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\events.py", line 2579, in wrap
+    return fn(target, *arg)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\util.py", line 307, in set_
+    return validator(state.obj(), key, value)
+  File "C:\Users\pc\loan-app\app.py", line 524, in validate_type
+    raise ValueError("Invalid settlement type")
+ValueError: Invalid settlement type
+2025-06-13 11:22:47,794 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:47] "[32mPOST /settle_loan/1 HTTP/1.1[0m" 302 -
+[2025-06-13 11:22:47,804] INFO in app: Found 1 loans for customer 202506000001
+2025-06-13 11:22:47,804 - INFO - Found 1 loans for customer 202506000001
+[2025-06-13 11:22:47,805] INFO in app: Customer ID: 1
+2025-06-13 11:22:47,805 - INFO - Customer ID: 1
+[2025-06-13 11:22:47,806] INFO in app: Found Loans: [('118000001', 'active')]
+2025-06-13 11:22:47,806 - INFO - Found Loans: [('118000001', 'active')]
+2025-06-13 11:22:47,809 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:47] "GET /customer/202506000001/account?section=settlement HTTP/1.1" 200 -
+2025-06-13 11:22:52,397 - INFO - 127.0.0.1 - - [13/Jun/2025 11:22:52] "GET /loanbook HTTP/1.1" 200 -
