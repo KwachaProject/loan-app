@@ -1,80 +1,118 @@
 #!/bin/bash
-# -----------------  start.sh  -----------------
 
 export FLASK_ENV=production
 set -e
 
-echo "🚀  Starting deployment script..."
-echo "🔍  Checking environment variables..."
+echo "🚀 Starting deployment script..."
+echo "🔍 Checking environment variables..."
+
 if [[ -z "$ADMIN_EMAIL" || -z "$ADMIN_PASSWORD" ]]; then
-  echo "❌  ADMIN_EMAIL and ADMIN_PASSWORD must be set"
-  exit 1
+    echo "❌ ERROR: ADMIN_EMAIL and ADMIN_PASSWORD must be set"
+    exit 1
 fi
 
-echo "🛠️   Handling database schema..."
+echo "🛠️  Handling database schema..."
 
-# ---------- helper: does a table exist? ----------
+# Function to check if a table exists
 table_exists() {
-  local tbl="$1"
-  python - <<PY
+    local table_name="$1"
+    python -c "
 from app import app, db
 with app.app_context():
-    print('exists' if db.engine.dialect.has_table(db.engine.connect(), '$tbl') else 'missing')
-PY
+    if db.engine.dialect.has_table(db.engine.connect(), '$table_name'):
+        print('exists')
+    else:
+        print('missing')
+"
 }
 
-# ---------- create core tables if they’re missing ----------
-echo "🔍  Checking core tables..."
-for TBL in user loan payment; do
-  if [[ "$(table_exists "$TBL")" == "missing" ]]; then
-    echo "🛠️   Creating missing table: $TBL"
-    python - <<PY
+# Create core tables if missing
+echo "🔍 Checking core tables..."
+for table in "user" "loan" "payment"; do
+    if [ "$(table_exists $table)" = "missing" ]; then
+        echo "🛠️  Creating missing table: $table"
+        python -c "
 from app import app, db, User, Loan, Payment
-models = {'user': User, 'loan': Loan, 'payment': Payment}
 with app.app_context():
-    models['$TBL'].__table__.create(db.engine)
-    print("✅  Created $TBL table")
-PY
-  fi
+    model_map = {
+        'user': User,
+        'loan': Loan,
+        'payment': Payment
+    }
+    model = model_map.get('$table')
+    if model:
+        model.__table__.create(db.engine)
+        print('✅ Created $table table')
+"
+    fi
 done
 
-# ---------- create ‘vote’ table if it isn’t there ----------
-if [[ "$(table_exists vote)" == "missing" ]]; then
-  echo "🛠️   Creating vote table..."
-  python - <<PY
+# Create the vote table if missing
+if [ "$(table_exists vote)" = "missing" ]; then
+    echo "🛠️  Creating vote table..."
+    python -c "
 from app import app, db
 with app.app_context():
     db.create_all()
-    print("✅  Created vote table")
-PY
+    print('✅ Created vote table')
+"
 fi
 
-# ---------- roles / permissions ----------
-echo "👥  Initializing roles and permissions..."
-python - <<PY
+# Initialize roles and permissions
+echo "👥 Initializing roles and permissions..."
+python -c "
 from app import app, initialize_roles_permissions
 with app.app_context():
     initialize_roles_permissions()
-    print("✅  Roles and permissions initialized")
-PY
+    print('✅ Roles and permissions initialized')
+"
 
-# ---------- admin user ----------
-echo "🔍  Checking for existing admin user..."
-ADMIN_EXISTS=$(python - <<PY
-from app import app, db, User
+# Check for existing admin user
+echo "🔍 Checking admin configuration..."
+ADMIN_EXISTS=$(python -c "
+from app import app, User
 with app.app_context():
-    print('yes' if User.query.filter_by(username='admin').first() else 'no')
-PY
-)
+    admin = User.query.filter_by(email='$ADMIN_EMAIL').first()
+    if admin:
+        # Check if another user already has 'admin' username
+        conflict = User.query.filter(User.username=='admin', User.id != admin.id).first()
+        if conflict:
+            print('conflict')
+        else:
+            print('exists')
+    else:
+        print('missing')
+")
 
-if [[ "$ADMIN_EXISTS" == "yes" ]]; then
-  echo "✅  Admin already present – skipping creation."
-else
-  echo "👑  Creating admin user: $ADMIN_EMAIL"
-  flask create-admin --username admin --email "$ADMIN_EMAIL" --password "$ADMIN_PASSWORD"
-fi
+# Handle admin creation based on check results
+case "$ADMIN_EXISTS" in
+    "exists")
+        echo "✅ Admin user already exists - skipping creation"
+        ;;
+    "conflict")
+        echo "⚠️  Username conflict detected - updating admin username"
+        python -c "
+from app import app, User
+with app.app_context():
+    admin = User.query.filter_by(email='$ADMIN_EMAIL').first()
+    if admin:
+        # Append timestamp to make username unique
+        import time
+        new_username = f'admin_{int(time.time())}'
+        admin.username = new_username
+        db.session.commit()
+        print(f'✅ Updated admin username to: {new_username}')
+"
+        ;;
+    "missing")
+        echo "👑 Creating admin user: $ADMIN_EMAIL"
+        flask create-admin
+        ;;
+    *)
+        echo "⚠️  Unknown admin status - skipping admin creation"
+        ;;
+esac
 
-# ---------- launch ----------
-echo "🚀  Starting Gunicorn..."
-exec gunicorn --workers 4 --bind "0.0.0.0:${PORT:-5000}" app:app
-# -----------------------------------------------------------
+# Start the Flask app
+echo "🚀 Starting Flask application..."
+exec gunicorn --workers 4 --bind 0.0.0.0:$PORT app:app
