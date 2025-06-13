@@ -67,19 +67,23 @@ with app.app_context():
     print('✅ Roles and permissions initialized')
 "
 
-# Create/update admin user
-echo "👑 Configuring admin user: $ADMIN_EMAIL"
-flask create-admin || {
-    echo "🔄 Retrying admin creation with force..."
-    flask create-admin --force
-}
+# Check if admin user already exists
+echo "🔍 Checking for existing admin user..."
+ADMIN_EXISTS=$(python -c "
+from app import app, User
+with app.app_context():
+    if User.query.filter_by(email='$ADMIN_EMAIL').first():
+        print('exists')
+    else:
+        print('missing')
+")
 
-# Verify admin creation
-echo "🔒 Verifying admin account..."
-if flask create-admin | grep -q -E "created|promoted|exists"; then
-    echo "✅ Admin account verified"
+# Create admin user only if it doesn't exist
+if [ "$ADMIN_EXISTS" = "exists" ]; then
+    echo "✅ Admin user already exists - skipping creation"
 else
-    echo "⚠️  Admin verification failed - continuing anyway"
+    echo "👑 Creating admin user: $ADMIN_EMAIL"
+    flask create-admin
 fi
 
 # Start the Flask app
