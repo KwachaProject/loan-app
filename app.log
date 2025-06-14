@@ -5342,3 +5342,14 @@ WHERE users.id = ?]
 2025-06-14 11:58:43,152 - INFO - 127.0.0.1 - - [14/Jun/2025 11:58:43] "[32mGET /payments HTTP/1.1[0m" 302 -
 2025-06-14 11:58:43,388 - INFO - 127.0.0.1 - - [14/Jun/2025 11:58:43] "GET /login HTTP/1.1" 200 -
 2025-06-14 11:58:43,440 - INFO - 127.0.0.1 - - [14/Jun/2025 11:58:43] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2025-06-14 11:59:53,775 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-14 11:59:53,775 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-14 11:59:57,974 - INFO - 127.0.0.1 - - [14/Jun/2025 11:59:57] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-06-14 11:59:58,021 - INFO - 127.0.0.1 - - [14/Jun/2025 11:59:58] "GET / HTTP/1.1" 200 -
+2025-06-14 12:00:01,995 - INFO - 127.0.0.1 - - [14/Jun/2025 12:00:01] "GET /loanbook HTTP/1.1" 200 -
+2025-06-14 12:00:08,483 - INFO - 127.0.0.1 - - [14/Jun/2025 12:00:08] "GET /payments HTTP/1.1" 200 -
+2025-06-14 12:00:09,667 - INFO - 127.0.0.1 - - [14/Jun/2025 12:00:09] "GET /disbursements HTTP/1.1" 200 -
+2025-06-14 12:00:11,747 - INFO - 127.0.0.1 - - [14/Jun/2025 12:00:11] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-06-14 12:00:14,335 - INFO - 127.0.0.1 - - [14/Jun/2025 12:00:14] "GET /admin/notifications HTTP/1.1" 200 -
+2025-06-14 12:00:15,397 - INFO - 127.0.0.1 - - [14/Jun/2025 12:00:15] "GET /admin/reports HTTP/1.1" 200 -
