@@ -803,7 +803,6 @@ def edit_customer(customer_id):
 
 @app.route('/loans')
 def view_loans():
-    # Fetch loan applications where the customer is approved for creation and the loan status is 'pending' or 'approved'
     loans = LoanApplication.query \
         .join(Customer) \
         .filter(Customer.is_approved_for_creation == True) \
@@ -813,12 +812,20 @@ def view_loans():
     
     processed_loans = []
     for loan_app, customer in loans:
+        # Calculate current_balance safely
+        try:
+            loan_app.current_balance = loan_app.calculate_current_balance()
+        except AttributeError:
+            # Fallback if no method is defined or DB column exists
+            loan_app.current_balance = 0
+
         processed_loans.append({
             'loan': loan_app,
             'customer': customer
         })
 
     return render_template('view_loans.html', loans=processed_loans)
+
        
 @app.route('/process_loan/<int:loan_id>/<action>', methods=['POST'])
 def process_loan(loan_id, action):
