@@ -5371,3 +5371,22 @@ WHERE users.id = ?]
 2025-06-14 16:04:37,036 - INFO - [33mPress CTRL+C to quit[0m
 2025-06-14 16:47:08,193 - ERROR - Error: Revision d32f895b2f28 is not a head revision; please specify --splice to create a new branch from this revision
 2025-06-14 16:48:06,160 - ERROR - Error: Revision d32f895b2f28 is not a head revision; please specify --splice to create a new branch from this revision
+2025-06-14 17:15:21,199 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-14 17:15:21,200 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-14 17:15:26,529 - INFO - 127.0.0.1 - - [14/Jun/2025 17:15:26] "GET /admin/reports HTTP/1.1" 200 -
+2025-06-14 17:15:27,336 - INFO - 127.0.0.1 - - [14/Jun/2025 17:15:27] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-14 17:15:28,598 - INFO - 127.0.0.1 - - [14/Jun/2025 17:15:28] "GET /customers HTTP/1.1" 200 -
+2025-06-14 17:15:29,472 - INFO - 127.0.0.1 - - [14/Jun/2025 17:15:29] "GET /loans HTTP/1.1" 200 -
+2025-06-14 17:15:31,036 - INFO - 127.0.0.1 - - [14/Jun/2025 17:15:31] "GET /disbursements HTTP/1.1" 200 -
+2025-06-14 17:15:31,909 - INFO - 127.0.0.1 - - [14/Jun/2025 17:15:31] "GET /loanbook HTTP/1.1" 200 -
+2025-06-14 17:15:33,312 - INFO - 127.0.0.1 - - [14/Jun/2025 17:15:33] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-06-14 17:15:33,937 - INFO - 127.0.0.1 - - [14/Jun/2025 17:15:33] "GET /payments HTTP/1.1" 200 -
+2025-06-14 17:15:35,727 - INFO - 127.0.0.1 - - [14/Jun/2025 17:15:35] "GET / HTTP/1.1" 200 -
+2025-06-14 17:34:10,992 - INFO - 127.0.0.1 - - [14/Jun/2025 17:34:10] "GET /register HTTP/1.1" 200 -
+2025-06-14 18:52:47,175 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-14 18:52:47,175 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-14 19:14:52,906 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-14 19:14:52,906 - INFO - [33mPress CTRL+C to quit[0m
