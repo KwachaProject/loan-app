@@ -5353,3 +5353,5 @@ WHERE users.id = ?]
 2025-06-14 12:00:11,747 - INFO - 127.0.0.1 - - [14/Jun/2025 12:00:11] "GET /admin/dashboard HTTP/1.1" 200 -
 2025-06-14 12:00:14,335 - INFO - 127.0.0.1 - - [14/Jun/2025 12:00:14] "GET /admin/notifications HTTP/1.1" 200 -
 2025-06-14 12:00:15,397 - INFO - 127.0.0.1 - - [14/Jun/2025 12:00:15] "GET /admin/reports HTTP/1.1" 200 -
+2025-06-14 12:32:00,674 - ERROR - Error: Directory migrations already exists and is not empty
+2025-06-14 12:32:11,638 - ERROR - Error: Directory migrations already exists and is not empty
