@@ -145,6 +145,9 @@ def setup_logging():
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s [%(pathname)s:%(lineno)d]'
     )
 
+
+
+
     # Rotating file handler
     log_file = os.path.join(log_dir, 'loan_app.log')
     file_handler = RotatingFileHandler(
@@ -2114,7 +2117,6 @@ def edit_customer(customer_id):
 
 @app.route('/loans')
 def view_loans():
-    # Fetch loan applications where the customer is approved for creation and the loan status is 'pending' or 'approved'
     loans = LoanApplication.query \
         .join(Customer) \
         .filter(Customer.is_approved_for_creation == True) \
@@ -2126,10 +2128,12 @@ def view_loans():
     for loan_app, customer in loans:
         processed_loans.append({
             'loan': loan_app,
-            'customer': customer
+            'customer': customer,
+            'current_balance': loan_app.balance or 0.0
         })
 
     return render_template('view_loans.html', loans=processed_loans)
+
        
 @app.route('/process_loan/<int:loan_id>/<action>', methods=['POST'])
 def process_loan(loan_id, action):
