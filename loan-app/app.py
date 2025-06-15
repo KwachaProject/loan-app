@@ -812,16 +812,10 @@ def view_loans():
     
     processed_loans = []
     for loan_app, customer in loans:
-        # Calculate current_balance safely
-        try:
-            loan_app.current_balance = loan_app.calculate_current_balance()
-        except AttributeError:
-            # Fallback if no method is defined or DB column exists
-            loan_app.current_balance = 0
-
         processed_loans.append({
             'loan': loan_app,
-            'customer': customer
+            'customer': customer,
+            'current_balance': loan_app.balance  # Use the @property method
         })
 
     return render_template('view_loans.html', loans=processed_loans)
