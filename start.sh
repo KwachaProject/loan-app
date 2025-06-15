@@ -19,13 +19,9 @@ echo "🆘  Ensuring critical columns exist…"
 
 python - <<'PY'
 from sqlalchemy import create_engine, inspect, text
-import os
+import os, sys
 
-# Use DATABASE_URL directly (as Render provides)
-url = os.environ["DATABASE_URL"]
-if url.startswith("postgres://"):
-    url = url.replace("postgres://", "postgresql://", 1)
-
+url = os.environ["DATABASE_URL"].replace("postgres://", "postgresql://", 1)
 engine = create_engine(url, isolation_level="AUTOCOMMIT")
 
 NEEDED = {
@@ -38,65 +34,77 @@ NEEDED = {
     "parent_loan_id"      : "INTEGER",
 }
 
-with engine.connect() as conn:
-    cols = {c["name"] for c in inspect(conn).get_columns("loan_applications")}
+with engine.connect() as c:
+    cols = {c["name"] for c in inspect(c).get_columns("loan_applications")}
     for col, ddl in NEEDED.items():
         if col in cols:
-            print(f"✅  {col} already present")
-            continue
-        print(f"➕  adding {col}")
-        try:
-            conn.execute(text(f"ALTER TABLE loan_applications "
-                              f"ADD COLUMN {col} {ddl}"))
-            print("   → done")
-        except Exception as e:
-            print(f"   ⚠️  could not add {col}: {e}")
+            print(f" ✅ {col} ok")
+        else:
+            print(f" ➕ add {col}")
+            try:
+                c.execute(text(f'ALTER TABLE loan_applications ADD COLUMN {col} {ddl}'))
+            except Exception as e:
+                print(f"   ⚠️  {e}")
 PY
 
 echo "✅  Column check complete"
 
-echo "🏷️  Stamping production DB to new baseline (0001_baseline)"
-flask db stamp 0001_baseline || true  
-
 ###############################################################################
-# 2. Apply Alembic migrations
+# 2. Bring Alembic in‑sync with reality (no more duplicate‑table crashes)
 ###############################################################################
-echo "🗄️  Applying database migrations…"
+echo "🗄️  Reconciling Alembic version…"
 
-if flask db upgrade; then
-  echo "✅  Alembic upgraded cleanly"
-else
-  echo "⚠️  Alembic upgrade failed – starting recovery"
+REPO_HEAD=$(alembic heads | awk 'NR==1{print $1}')
+echo "🔎  Repo head is $REPO_HEAD"
 
-  HEAD_REV="$(alembic heads | awk 'NR==1{print $1}')"
-  echo "🔎  Repo head revision is ${HEAD_REV}"
-
-  python - <<PY
-import os
-from sqlalchemy import create_engine, text
+python - <<PY
+import os, sys
+from sqlalchemy import create_engine, inspect, text
 
 url = os.environ["DATABASE_URL"].replace("postgres://", "postgresql://", 1)
-engine = create_engine(url, isolation_level="AUTOCOMMIT")
+e   = create_engine(url, isolation_level="AUTOCOMMIT")
 
-with engine.connect() as conn:
-    conn.execute(text("CREATE TABLE IF NOT EXISTS alembic_version (version_num VARCHAR(32) NOT NULL)"))
-    conn.execute(text("DELETE FROM alembic_version"))
-    conn.execute(text("INSERT INTO alembic_version (version_num) VALUES (:rev)"), {"rev": "${HEAD_REV}"})
-    print(f"✅  Force‑stamped alembic_version with ${HEAD_REV}")
+with e.connect() as c:
+    c.execute(text("""
+      CREATE TABLE IF NOT EXISTS alembic_version (
+        version_num VARCHAR(32) NOT NULL
+      )
+    """))
+
+    current = c.execute(text("SELECT version_num FROM alembic_version LIMIT 1")).scalar()
+    have_tables = 'customers' in inspect(c).get_table_names()
+
+    if current == None and have_tables:
+        # Production DB already has schema – fast‑forward
+        c.execute(text("INSERT INTO alembic_version VALUES (:v)"), {'v': "$REPO_HEAD"})
+        print("📌  Existing tables detected, stamped directly to HEAD")
+        sys.exit(0)
+
+    if current == "$REPO_HEAD":
+        print("✅  DB already at head")
+        sys.exit(0)
+
+    if have_tables and current and current.startswith("0001"):
+        # Old baseline but schema exists – bump straight to head
+        c.execute(text("UPDATE alembic_version SET version_num=:v"), {'v': "$REPO_HEAD"})
+        print("🪄  Baseline bumped to HEAD")
+        sys.exit(0)
+
+    # Otherwise run real upgrade
+    sys.exit(1)
 PY
+NEEDS_UPGRADE=$?
 
-  if flask db upgrade; then
-    echo "✅  Upgrade succeeded after recovery"
-  else
-    echo "❌  Final Alembic upgrade failed – aborting deploy" >&2
-    exit 1
-  fi
+if [[ $NEEDS_UPGRADE -eq 1 ]]; then
+  echo "⏫  Running flask db upgrade…"
+  flask db upgrade
+  echo "✅  Alembic upgrade complete"
 fi
 
 ###############################################################################
-# 3. Seed roles and permissions
+# 3. Seed roles / permissions
 ###############################################################################
-echo "👥  Seeding roles / permissions…"
+echo "👥  Seeding RBAC data…"
 python - <<'PY'
 from app import app, initialize_roles_permissions
 with app.app_context():
@@ -107,33 +115,29 @@ PY
 ###############################################################################
 # 4. Ensure admin user exists
 ###############################################################################
-echo "👑  Ensuring admin account…"
+echo "👑  Checking admin account…"
 python - <<'PY'
 from app import app, db, User
 from werkzeug.security import generate_password_hash
 import os, time
-
-email    = os.environ["ADMIN_EMAIL"]
-password = os.environ["ADMIN_PASSWORD"]
+email, pwd = os.environ["ADMIN_EMAIL"], os.environ["ADMIN_PASSWORD"]
 
 with app.app_context():
-    admin = User.query.filter_by(email=email).first()
-    if admin:
-        print("✅  Admin already present")
+    u = User.query.filter_by(email=email).first()
+    if u:
+        print("✅  Admin present")
     else:
-        username = "admin"
-        if User.query.filter_by(username=username).first():
-            username = f"admin_{int(time.time())}"
-        admin = User(username=username,
-                     email=email,
-                     password_hash=generate_password_hash(password))
-        db.session.add(admin)
+        uname = "admin"
+        if User.query.filter_by(username=uname).first():
+            uname = f"admin_{int(time.time())}"
+        db.session.add(User(username=uname, email=email,
+                            password_hash=generate_password_hash(pwd)))
         db.session.commit()
-        print(f"✅  Created admin user {email} ({username})")
+        print(f"✅  Created admin {email} ({uname})")
 PY
 
 ###############################################################################
 # 5. Launch Gunicorn
 ###############################################################################
 echo "🚀  Launching Gunicorn…"
-exec gunicorn --workers 4 --bind 0.0.0.0:${PORT:-8000} app:app
+exec gunicorn --workers 4 --bind "0.0.0.0:${PORT:-8000}" app:app
