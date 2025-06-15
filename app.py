@@ -741,9 +741,6 @@ class LoanApplication(db.Model):
         )
 
 
-
-        
-
 class Disbursement(db.Model):
     __tablename__ = 'disbursements'
 
@@ -2700,7 +2697,7 @@ from sqlalchemy.orm import joinedload
 def loanbook():
     try:
         page = int(request.args.get("page", 1))
-        per_page = 25
+        per_page = 1000
         ajax = request.args.get("ajax") == "true"
 
         loans_query = LoanApplication.query \
