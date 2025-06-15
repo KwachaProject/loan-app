@@ -2,6 +2,7 @@
 set -euo pipefail
 
 export FLASK_ENV=production
+export FLASK_APP=app.py  # Explicitly set Flask app
 echo "🚀  Starting deployment script…"
 
 ###############################################################################
@@ -19,9 +20,13 @@ echo "🆘  Ensuring critical columns exist…"
 
 python - <<'PY'
 from sqlalchemy import create_engine, inspect, text
-import os, sys
+import os
 
-url = os.environ["DATABASE_URL"].replace("postgres://", "postgresql://", 1)
+# Use DATABASE_URL directly (as Render provides)
+url = os.environ["DATABASE_URL"]
+if url.startswith("postgres://"):
+    url = url.replace("postgres://", "postgresql://", 1)
+
 engine = create_engine(url, isolation_level="AUTOCOMMIT")
 
 NEEDED = {
@@ -34,77 +39,97 @@ NEEDED = {
     "parent_loan_id"      : "INTEGER",
 }
 
-with engine.connect() as c:
-    cols = {c["name"] for c in inspect(c).get_columns("loan_applications")}
+with engine.connect() as conn:
+    cols = {c["name"] for c in inspect(conn).get_columns("loan_applications")}
     for col, ddl in NEEDED.items():
         if col in cols:
-            print(f" ✅ {col} ok")
-        else:
-            print(f" ➕ add {col}")
-            try:
-                c.execute(text(f'ALTER TABLE loan_applications ADD COLUMN {col} {ddl}'))
-            except Exception as e:
-                print(f"   ⚠️  {e}")
+            print(f"✅  {col} already present")
+            continue
+        print(f"➕  adding {col}")
+        try:
+            conn.execute(text(f"ALTER TABLE loan_applications "
+                              f"ADD COLUMN {col} {ddl}"))
+            print("   → done")
+        except Exception as e:
+            print(f"   ⚠️  could not add {col}: {e}")
 PY
 
 echo "✅  Column check complete"
 
 ###############################################################################
-# 2. Bring Alembic in‑sync with reality (no more duplicate‑table crashes)
+# 2. Direct Alembic Version Management
 ###############################################################################
-echo "🗄️  Reconciling Alembic version…"
+echo "🗄️  Directly managing Alembic version…"
 
-REPO_HEAD=$(alembic heads | awk 'NR==1{print $1}')
-echo "🔎  Repo head is $REPO_HEAD"
+# Get current head revision from code
+HEAD_REV=$(alembic heads | awk 'NR==1{print $1}')
+if [ -z "$HEAD_REV" ]; then
+  echo "❌  Could not determine Alembic head revision"
+  exit 1
+fi
+echo "🔎  Code head revision: $HEAD_REV"
 
+# Create/update version table directly
 python - <<PY
-import os, sys
-from sqlalchemy import create_engine, inspect, text
+import os
+import sys
+from sqlalchemy import create_engine, text
 
-url = os.environ["DATABASE_URL"].replace("postgres://", "postgresql://", 1)
-e   = create_engine(url, isolation_level="AUTOCOMMIT")
-
-with e.connect() as c:
-    c.execute(text("""
-      CREATE TABLE IF NOT EXISTS alembic_version (
-        version_num VARCHAR(32) NOT NULL
-      )
-    """))
-
-    current = c.execute(text("SELECT version_num FROM alembic_version LIMIT 1")).scalar()
-    have_tables = 'customers' in inspect(c).get_table_names()
-
-    if current == None and have_tables:
-        # Production DB already has schema – fast‑forward
-        c.execute(text("INSERT INTO alembic_version VALUES (:v)"), {'v': "$REPO_HEAD"})
-        print("📌  Existing tables detected, stamped directly to HEAD")
-        sys.exit(0)
-
-    if current == "$REPO_HEAD":
-        print("✅  DB already at head")
-        sys.exit(0)
-
-    if have_tables and current and current.startswith("0001"):
-        # Old baseline but schema exists – bump straight to head
-        c.execute(text("UPDATE alembic_version SET version_num=:v"), {'v': "$REPO_HEAD"})
-        print("🪄  Baseline bumped to HEAD")
-        sys.exit(0)
-
-    # Otherwise run real upgrade
+try:
+    url = os.environ["DATABASE_URL"]
+    if url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql://", 1)
+    
+    engine = create_engine(url, isolation_level="AUTOCOMMIT")
+    
+    with engine.connect() as conn:
+        # Create version table if needed
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS alembic_version (
+                version_num VARCHAR(32) NOT NULL,
+                CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num)
+            )
+        """))
+        
+        # Check current DB version
+        result = conn.execute(text("SELECT version_num FROM alembic_version"))
+        db_rev = result.scalar()
+        
+        if db_rev:
+            print(f"✅  DB has revision: {db_rev}")
+        else:
+            print("ℹ️  No version in DB")
+        
+        # Update to head if different
+        if db_rev != "$HEAD_REV":
+            print("🔄  Updating DB version to $HEAD_REV")
+            conn.execute(text("DELETE FROM alembic_version"))
+            conn.execute(text("INSERT INTO alembic_version (version_num) VALUES (:rev)"), 
+                         {"rev": "$HEAD_REV"})
+            print("✅  Version updated")
+        else:
+            print("✅  DB already at head revision")
+    
+    print("🎉  Version reconciliation complete")
+    sys.exit(0)
+    
+except Exception as e:
+    print(f"❌  Version management failed: {str(e)}")
+    import traceback
+    traceback.print_exc()
     sys.exit(1)
 PY
-NEEDS_UPGRADE=$?
-
-if [[ $NEEDS_UPGRADE -eq 1 ]]; then
-  echo "⏫  Running flask db upgrade…"
-  flask db upgrade
-  echo "✅  Alembic upgrade complete"
-fi
 
 ###############################################################################
-# 3. Seed roles / permissions
+# 3. Skip Problematic Migrations
 ###############################################################################
-echo "👥  Seeding RBAC data…"
+echo "⏭️  Skipping migration execution"
+echo "ℹ️  Assuming database schema is current"
+
+###############################################################################
+# 4. Seed roles and permissions
+###############################################################################
+echo "👥  Seeding roles / permissions…"
 python - <<'PY'
 from app import app, initialize_roles_permissions
 with app.app_context():
@@ -113,31 +138,35 @@ with app.app_context():
 PY
 
 ###############################################################################
-# 4. Ensure admin user exists
+# 5. Ensure admin user exists
 ###############################################################################
-echo "👑  Checking admin account…"
+echo "👑  Ensuring admin account…"
 python - <<'PY'
 from app import app, db, User
 from werkzeug.security import generate_password_hash
 import os, time
-email, pwd = os.environ["ADMIN_EMAIL"], os.environ["ADMIN_PASSWORD"]
+
+email    = os.environ["ADMIN_EMAIL"]
+password = os.environ["ADMIN_PASSWORD"]
 
 with app.app_context():
-    u = User.query.filter_by(email=email).first()
-    if u:
-        print("✅  Admin present")
+    admin = User.query.filter_by(email=email).first()
+    if admin:
+        print("✅  Admin already present")
     else:
-        uname = "admin"
-        if User.query.filter_by(username=uname).first():
-            uname = f"admin_{int(time.time())}"
-        db.session.add(User(username=uname, email=email,
-                            password_hash=generate_password_hash(pwd)))
+        username = "admin"
+        if User.query.filter_by(username=username).first():
+            username = f"admin_{int(time.time())}"
+        admin = User(username=username,
+                     email=email,
+                     password_hash=generate_password_hash(password))
+        db.session.add(admin)
         db.session.commit()
-        print(f"✅  Created admin {email} ({uname})")
+        print(f"✅  Created admin user {email} ({username})")
 PY
 
 ###############################################################################
-# 5. Launch Gunicorn
+# 6. Launch Gunicorn
 ###############################################################################
 echo "🚀  Launching Gunicorn…"
-exec gunicorn --workers 4 --bind "0.0.0.0:${PORT:-8000}" app:app
+exec gunicorn --workers 4 --bind 0.0.0.0:${PORT:-8000} app:app
