@@ -89,6 +89,7 @@
                             <th class="text-end">Balance</th>
                             <th>Method</th>
                             <th>Reference</th>
+                            <th>Actions</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -106,6 +107,15 @@
                             <td>
                                 {% if not row.valid_allocation %}
                                 <span class="badge bg-danger" title="Allocation doesn't match payment amount">!</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.method and row.method.lower() not in ['settlement', 'internal_topup', 'internal_settlement'] %}
+                                <a href="{{ url_for('edit_payment', payment_id=row.id) }}" class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                {% else %}
+                                <span class="text-muted">System</span>
                                 {% endif %}
                             </td>
                         </tr>

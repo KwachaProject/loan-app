@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Payment{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Edit Payment</h2>
+    
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="mb-4">
+                <h5>Payment Details</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Loan Number:</strong> {{ loan.loan_number }}</p>
+                        <p><strong>Customer:</strong> {{ loan.customer.first_name }} {{ loan.customer.last_name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Original Amount:</strong> {{ "{:,.2f}".format(payment.amount) }}</p>
+                        <p><strong>Date:</strong> {{ payment.created_at.strftime('%Y-%m-%d %H:%M') if payment.created_at else 'N/A' }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="amount" class="form-label">New Amount (MWK)</label>
+                    <input type="number" class="form-control" name="amount" 
+                           step="0.01" min="0.01" value="{{ payment.amount }}" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Update Payment
+                </button>
+                <a href="{{ url_for('loan_statement', loan_number=loan.loan_number) }}" 
+                   class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

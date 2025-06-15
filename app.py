@@ -96,36 +96,6 @@ console_handler.setFormatter(formatter)
 app.logger.addHandler(console_handler)
 
 
-@app.template_filter('money')
-def money_format(value):
-    try:
-        return f"{float(value):,.2f}"
-    except Exception:
-        return "0.00"
-
-@app.template_filter('time_ago')
-def time_ago_filter(dt):
-    if not isinstance(dt, datetime):
-        return dt
-
-    now = datetime.utcnow()
-    delta = relativedelta(now, dt)
-
-    if delta.years > 0:
-        return f"{delta.years} year(s) ago"
-    elif delta.months > 0:
-        return f"{delta.months} month(s) ago"
-    elif delta.days > 0:
-        return f"{delta.days} day(s) ago"
-    elif delta.hours > 0:
-        return f"{delta.hours} hour(s) ago"
-    elif delta.minutes > 0:
-        return f"{delta.minutes} minute(s) ago"
-    else:
-        return "just now"
-
-# Register the filter
-app.jinja_env.filters['time_ago'] = time_ago_filter
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -168,6 +138,38 @@ def setup_logging():
 # Initialize logging
 setup_logging()
 
+@app.template_filter('money')
+def money_format(value):
+    try:
+        return f"{float(value):,.2f}"
+    except Exception:
+        return "0.00"
+
+@app.template_filter('time_ago')
+def time_ago_filter(dt):
+    if not isinstance(dt, datetime):
+        return dt
+
+    now = datetime.utcnow()
+    delta = relativedelta(now, dt)
+
+    if delta.years > 0:
+        return f"{delta.years} year(s) ago"
+    elif delta.months > 0:
+        return f"{delta.months} month(s) ago"
+    elif delta.days > 0:
+        return f"{delta.days} day(s) ago"
+    elif delta.hours > 0:
+        return f"{delta.hours} hour(s) ago"
+    elif delta.minutes > 0:
+        return f"{delta.minutes} minute(s) ago"
+    else:
+        return "just now"
+
+# Register the filter
+app.jinja_env.filters['time_ago'] = time_ago_filter
+
+
 @app.template_filter('datetimeformat')
 def datetimeformat_filter(value, format='%Y-%m-%d %H:%M'):
     """Custom datetime format filter"""
@@ -177,6 +179,8 @@ def datetimeformat_filter(value, format='%Y-%m-%d %H:%M'):
         return value.strftime(format)
     except AttributeError:
         return ""
+
+app.jinja_env.filters['datetimeformat'] = datetimeformat_filter
 
 logging.basicConfig(
     filename='app.log',
@@ -832,7 +836,7 @@ def allocate_payment_listener(mapper, connection, target):
 
 
 
-def allocate_payment(payment: Payment, loan: LoanApplication):
+def allocate_payment(payment: Payment, loan: LoanApplication, is_edit=False):
     session = object_session(payment)
     
     if payment.method == 'settlement':
@@ -841,9 +845,11 @@ def allocate_payment(payment: Payment, loan: LoanApplication):
     if not session:
         raise RuntimeError("No active session for allocation")
 
-    # Skip if already allocated
-    if session.query(PaymentAllocation).filter_by(payment_id=payment.id).first():
-        return
+    # Delete existing allocation if present (for edits)
+    existing_allocation = session.query(PaymentAllocation).filter_by(payment_id=payment.id).first()
+    if existing_allocation:
+        session.delete(existing_allocation)
+        session.flush()  # Ensure deletion is processed before recalculation
 
     config = PRICING.get(loan.term_months)
     if not config:
@@ -851,48 +857,66 @@ def allocate_payment(payment: Payment, loan: LoanApplication):
 
     loan_amount = loan.loan_amount or 0
     capitalized = loan_amount + (loan_amount * config['origination']) + (loan_amount * config['insurance']) + config['crb']
-    paid_principal = sum(p.allocation.principal for p in loan.payments if p.allocation and p.id != payment.id)
+    
+    # Calculate paid principal excluding current payment
+    paid_principal = sum(
+        p.allocation.principal 
+        for p in loan.payments 
+        if p.allocation and p.id != payment.id and p.status in ['successful', 'completed']
+    )
     remaining_principal = max(capitalized - paid_principal, 0)
 
     rate = config.get('rate', 0.0)
     interest = round(remaining_principal * rate, 2)
     method = (payment.method or '').lower()
 
-    allocation = PaymentAllocation(payment_id=payment.id, principal=0.0, interest=0.0, fees=0.0)
+    allocation = PaymentAllocation(payment_id=payment.id, principal=0.0, interest=0.0, fees=0.0, settlement_interest=0.0)
 
     if method in ('internal_topup', 'internal_settlement'):
         # Internal settlement: no fees, allocate to principal + capture interest to special fields
         interest = min(interest, payment.amount)
         principal = round(payment.amount - interest, 2)
 
-        # Cap principal
+        # Cap principal to remaining balance
         principal = min(principal, remaining_principal)
 
         allocation.principal = principal
         allocation.interest = 0.0
         allocation.fees = 0.0
 
-        if loan.closure_type == 'topup':
+        if method == 'internal_topup':
+            allocation.settlement_interest = interest
             loan.top_up_interest = interest
-        elif loan.closure_type == 'settlement':
+        else:  # internal_settlement
+            allocation.settlement_interest = interest
             loan.settlement_interest = interest
 
     else:
         # Normal repayment
         collection_fee = round(loan_amount * config['collection'], 2)
         fees = min(collection_fee, payment.amount)
-        remaining = payment.amount - fees
+        remaining_after_fees = payment.amount - fees
 
-        interest = min(interest, remaining)
-        principal = max(remaining - interest, 0)
+        interest = min(interest, remaining_after_fees)
+        principal = max(remaining_after_fees - interest, 0)
         principal = min(principal, remaining_principal)
 
         allocation.principal = round(principal, 2)
         allocation.interest = round(interest, 2)
         allocation.fees = round(fees, 2)
 
+    # Validate allocation matches payment amount
+    allocated_total = allocation.principal + allocation.interest + allocation.fees + allocation.settlement_interest
+    if not math.isclose(allocated_total, payment.amount, abs_tol=0.01):
+        raise AccountingError(
+            f"Allocation mismatch: Payment {payment.id} amount {payment.amount} "
+            f"vs allocated {allocated_total} (P:{allocation.principal} "
+            f"I:{allocation.interest} F:{allocation.fees} SI:{allocation.settlement_interest})"
+        )
+
     session.add(allocation)
     session.add(loan)
+    return allocation
 
 
 class PaymentAllocation(db.Model):
@@ -1750,6 +1774,7 @@ def loan_statement(loan_number):
             allocated_total = (allocation.principal or 0) + (allocation.interest or 0) + (allocation.fees or 0)
             valid_allocation = abs(allocated_total - payment.amount) < 0.01
             statement.append({
+                'id': payment.id,
                 'date': payment.created_at.strftime('%Y-%m-%d'),
                 'total': payment.amount,
                 'principal': allocation.principal,
@@ -1787,6 +1812,7 @@ def loan_statement(loan_number):
     except Exception as e:
         flash(f"Error generating statement: {str(e)}", "danger")
         return redirect(url_for('loanbook'))
+
 
 
 
@@ -2610,6 +2636,42 @@ def handle_payments():
     
     return render_template('payments.html', loan=loan)
 
+@app.route('/payment/<int:payment_id>/edit', methods=['GET', 'POST'])
+@login_required
+@role_required('finance_officer', 'admin')
+def edit_payment(payment_id):
+    payment = Payment.query.get_or_404(payment_id)
+    loan = payment.loan
+    
+    if request.method == 'POST':
+        try:
+            new_amount = float(request.form['amount'])
+            
+            # Validate amount
+            if new_amount <= 0:
+                flash("Amount must be positive", "danger")
+                return redirect(url_for('edit_payment', payment_id=payment.id))
+            
+            # Update payment amount
+            payment.amount = new_amount
+            
+            # Reallocate payment
+            allocate_payment(payment, loan, is_edit=True)
+            
+            # Recalculate loan balances
+            loan.recalculate_balance()
+            db.session.commit()
+            
+            flash("Payment updated successfully", "success")
+            return redirect(url_for('loan_statement', loan_number=loan.loan_number))
+            
+        except ValueError:
+            flash("Invalid amount format", "danger")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Error updating payment: {str(e)}", "danger")
+    
+    return render_template('edit_payment.html', payment=payment, loan=loan)
 
 @app.route('/api/verify_loan/<loan_number>')
 def verify_loan(loan_number):
