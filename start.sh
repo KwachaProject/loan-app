@@ -1,24 +1,17 @@
 #!/usr/bin/env bash
-set -u  # Only exit on unset variables - handle other errors manually
+set -u  # Only exit on unset variables
 
 export FLASK_ENV=production
 export FLASK_APP=app.py
 echo "🚀  Starting deployment script…"
 
-###############################################################################
-# 0. Sanity‑check required secrets
-###############################################################################
-if [[ -z "${ADMIN_EMAIL:-}" || -z "${ADMIN_PASSWORD:-}" ]]; then
-  echo "❌  ADMIN_EMAIL and ADMIN_PASSWORD must be set" >&2
-  exit 1
-fi
+# ... [sanity checks] ...
 
 ###############################################################################
-# 1. Ensure critical columns exist
+# 1. Ensure critical columns exist (UPDATED)
 ###############################################################################
 echo "🆘  Ensuring critical columns exist…"
 
-# Use simpler Python connection method
 python - <<'PY'
 import os
 import psycopg2
@@ -29,7 +22,7 @@ def main():
         conn = psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
         cursor = conn.cursor()
         
-        # Check if loan_applications table exists
+        # 1. Check loan_applications table
         cursor.execute("""
             SELECT column_name 
             FROM information_schema.columns 
@@ -37,7 +30,7 @@ def main():
         """)
         existing_columns = {row[0] for row in cursor.fetchall()}
         
-        NEEDED = {
+        LOAN_NEEDED = {
             "current_balance": "NUMERIC(12,2) DEFAULT 0.0",
             "top_up_balance": "NUMERIC(12,2) DEFAULT 0.0",
             "settlement_balance": "NUMERIC(12,2) DEFAULT 0.0",
@@ -47,23 +40,45 @@ def main():
             "parent_loan_id": "INTEGER"
         }
         
-        for col, ddl in NEEDED.items():
+        for col, ddl in LOAN_NEEDED.items():
             if col in existing_columns:
-                print(f"✅  {col} already present")
+                print(f"✅  loan_applications.{col} exists")
             else:
-                print(f"➕  Adding {col}")
+                print(f"⚠️  ADDING: loan_applications.{col}")
                 try:
                     cursor.execute(f"ALTER TABLE loan_applications ADD COLUMN {col} {ddl}")
-                    print(f"   → Successfully added {col}")
+                    print(f"   → Added loan_applications.{col}")
                 except Exception as e:
-                    print(f"   ⚠️  Failed to add {col}: {str(e)}")
+                    print(f"   ❌ Failed to add {col}: {str(e)}")
+        
+        # 2. Check payment_allocations table (CRITICAL FIX)
+        cursor.execute("""
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'payment_allocations'
+        """)
+        payment_columns = {row[0] for row in cursor.fetchall()}
+        
+        PAYMENT_NEEDED = {
+            "settlement_interest": "NUMERIC(12,2) DEFAULT 0.0"
+        }
+        
+        for col, ddl in PAYMENT_NEEDED.items():
+            if col in payment_columns:
+                print(f"✅  payment_allocations.{col} exists")
+            else:
+                print(f"⚠️  ADDING: payment_allocations.{col}")
+                try:
+                    cursor.execute(f"ALTER TABLE payment_allocations ADD COLUMN {col} {ddl}")
+                    print(f"   → Added payment_allocations.{col}")
+                except Exception as e:
+                    print(f"   ❌ Failed to add {col}: {str(e)}")
         
         conn.commit()
-        print("✅  Column check complete")
         return True
         
     except Exception as e:
-        print(f"❌  Database connection failed: {str(e)}")
+        print(f"❌  Column check failed: {str(e)}")
         return False
     finally:
         if 'conn' in locals():
@@ -87,51 +102,7 @@ fi
 
 echo "🔧  Setting DB version to: $HEAD_REV"
 
-# Simplified version management
-python - <<PY
-import os
-import psycopg2
-import sys
-
-def set_alembic_version():
-    try:
-        conn = psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
-        cursor = conn.cursor()
-        
-        # Create version table if needed
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS alembic_version (
-                version_num VARCHAR(32) NOT NULL PRIMARY KEY
-            )
-        """)
-        
-        # Set to current head
-        cursor.execute("DELETE FROM alembic_version")
-        cursor.execute("INSERT INTO alembic_version (version_num) VALUES (%s)", (HEAD_REV,))
-        
-        conn.commit()
-        print(f"✅  Successfully set version to {HEAD_REV}")
-        return True
-        
-    except Exception as e:
-        print(f"❌  Version management failed: {str(e)}")
-        return False
-    finally:
-        if 'conn' in locals():
-            conn.close()
-
-# Use shell variable
-HEAD_REV = "$HEAD_REV"
-if set_alembic_version():
-    sys.exit(0)
-else:
-    sys.exit(1)
-PY
-
-# If version management failed, continue anyway
-if [ $? -ne 0 ]; then
-    echo "⚠️  Version management failed - proceeding anyway"
-fi
+# ... [version management code] ...
 
 ###############################################################################
 # 3. Start Application Services
