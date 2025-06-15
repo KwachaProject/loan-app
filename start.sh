@@ -13,38 +13,48 @@ if [[ -z "${ADMIN_EMAIL:-}" || -z "${ADMIN_PASSWORD:-}" ]]; then
 fi
 
 ###############################################################################
-# 1. Make sure the critical columns exist (works even on Render free tier)
+# 1.  Make sure the critical columns exist  (works on Render free tier)
+#     Runs every deploy; if the column is already there Postgres skips it.
 ###############################################################################
 echo "🆘  Ensuring critical columns exist in loan_applications…"
 
 python - <<'PY'
-from app import app, db
-from sqlalchemy import text
+from sqlalchemy import create_engine, inspect, text
+import os
 
-CRITICAL_COLUMNS = {
-    'current_balance':      'NUMERIC(12, 2) DEFAULT 0.0',
-    'top_up_balance':       'NUMERIC(12, 2)',
-    'settlement_balance':   'NUMERIC(12, 2)',
-    'settlement_type':      'VARCHAR(50)',
-    'settling_institution': 'VARCHAR(255)',
-    'settlement_reason':    'TEXT',
-    'parent_loan_id':       'INTEGER',
+# Convert old-style URL if needed
+url = os.environ["DATABASE_URL"]
+if url.startswith("postgres://"):
+    url = url.replace("postgres://", "postgresql://", 1)
+
+engine = create_engine(url, isolation_level="AUTOCOMMIT")
+
+NEEDED = {
+    "current_balance"     : "NUMERIC(12,2) DEFAULT 0.0",
+    "top_up_balance"      : "NUMERIC(12,2) DEFAULT 0.0",
+    "settlement_balance"  : "NUMERIC(12,2) DEFAULT 0.0",
+    "settlement_type"     : "VARCHAR(50)",
+    "settling_institution": "VARCHAR(255)",
+    "settlement_reason"   : "TEXT",
+    "parent_loan_id"      : "INTEGER",
 }
 
-with app.app_context():
-    conn = db.engine.connect()
-    for col, dtype in CRITICAL_COLUMNS.items():
-        print(f"🔧  ALTER TABLE loan_applications ADD COLUMN IF NOT EXISTS {col} {dtype}")
+with engine.connect() as conn:
+    cols = {c["name"] for c in inspect(conn).get_columns("loan_applications")}
+    for col, ddl in NEEDED.items():
+        if col in cols:
+            print(f"✅  {col} already present")
+            continue
+        print(f"➕  adding {col}")
         try:
-            conn.execute(text(f"""
-                ALTER TABLE loan_applications
-                ADD COLUMN IF NOT EXISTS {col} {dtype}
-            """))
-            print(f"✅  Column {col} ready")
+            conn.execute(text(f"ALTER TABLE loan_applications "
+                              f"ADD COLUMN {col} {ddl}"))
+            print("   → done")
         except Exception as e:
-            # Never fail hard – just warn and continue
-            print(f"⚠️  Could not add {col}: {e}")
+            # Don’t crash the deploy; just warn
+            print(f"   ⚠️  could not add {col}: {e}")
 PY
+
 echo "✅  Column check complete"
 
 ###############################################################################
