@@ -5723,3 +5723,785 @@ jinja2.exceptions.TemplateAssertionError: No filter named 'money'.
 2025-06-15 20:54:57,572 - INFO - 127.0.0.1 - - [15/Jun/2025 20:54:57] "[32mGET /loan/115000001/statement HTTP/1.1[0m" 302 -
 2025-06-15 20:54:57,604 - INFO - 127.0.0.1 - - [15/Jun/2025 20:54:57] "GET /loanbook HTTP/1.1" 200 -
 2025-06-15 20:54:59,312 - INFO - 127.0.0.1 - - [15/Jun/2025 20:54:59] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-15 20:58:57,970 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-15 20:58:57,971 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-15 20:59:11,532 - INFO - 127.0.0.1 - - [15/Jun/2025 20:59:11] "GET /loanbook HTTP/1.1" 200 -
+[2025-06-15 20:59:14,487] INFO in app: Found 1 loans for customer 202506000001
+2025-06-15 20:59:14,487 - INFO - Found 1 loans for customer 202506000001
+[2025-06-15 20:59:14,488] INFO in app: Customer ID: 1
+2025-06-15 20:59:14,488 - INFO - Customer ID: 1
+[2025-06-15 20:59:14,490] INFO in app: Found Loans: [('115000001', 'active')]
+2025-06-15 20:59:14,490 - INFO - Found Loans: [('115000001', 'active')]
+2025-06-15 20:59:14,527 - INFO - 127.0.0.1 - - [15/Jun/2025 20:59:14] "GET /customer/202506000001/account HTTP/1.1" 200 -
+2025-06-15 20:59:15,510 - INFO - 127.0.0.1 - - [15/Jun/2025 20:59:15] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-15 20:59:16,603 - INFO - 127.0.0.1 - - [15/Jun/2025 20:59:16] "GET /loan/115000001/statement HTTP/1.1" 200 -
+2025-06-15 20:59:23,043 - INFO - 127.0.0.1 - - [15/Jun/2025 20:59:23] "GET /payment/1/edit HTTP/1.1" 200 -
+2025-06-15 20:59:41,396 - INFO - 127.0.0.1 - - [15/Jun/2025 20:59:41] "[32mPOST /payment/1/edit HTTP/1.1[0m" 302 -
+2025-06-15 20:59:41,676 - INFO - 127.0.0.1 - - [15/Jun/2025 20:59:41] "GET /loan/115000001/statement HTTP/1.1" 200 -
+2025-06-15 21:01:00,335 - INFO - 127.0.0.1 - - [15/Jun/2025 21:01:00] "GET /loan/115000001/statement HTTP/1.1" 200 -
+2025-06-15 21:21:00,386 - INFO - 127.0.0.1 - - [15/Jun/2025 21:21:00] "GET /loanbook HTTP/1.1" 200 -
+[2025-06-15 21:21:02,377] INFO in app: Found 1 loans for customer 202506000001
+2025-06-15 21:21:02,377 - INFO - Found 1 loans for customer 202506000001
+[2025-06-15 21:21:02,378] INFO in app: Customer ID: 1
+2025-06-15 21:21:02,378 - INFO - Customer ID: 1
+[2025-06-15 21:21:02,380] INFO in app: Found Loans: [('115000001', 'active')]
+2025-06-15 21:21:02,380 - INFO - Found Loans: [('115000001', 'active')]
+2025-06-15 21:21:02,393 - INFO - 127.0.0.1 - - [15/Jun/2025 21:21:02] "GET /customer/202506000001/account HTTP/1.1" 200 -
+[2025-06-15 21:21:04,007] INFO in app: Found 1 loans for customer 202506000001
+2025-06-15 21:21:04,007 - INFO - Found 1 loans for customer 202506000001
+[2025-06-15 21:21:04,008] INFO in app: Customer ID: 1
+2025-06-15 21:21:04,008 - INFO - Customer ID: 1
+[2025-06-15 21:21:04,010] INFO in app: Found Loans: [('115000001', 'active')]
+2025-06-15 21:21:04,010 - INFO - Found Loans: [('115000001', 'active')]
+2025-06-15 21:21:04,015 - INFO - 127.0.0.1 - - [15/Jun/2025 21:21:04] "GET /customer/202506000001/account?section=additional HTTP/1.1" 200 -
+[2025-06-15 21:21:18,445] INFO in app: Found 1 loans for customer 202506000001
+2025-06-15 21:21:18,445 - INFO - Found 1 loans for customer 202506000001
+[2025-06-15 21:21:18,446] INFO in app: Customer ID: 1
+2025-06-15 21:21:18,446 - INFO - Customer ID: 1
+[2025-06-15 21:21:18,447] INFO in app: Found Loans: [('115000001', 'active')]
+2025-06-15 21:21:18,447 - INFO - Found Loans: [('115000001', 'active')]
+2025-06-15 21:21:18,451 - INFO - 127.0.0.1 - - [15/Jun/2025 21:21:18] "GET /customer/202506000001/account?section=topup HTTP/1.1" 200 -
+2025-06-16 05:27:49,873 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 05:27:49,873 - INFO - [33mPress CTRL+C to quit[0m
+[2025-06-16 05:27:54,115] INFO in app: Found 1 loans for customer 202506000001
+2025-06-16 05:27:54,115 - INFO - Found 1 loans for customer 202506000001
+[2025-06-16 05:27:54,116] INFO in app: Customer ID: 1
+2025-06-16 05:27:54,116 - INFO - Customer ID: 1
+[2025-06-16 05:27:54,117] INFO in app: Found Loans: [('115000001', 'active')]
+2025-06-16 05:27:54,117 - INFO - Found Loans: [('115000001', 'active')]
+2025-06-16 05:27:54,181 - INFO - 127.0.0.1 - - [16/Jun/2025 05:27:54] "GET /customer/202506000001/account?section=topup HTTP/1.1" 200 -
+2025-06-16 05:27:55,261 - INFO - 127.0.0.1 - - [16/Jun/2025 05:27:55] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-16 05:27:56,785 - INFO - 127.0.0.1 - - [16/Jun/2025 05:27:56] "GET /loans HTTP/1.1" 200 -
+2025-06-16 05:28:00,527 - INFO - 127.0.0.1 - - [16/Jun/2025 05:28:00] "GET /customers HTTP/1.1" 200 -
+2025-06-16 05:28:04,092 - INFO - 127.0.0.1 - - [16/Jun/2025 05:28:04] "GET /loanbook HTTP/1.1" 200 -
+[2025-06-16 05:28:05,716] INFO in app: Found 1 loans for customer 202506000001
+2025-06-16 05:28:05,716 - INFO - Found 1 loans for customer 202506000001
+[2025-06-16 05:28:05,717] INFO in app: Customer ID: 1
+2025-06-16 05:28:05,717 - INFO - Customer ID: 1
+[2025-06-16 05:28:05,718] INFO in app: Found Loans: [('115000001', 'active')]
+2025-06-16 05:28:05,718 - INFO - Found Loans: [('115000001', 'active')]
+2025-06-16 05:28:05,724 - INFO - 127.0.0.1 - - [16/Jun/2025 05:28:05] "GET /customer/202506000001/account HTTP/1.1" 200 -
+[2025-06-16 05:28:07,340] INFO in app: Found 1 loans for customer 202506000001
+2025-06-16 05:28:07,340 - INFO - Found 1 loans for customer 202506000001
+[2025-06-16 05:28:07,342] INFO in app: Customer ID: 1
+2025-06-16 05:28:07,342 - INFO - Customer ID: 1
+[2025-06-16 05:28:07,345] INFO in app: Found Loans: [('115000001', 'active')]
+2025-06-16 05:28:07,345 - INFO - Found Loans: [('115000001', 'active')]
+2025-06-16 05:28:07,350 - INFO - 127.0.0.1 - - [16/Jun/2025 05:28:07] "GET /customer/202506000001/account?section=additional HTTP/1.1" 200 -
+2025-06-16 05:28:32,116 - INFO - 127.0.0.1 - - [16/Jun/2025 05:28:32] "[32mPOST /apply_additional/1 HTTP/1.1[0m" 302 -
+[2025-06-16 05:28:32,372] INFO in app: Found 2 loans for customer 202506000001
+2025-06-16 05:28:32,372 - INFO - Found 2 loans for customer 202506000001
+[2025-06-16 05:28:32,374] INFO in app: Customer ID: 1
+2025-06-16 05:28:32,374 - INFO - Customer ID: 1
+[2025-06-16 05:28:32,377] INFO in app: Found Loans: [('115000001', 'active'), ('103000002', 'active')]
+2025-06-16 05:28:32,377 - INFO - Found Loans: [('115000001', 'active'), ('103000002', 'active')]
+2025-06-16 05:28:32,386 - INFO - 127.0.0.1 - - [16/Jun/2025 05:28:32] "GET /customer/202506000001/account?section=statement HTTP/1.1" 200 -
+2025-06-16 05:28:36,797 - INFO - 127.0.0.1 - - [16/Jun/2025 05:28:36] "GET /loans HTTP/1.1" 200 -
+2025-06-16 06:11:09,521 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 06:11:09,521 - INFO - [33mPress CTRL+C to quit[0m
+[2025-06-16 06:11:15,779] ERROR in app: Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2158, in view_loans
+    return render_template('view_loans.html', loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 168, in template
+    {% block scripts %}
+jinja2.exceptions.TemplateSyntaxError: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-06-16 06:11:15,779 - ERROR - Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2158, in view_loans
+    return render_template('view_loans.html', loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 168, in template
+    {% block scripts %}
+jinja2.exceptions.TemplateSyntaxError: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-06-16 06:11:15,855 - INFO - 127.0.0.1 - - [16/Jun/2025 06:11:15] "[35m[1mGET /loans HTTP/1.1[0m" 500 -
+2025-06-16 06:11:15,924 - INFO - 127.0.0.1 - - [16/Jun/2025 06:11:15] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-16 06:11:53,160 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 06:11:53,160 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-16 06:12:07,835 - INFO - 127.0.0.1 - - [16/Jun/2025 06:12:07] "GET /loans HTTP/1.1" 200 -
+2025-06-16 06:12:08,886 - INFO - 127.0.0.1 - - [16/Jun/2025 06:12:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-06-16 06:12:26,412] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2112, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 135, in template
+    <strong>{{ doc.type|title.replace("_", " ") }}:</strong>
+    ^^^^^
+jinja2.exceptions.TemplateAssertionError: No filter named 'title.replace'.
+2025-06-16 06:12:26,412 - ERROR - Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2112, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 135, in template
+    <strong>{{ doc.type|title.replace("_", " ") }}:</strong>
+    ^^^^^
+jinja2.exceptions.TemplateAssertionError: No filter named 'title.replace'.
+2025-06-16 06:12:26,427 - INFO - 127.0.0.1 - - [16/Jun/2025 06:12:26] "[35m[1mGET /approve_customers HTTP/1.1[0m" 500 -
+2025-06-16 06:17:31,935 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 06:17:31,935 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-16 06:17:36,885 - INFO - 127.0.0.1 - - [16/Jun/2025 06:17:36] "GET /approve_customers HTTP/1.1" 200 -
+2025-06-16 06:17:37,594 - INFO - 127.0.0.1 - - [16/Jun/2025 06:17:37] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-16 06:17:43,394 - INFO - 127.0.0.1 - - [16/Jun/2025 06:17:43] "GET /register HTTP/1.1" 200 -
+2025-06-16 06:20:11,813 - INFO - 127.0.0.1 - - [16/Jun/2025 06:20:11] "[32mPOST /register HTTP/1.1[0m" 302 -
+2025-06-16 06:20:11,821 - INFO - 127.0.0.1 - - [16/Jun/2025 06:20:11] "GET /register HTTP/1.1" 200 -
+2025-06-16 06:22:06,363 - INFO - 127.0.0.1 - - [16/Jun/2025 06:22:06] "[32mPOST /register HTTP/1.1[0m" 302 -
+2025-06-16 06:22:06,370 - INFO - 127.0.0.1 - - [16/Jun/2025 06:22:06] "GET /register HTTP/1.1" 200 -
+[2025-06-16 06:22:08,344] ERROR in app: Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2112, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 135, in block 'content'
+    <strong>{{ doc.type.replace('_', ' ') | title }}:</strong>
+    ^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'app.Document object' has no attribute 'type'
+2025-06-16 06:22:08,344 - ERROR - Exception on /approve_customers [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2112, in approve_customers
+    return render_template('approve_customers.html', customers=unapproved_customers)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\approve_customers.html", line 135, in block 'content'
+    <strong>{{ doc.type.replace('_', ' ') | title }}:</strong>
+    ^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'app.Document object' has no attribute 'type'
+2025-06-16 06:22:08,366 - INFO - 127.0.0.1 - - [16/Jun/2025 06:22:08] "[35m[1mGET /approve_customers HTTP/1.1[0m" 500 -
+2025-06-16 06:32:51,671 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 06:32:51,671 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-16 06:32:56,161 - INFO - 127.0.0.1 - - [16/Jun/2025 06:32:56] "GET /approve_customers HTTP/1.1" 200 -
+2025-06-16 06:32:57,108 - INFO - 127.0.0.1 - - [16/Jun/2025 06:32:57] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-16 06:33:09,649 - INFO - 127.0.0.1 - - [16/Jun/2025 06:33:09] "GET /docs/2_id_front_20250616_062206.jpg HTTP/1.1" 200 -
+2025-06-16 06:33:33,174 - INFO - 127.0.0.1 - - [16/Jun/2025 06:33:33] "[32mPOST /approve_customers HTTP/1.1[0m" 302 -
+2025-06-16 06:33:33,469 - INFO - 127.0.0.1 - - [16/Jun/2025 06:33:33] "GET /approve_customers HTTP/1.1" 200 -
+2025-06-16 06:33:36,629 - INFO - 127.0.0.1 - - [16/Jun/2025 06:33:36] "GET /customers HTTP/1.1" 200 -
+2025-06-16 06:33:39,754 - INFO - 127.0.0.1 - - [16/Jun/2025 06:33:39] "GET /loans HTTP/1.1" 200 -
+2025-06-16 07:09:01,205 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 07:09:01,205 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-16 07:09:07,931 - INFO - 127.0.0.1 - - [16/Jun/2025 07:09:07] "GET /loans HTTP/1.1" 200 -
+2025-06-16 07:09:08,843 - INFO - 127.0.0.1 - - [16/Jun/2025 07:09:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-16 07:09:14,239 - INFO - 127.0.0.1 - - [16/Jun/2025 07:09:14] "[33mGET /docs/flask_final.docx HTTP/1.1[0m" 404 -
+2025-06-16 07:09:20,953 - INFO - 127.0.0.1 - - [16/Jun/2025 07:09:20] "[33mGET /docs/flask_final.docx HTTP/1.1[0m" 404 -
+2025-06-16 07:09:23,737 - INFO - 127.0.0.1 - - [16/Jun/2025 07:09:23] "[33mGET /docs/flask_final.docx HTTP/1.1[0m" 404 -
+2025-06-16 07:30:43,257 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 07:30:43,257 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-16 07:30:49,839 - INFO - 127.0.0.1 - - [16/Jun/2025 07:30:49] "GET /loans HTTP/1.1" 200 -
+2025-06-16 07:30:50,855 - INFO - 127.0.0.1 - - [16/Jun/2025 07:30:50] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-16 07:31:06,411 - INFO - 127.0.0.1 - - [16/Jun/2025 07:31:06] "[32mPOST /process_loan/2/approve HTTP/1.1[0m" 302 -
+2025-06-16 07:31:06,740 - INFO - 127.0.0.1 - - [16/Jun/2025 07:31:06] "GET /loans HTTP/1.1" 200 -
+2025-06-16 07:31:14,986 - INFO - 127.0.0.1 - - [16/Jun/2025 07:31:14] "GET /docs/2_payslip_20250616_062206.jpg HTTP/1.1" 200 -
+2025-06-16 07:31:29,386 - INFO - 127.0.0.1 - - [16/Jun/2025 07:31:29] "[33mGET /docs/flask_final.docx HTTP/1.1[0m" 404 -
+2025-06-16 07:31:33,422 - INFO - 127.0.0.1 - - [16/Jun/2025 07:31:33] "[33mGET /docs/flask_final.docx HTTP/1.1[0m" 404 -
+2025-06-16 07:31:38,240 - INFO - 127.0.0.1 - - [16/Jun/2025 07:31:38] "GET /docs/1_payslip_20250615_201823.jpg HTTP/1.1" 200 -
+2025-06-16 07:31:49,660 - INFO - 127.0.0.1 - - [16/Jun/2025 07:31:49] "[32mPOST /process_loan/3/approve HTTP/1.1[0m" 302 -
+2025-06-16 07:31:49,978 - INFO - 127.0.0.1 - - [16/Jun/2025 07:31:49] "GET /loans HTTP/1.1" 200 -
+2025-06-16 07:33:00,969 - INFO - 127.0.0.1 - - [16/Jun/2025 07:33:00] "[33mGET /docs/flask_final.docx HTTP/1.1[0m" 404 -
+2025-06-16 07:33:04,378 - INFO - 127.0.0.1 - - [16/Jun/2025 07:33:04] "[36mGET /docs/1_payslip_20250615_201823.jpg HTTP/1.1[0m" 304 -
+2025-06-16 07:33:10,469 - INFO - 127.0.0.1 - - [16/Jun/2025 07:33:10] "[33mGET /docs/flask_final.docx HTTP/1.1[0m" 404 -
+2025-06-16 07:34:03,696 - INFO - 127.0.0.1 - - [16/Jun/2025 07:34:03] "GET /customers HTTP/1.1" 200 -
+2025-06-16 07:34:05,531 - INFO - 127.0.0.1 - - [16/Jun/2025 07:34:05] "GET /approve_customers HTTP/1.1" 200 -
+2025-06-16 07:34:06,941 - INFO - 127.0.0.1 - - [16/Jun/2025 07:34:06] "GET /customers HTTP/1.1" 200 -
+2025-06-16 07:34:18,149 - INFO - 127.0.0.1 - - [16/Jun/2025 07:34:18] "GET /loans HTTP/1.1" 200 -
+[2025-06-16 07:34:25,920] INFO in app: [DISBURSEMENT] Loan #103000002 | Top-up of: None | Cash to Client: 1000000.0
+2025-06-16 07:34:25,920 - INFO - [DISBURSEMENT] Loan #103000002 | Top-up of: None | Cash to Client: 1000000.0
+[2025-06-16 07:34:25,920] INFO in app: [DISBURSEMENT] Loan #136000003 | Top-up of: None | Cash to Client: 1000000.0
+2025-06-16 07:34:25,920 - INFO - [DISBURSEMENT] Loan #136000003 | Top-up of: None | Cash to Client: 1000000.0
+2025-06-16 07:34:25,937 - INFO - 127.0.0.1 - - [16/Jun/2025 07:34:25] "GET /disbursements HTTP/1.1" 200 -
+2025-06-16 07:34:29,139 - INFO - 127.0.0.1 - - [16/Jun/2025 07:34:29] "GET /payments HTTP/1.1" 200 -
+2025-06-16 07:34:30,893 - INFO - 127.0.0.1 - - [16/Jun/2025 07:34:30] "GET /customers HTTP/1.1" 200 -
+2025-06-16 07:34:33,068 - INFO - 127.0.0.1 - - [16/Jun/2025 07:34:33] "GET /loans HTTP/1.1" 200 -
+2025-06-16 10:52:37,053 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 10:52:37,053 - INFO - [33mPress CTRL+C to quit[0m
+[2025-06-16 10:52:54,378] ERROR in app: Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 10:52:54,378 - ERROR - Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 10:52:54,446 - INFO - 127.0.0.1 - - [16/Jun/2025 10:52:54] "[35m[1mGET /loans HTTP/1.1[0m" 500 -
+2025-06-16 10:52:54,566 - INFO - 127.0.0.1 - - [16/Jun/2025 10:52:54] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-16 10:59:09,195 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 10:59:09,195 - INFO - [33mPress CTRL+C to quit[0m
+[2025-06-16 10:59:13,670] ERROR in app: Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 10:59:13,670 - ERROR - Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 10:59:13,688 - INFO - 127.0.0.1 - - [16/Jun/2025 10:59:13] "[35m[1mGET /loans HTTP/1.1[0m" 500 -
+2025-06-16 10:59:13,728 - INFO - 127.0.0.1 - - [16/Jun/2025 10:59:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-16 10:59:16,070 - INFO - 127.0.0.1 - - [16/Jun/2025 10:59:16] "GET /customers HTTP/1.1" 200 -
+[2025-06-16 10:59:25,979] ERROR in app: Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 10:59:25,979 - ERROR - Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 10:59:25,991 - INFO - 127.0.0.1 - - [16/Jun/2025 10:59:25] "[35m[1mGET /loans HTTP/1.1[0m" 500 -
+2025-06-16 11:19:30,977 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-16 11:19:30,977 - INFO - [33mPress CTRL+C to quit[0m
+[2025-06-16 11:19:40,148] ERROR in app: Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 11:19:40,148 - ERROR - Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 11:19:40,165 - INFO - 127.0.0.1 - - [16/Jun/2025 11:19:40] "[35m[1mGET /loans HTTP/1.1[0m" 500 -
+2025-06-16 11:19:40,222 - INFO - 127.0.0.1 - - [16/Jun/2025 11:19:40] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-06-16 11:19:44,326] ERROR in app: Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 11:19:44,326 - ERROR - Exception on /loans [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 2191, in view_loans
+    return render_template("view_loans.html", loans=processed_loans)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 156, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\view_loans.html", line 137, in block 'content'
+    <a href="{{ url_for('serve_document', filename=doc.filename) }}"
+    ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'serve_document' with values ['filename']. Did you forget to specify values ['doc_id']?
+2025-06-16 11:19:44,348 - INFO - 127.0.0.1 - - [16/Jun/2025 11:19:44] "[35m[1mGET /loans HTTP/1.1[0m" 500 -

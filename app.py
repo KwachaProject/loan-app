@@ -255,6 +255,35 @@ def server_info():
         "environment": env
     }
 
+# app.py
+from flask import send_file, abort
+from werkzeug.exceptions import NotFound
+
+@app.route("/documents/id/<int:doc_id>")
+@login_required
+def serve_document(doc_id: int):
+    """
+    Streams any uploaded document (image, PDF, DOCX …) back to the browser.
+    Large files are forced to download (`as_attachment=True`) so Office apps
+    / photo viewers take over.
+    """
+    doc = Document.query.get_or_404(doc_id)
+
+    try:
+        # `download_name` keeps the original filename for the user
+        return send_file(
+            doc.path,
+            as_attachment=doc.filetype not in ("id_front", "id_back", "live_photo", "payslip", "photo"),
+            download_name=doc.filename,
+            max_age=0               # don’t cache sensitive docs
+        )
+    except FileNotFoundError:
+        raise NotFound("File is missing on the server.")
+
+
+
+
+# ---------------- Pricing Configuration ----------------
 
 PRICING = {
     3:  {'rate': 0.035, 'origination': 0.15,  'insurance': 0.008,  'collection': 0.0025,  'crb': 3000},
@@ -2140,23 +2169,26 @@ def edit_customer(customer_id):
 
 @app.route('/loans')
 def view_loans():
-    loans = LoanApplication.query \
-        .join(Customer) \
-        .filter(Customer.is_approved_for_creation == True) \
-        .filter(LoanApplication.status.in_(['pending', 'approved'])) \
-        .add_entity(Customer) \
+    loans = (
+        LoanApplication.query
+        .join(Customer)
+        .filter(Customer.is_approved_for_creation.is_(True))
+        .filter(LoanApplication.status.in_(['pending', 'approved']))
+        .options(joinedload(LoanApplication.documents))  # <-- eager‑load docs
+        .add_entity(Customer)
         .all()
-    
-    processed_loans = []
-    for loan_app, customer in loans:
-        processed_loans.append({
-            'loan': loan_app,
-            'customer': customer,
-            'current_balance': loan_app.balance or 0.0
-        })
+    )
 
-    return render_template('view_loans.html', loans=processed_loans)
+    processed_loans = [
+        {
+            "loan":      loan_app,
+            "customer":  customer,
+            "current_balance": loan_app.balance or 0.0,
+        }
+        for loan_app, customer in loans
+    ]
 
+    return render_template("view_loans.html", loans=processed_loans)
        
 @app.route('/process_loan/<int:loan_id>/<action>', methods=['POST'])
 def process_loan(loan_id, action):

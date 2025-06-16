@@ -1,3 +1,4 @@
+{# templates/view_loans.html #}
 {% extends "base.html" %}
 
 {% block title %}View Loans{% endblock %}
@@ -8,12 +9,13 @@
     <i class="bi bi-clipboard-data me-2"></i>Loan Applications
   </h2>
 
+  {# flash messages --------------------------------------------------------- #}
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% for category, message in messages %}
         <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
           {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
       {% endfor %}
     {% endif %}
@@ -23,77 +25,85 @@
     <div class="card-header bg-primary text-white">
       <i class="bi bi-table me-2"></i>Loan Portfolio Overview
     </div>
+
     <div class="card-body p-0">
       <table class="table table-hover align-middle mb-0" id="loanTable">
         <thead class="bg-light-primary">
           <tr>
             <th class="text-primary"><i class="bi bi-person me-1"></i>Customer</th>
-            <th class="text-primary">Amount MWK</th>
+            <th class="text-primary">Amount (MWK)</th>
             <th class="text-primary">Term</th>
-            <th class="text-primary">Monthly Payment MWK</th>
+            <th class="text-primary">Monthly Pay (MWK)</th>
             <th class="text-primary">Status</th>
             <th class="text-primary">Requested</th>
             <th class="text-primary">Category</th>
             <th class="text-primary">Actions</th>
           </tr>
         </thead>
+
         <tbody>
           {% for entry in loans %}
           <tr>
             <td class="fw-medium">{{ entry.customer.first_name }} {{ entry.customer.last_name }}</td>
             <td>{{ "%.2f"|format(entry.loan.loan_amount or 0) }}</td>
-            <td>{{ entry.loan.term_months if entry.loan else '' }}</td>
+            <td>{{ entry.loan.term_months }}</td>
             <td class="text-nowrap">{{ "%.2f"|format(entry.loan.monthly_instalment or 0) }}</td>
+
+            {# loan status badge --------------------------------------------- #}
             <td>
-              {% if entry.loan %}
-                {% if entry.loan.application_status == 'approved' %}
-                  <span class="badge 
-                    {% if entry.loan.loan_state == 'active' %}bg-primary
-                    {% elif entry.loan.loan_state == 'closed' %}bg-secondary
-                    {% elif entry.loan.loan_state == 'written_off' %}bg-danger
-                    {% elif entry.loan.loan_state == 'topped_up' %}bg-info
-                    {% else %}bg-warning{% endif %}">
-                    {{ entry.loan.loan_state|upper|replace('_', ' ') }}
-                  </span>
-                {% elif entry.loan.application_status == 'pending' %}
-                  <span class="badge bg-warning-soft text-warning">
-                    <i class="bi bi-clock-history me-1"></i>{{ entry.loan.application_status|title }}
-                  </span>
-                {% else %}
-                  <span class="badge bg-danger-soft text-danger">
-                    <i class="bi bi-x-circle me-1"></i>{{ entry.loan.application_status|title }}
-                  </span>
-                {% endif %}
+              {% if entry.loan.application_status == 'approved' %}
+                <span class="badge
+                  {% if entry.loan.loan_state == 'active' %}bg-primary
+                  {% elif entry.loan.loan_state == 'closed' %}bg-secondary
+                  {% elif entry.loan.loan_state == 'written_off' %}bg-danger
+                  {% elif entry.loan.loan_state == 'topped_up' %}bg-info
+                  {% else %}bg-warning{% endif %}">
+                  {{ entry.loan.loan_state|replace('_', ' ')|upper }}
+                </span>
+              {% elif entry.loan.application_status == 'pending' %}
+                <span class="badge bg-warning-soft text-warning">
+                  <i class="bi bi-clock-history me-1"></i>{{ entry.loan.application_status|title }}
+                </span>
               {% else %}
-                <span class="badge bg-secondary-soft text-secondary">No Loan</span>
+                <span class="badge bg-danger-soft text-danger">
+                  <i class="bi bi-x-circle me-1"></i>{{ entry.loan.application_status|title }}
+                </span>
               {% endif %}
             </td>
-            <td>{{ entry.loan.created_at.strftime('%d %b %Y') if entry.loan and entry.loan.created_at else '' }}</td>
+
+            <td>{{ entry.loan.created_at.strftime('%d %b %Y') if entry.loan.created_at else '' }}</td>
+
             <td>
-              <span class="badge bg-primary-soft text-primary">
-                {{ entry.loan.category if entry.loan else 'None' }}
-              </span>
+              <span class="badge bg-primary-soft text-primary">{{ entry.loan.category }}</span>
             </td>
+
+            {# actions ------------------------------------------------------- #}
             <td class="text-nowrap">
               <div class="d-flex gap-2">
-                {% if entry.loan %}
-                <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='approve') }}">
-                  <button class="btn btn-success-soft btn-sm px-3 py-1" type="submit" 
-                    {% if entry.loan.application_status == 'approved' %}disabled{% endif %}>
+                {# 1. docs modal trigger #}
+                <button type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#loanDocsModal{{ entry.loan.id }}">
+                  <i class="bi bi-file-earmark-text me-1"></i>Docs
+                </button>
+
+                {# 2. approve / reject buttons #}
+                <form method="POST"
+                      action="{{ url_for('process_loan', loan_id=entry.loan.id, action='approve') }}">
+                  <button class="btn btn-success-soft btn-sm px-3 py-1" type="submit"
+                          {% if entry.loan.application_status == 'approved' %}disabled{% endif %}>
                     <i class="bi bi-check2"></i>
                   </button>
                 </form>
-                <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='reject') }}">
-                  <button class="btn btn-danger-soft btn-sm px-3 py-1" type="submit" 
-                    {% if entry.loan.application_status == 'rejected' %}disabled{% endif %}>
+
+                <form method="POST"
+                      action="{{ url_for('process_loan', loan_id=entry.loan.id, action='reject') }}">
+                  <button class="btn btn-danger-soft btn-sm px-3 py-1" type="submit"
+                          {% if entry.loan.application_status == 'rejected' %}disabled{% endif %}>
                     <i class="bi bi-x"></i>
                   </button>
                 </form>
-                {% endif %}
-                <a href="{{ url_for('loan_form', customer_id=entry.customer.id) }}" 
-                   class="btn btn-primary-soft btn-sm px-3 py-1">
-                  <i class="bi bi-pencil"></i>
-                </a>
               </div>
             </td>
           </tr>
@@ -104,31 +114,69 @@
   </div>
 </div>
 
-<style>
-  .bg-light-primary { background-color: #e3f2fd; }
-  .bg-primary-soft { background-color: #e3f2fd; }
-  .bg-success-soft { background-color: #d1e7dd; }
-  .bg-warning-soft { background-color: #fff3cd; }
-  .bg-danger-soft { background-color: #f8d7da; }
-  .bg-secondary-soft { background-color: #dee2e6; }
-  .btn-primary-soft { 
-    background-color: #e3f2fd;
-    color: #0d6efd;
-    border: 1px solid #0d6efd40;
-  }
-  .btn-success-soft { 
-    background-color: #d1e7dd;
-    color: #198754;
-    border: 1px solid #19875440;
-  }
-  .btn-danger-soft { 
-    background-color: #f8d7da;
-    color: #dc3545;
-    border: 1px solid #dc354540;
-  }
-</style>
+{# --------------------------- loan document modals ------------------------- #}
+{% for entry in loans %}
+<div class="modal fade" id="loanDocsModal{{ entry.loan.id }}" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ entry.customer.first_name }} {{ entry.customer.last_name }} — Loan #{{ entry.loan.loan_number or entry.loan.id }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
 
+      <div class="modal-body">
+        {% set loan_docs = entry.customer.documents
+                           | selectattr('filetype', 'in', ['loan_form', 'live_photo', 'payslip'])
+                           | list %}
+        {% if loan_docs %}
+          {% for doc in loan_docs %}
+          <p class="mb-2">
+            <strong>{{ doc.filetype.replace('_', ' ') | title }}:</strong>
+            <a href="{{ url_for('serve_document', doc_id=doc.id) }}" target="_blank" class="link-primary text-decoration-underline">
+              View
+            </a>
+          </p>
+          {% endfor %}
+        {% else %}
+          <div class="alert alert-warning">No loan‑related documents available for this customer.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}  {# keeps any JS from base.html #}
 <script>
-  // Optional: Add JS for table filtering or sorting if needed
+  // DataTables init (if jQuery + DataTables are loaded in base.html)
+  document.addEventListener('DOMContentLoaded', () => {
+    $('#loanTable').DataTable({
+      order: [[5, 'desc']],
+      columnDefs: [{ orderable: false, targets: [7] }]
+    });
+  });
 </script>
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style>
+  .bg-light-primary { background-color:#e3f2fd; }
+  .bg-primary-soft  { background-color:#e3f2fd; }
+  .bg-success-soft  { background-color:#d1e7dd; }
+  .bg-warning-soft  { background-color:#fff3cd; }
+  .bg-danger-soft   { background-color:#f8d7da; }
+  .btn-outline-primary {
+    border-color:#0d6efd; color:#0d6efd;
+  }
+  .btn-outline-primary:hover {
+    background:#0d6efd; color:#fff;
+  }
+  .btn-success-soft { background:#d1e7dd; color:#198754; border:1px solid #19875440; }
+  .btn-danger-soft  { background:#f8d7da; color:#dc3545; border:1px solid #dc354540; }
+</style>
 {% endblock %}
