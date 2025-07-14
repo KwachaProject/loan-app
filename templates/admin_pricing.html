@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Pricing Configuration</h2>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Add/Edit Pricing</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-select" required>
+                            <option value="civil_servant">Civil Servant</option>
+                            <option value="private_sector">Private Sector</option>
+                            <option value="sme">SME</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Term (months)</label>
+                        <select name="term" class="form-select" required>
+                            {% for term in [3, 6, 9, 12, 18, 24, 36, 48] %}
+                                <option value="{{ term }}">{{ term }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Interest Rate</label>
+                        <input type="number" step="0.001" name="interest_rate" 
+                               class="form-control" required placeholder="0.035">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Origination Fee</label>
+                        <input type="number" step="0.001" name="origination_fee" 
+                               class="form-control" required placeholder="0.15">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Insurance Fee</label>
+                        <input type="number" step="0.001" name="insurance_fee" 
+                               class="form-control" required placeholder="0.026">
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Collection Fee</label>
+                        <input type="number" step="0.001" name="collection_fee" 
+                               class="form-control" required placeholder="0.0025">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">CRB Fee (MWK)</label>
+                        <input type="number" step="0.01" name="crb_fee" 
+                               class="form-control" required placeholder="3000">
+                    </div>
+                    <div class="col-md-3 align-self-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Save Configuration
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="row mb-3 mt-4">
+                    <div class="col-md-12">
+                        <h5>Application Scope</h5>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="apply_to_new" 
+                                   id="apply_to_new" checked>
+                            <label class="form-check-label" for="apply_to_new">
+                                Apply to new loans
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="apply_to_existing" 
+                                   id="apply_to_existing">
+                            <label class="form-check-label" for="apply_to_existing">
+                                Apply to existing loans
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <h6>For Existing Loans:</h6>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="apply_interest_to_existing" 
+                                   id="apply_interest_to_existing">
+                            <label class="form-check-label" for="apply_interest_to_existing">
+                                Update interest rates
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="apply_collection_to_existing" 
+                                   id="apply_collection_to_existing">
+                            <label class="form-check-label" for="apply_collection_to_existing">
+                                Update collection fees
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning mt-3">
+                    <strong>Warning:</strong> Changing rates on existing loans will regenerate repayment schedules
+                    and may affect customer payments. Use with caution.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% for category, configs in configs_by_category.items() %}
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h4 class="mb-0">{{ category | replace('_', ' ') | title }} Pricing</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Term (months)</th>
+                            <th>Interest Rate</th>
+                            <th>Origination Fee</th>
+                            <th>Insurance Fee</th>
+                            <th>Collection Fee</th>
+                            <th>CRB Fee</th>
+                            <th>Applies To</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for config in configs %}
+                        <tr>
+                            <td>{{ config.term_months }}</td>
+                            <td>{{ (config.interest_rate * 100)|round(2) }}%</td>
+                            <td>{{ (config.origination_fee * 100)|round(2) }}</td>
+                            <td>{{ (config.insurance_fee * 100)|round(2) }}</td>
+                            <td>{{ (config.collection_fee * 100)|round(2) }}</td>
+                            <td>MWK {{ "{:,.2f}".format(config.crb_fee) }}</td>
+                            <td>
+                                {% if config.apply_to_new %}New loans{% endif %}
+                                {% if config.apply_to_existing %}
+                                    <br>Existing loans:
+                                    {% if config.apply_interest_to_existing %}Interest{% endif %}
+                                    {% if config.apply_collection_to_existing %}Collection{% endif %}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-warning edit-pricing" 
+                                        data-id="{{ config.id }}"
+                                        data-category="{{ config.category }}"
+                                        data-term="{{ config.term_months }}"
+                                        data-rate="{{ config.interest_rate }}"
+                                        data-origination="{{ config.origination_fee }}"
+                                        data-insurance="{{ config.insurance_fee }}"
+                                        data-collection="{{ config.collection_fee }}"
+                                        data-crb="{{ config.crb_fee }}"
+                                        data-apply-to-new="{{ 'true' if config.apply_to_new else 'false' }}"
+                                        data-apply-to-existing="{{ 'true' if config.apply_to_existing else 'false' }}"
+                                        data-apply-interest="{{ 'true' if config.apply_interest_to_existing else 'false' }}"
+                                        data-apply-collection="{{ 'true' if config.apply_collection_to_existing else 'false' }}">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.edit-pricing').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const data = this.dataset;
+            
+            // Fill form with existing values
+            document.querySelector('select[name="category"]').value = data.category;
+            document.querySelector('select[name="term"]').value = data.term;
+            document.querySelector('input[name="interest_rate"]').value = data.rate;
+            document.querySelector('input[name="origination_fee"]').value = data.origination;
+            document.querySelector('input[name="insurance_fee"]').value = data.insurance;
+            document.querySelector('input[name="collection_fee"]').value = data.collection;
+            document.querySelector('input[name="crb_fee"]').value = data.crb;
+            
+            // Set checkbox values
+            document.getElementById('apply_to_new').checked = data.applyToNew === 'true';
+            document.getElementById('apply_to_existing').checked = data.applyToExisting === 'true';
+            document.getElementById('apply_interest_to_existing').checked = data.applyInterest === 'true';
+            document.getElementById('apply_collection_to_existing').checked = data.applyCollection === 'true';
+            
+            // Scroll to form
+            document.querySelector('.card-header').scrollIntoView({behavior: 'smooth'});
+        });
+    });
+});
+</script>
+{% endblock %}
