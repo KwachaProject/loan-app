@@ -4756,3 +4756,9 @@ AttributeError: type object 'RepaymentSchedule' has no attribute 'interest'
 [2025-07-14 03:02:14,406] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-07-14 03:02:14,407] INFO in app: System encoding: utf-8
 [2025-07-14 03:02:14,409] INFO in app: ==================================================
+[2025-07-14 03:22:54,972] INFO in app: ==================================================
+[2025-07-14 03:22:54,979] INFO in app: Application logging initialized successfully
+[2025-07-14 03:22:54,981] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-07-14 03:22:54,983] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-07-14 03:22:54,987] INFO in app: System encoding: utf-8
+[2025-07-14 03:22:54,990] INFO in app: ==================================================
