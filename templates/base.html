@@ -112,6 +112,10 @@
                 <a class="nav-link {% if request.endpoint == 'loanbook' %}active{% endif %}" href="{{ url_for('loanbook') }}">
                     <i class="bi bi-journal-text me-2"></i>Loan Book
                 </a>
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'income_report' %}active{% endif %}" href="{{ url_for('income_report') }}">
+                    <i class="bi bi-cash-stack me-2"></i>Income Report
+                </a>
             </li> 
                 {% if current_user.is_authenticated and current_user.role.name == 'admin' %}
                     <li class="nav-item">

@@ -22,7 +22,23 @@
             </a>
         </li>
         <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'cutoff_dates' %}active{% endif %}" href="{{ url_for('admin_dashboard', section='cutoff_dates') }}">Cut Off Management</a>
+        </li>
+        
+        <li class="nav-item" role="presentation">
             <a class="nav-link {% if section == 'reports' %}active{% endif %}" href="{{ url_for('admin_reports') }}">Reports</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'votes' %}active{% endif %}" href="{{ url_for('admin_votes') }}">Vote Management</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'pricing' %}active{% endif %}" href="{{ url_for('admin_pricing') }}">Pricing</a>
+        </li>
+        <!-- NEW BATCH IMPORT TAB -->
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'batch_import' %}active{% endif %}" href="{{ url_for('batch_import_loans') }}">
+                Loan Import
+            </a>
         </li>
     </ul>
 
@@ -89,12 +105,7 @@
                                     </button>
                                 </form>
                             </td>
-                            <td class="text-center">
-                                <form action="{{ url_for('delete_user') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                    <input type="hidden" name="user_id" value="{{ user.id }}">
-                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                </form>
-                            </td>
+
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -145,7 +156,7 @@
                 {% for note in notifications %}
                     <li class="list-group-item d-flex justify-content-between align-items-center {% if not note.is_read %}fw-bold{% endif %}">
                         <a href="{{ url_for('mark_notification_read', notification_id=note.id) }}"
-                           class="stretched-link text-decoration-none text-reset">
+                        class="stretched-link text-decoration-none text-reset">
                             {{ note.message }}
                         </a>
                         <span class="badge bg-light text-muted ms-3">
@@ -157,6 +168,49 @@
         {% else %}
             <p class="text-muted">No notifications at this time.</p>
         {% endif %}
+
+    {% elif section == 'cutoff_dates' %}
+        <!-- Cutoff Dates tab content -->
+        <h5>Repayment Cutoff-Date Settings</h5>
+
+        <div class="row g-4 mb-4">
+
+        <!-- CIVIL SERVANT form -->
+        <div class="col-md-6">
+            <form method="POST" action="{{ url_for('update_single_cutoff') }}" class="card shadow-sm p-3">
+                {{ csrf_token() if csrf_token is defined }}
+                <input type="hidden" name="category" value="civil_servant">
+                <h6 class="mb-3 text-primary">Civil Servant</h6>
+
+                <label class="form-label">Cut-off (date & time)</label>
+                <input type="datetime-local"
+                    name="cutoff_dt"
+                    class="form-control mb-3"
+                    value="{{ cutoff_configs.get('civil_servant')|default('', true) }}"
+                    required>
+
+                <button type="submit" class="btn btn-primary w-100">Save Civil-Servant Cut-off</button>
+            </form>
+        </div>
+
+        <!-- PRIVATE SECTOR form -->
+        <div class="col-md-6">
+            <form method="POST" action="{{ url_for('update_single_cutoff') }}" class="card shadow-sm p-3">
+                {{ csrf_token() if csrf_token is defined }}
+                <input type="hidden" name="category" value="private_sector">
+                <h6 class="mb-3 text-primary">Private Sector</h6>
+
+                <label class="form-label">Cut-off (date & time)</label>
+                <input type="datetime-local"
+                    name="cutoff_dt"
+                    class="form-control mb-3"
+                    value="{{ cutoff_configs.get('private_sector')|default('', true) }}"
+                    required>
+
+                <button type="submit" class="btn btn-primary w-100">Save Private-Sector Cut-off</button>
+            </form>
+        </div>
+    </div>
 
     {% elif section == 'settlements_report' %}
         <h5 class="mb-3">Settlement Report</h5>
@@ -193,15 +247,417 @@
     {% elif section == 'reports' %}
         <h5>Reports & Metrics</h5>
 
-       <div class="list-group mb-4">
+        <div class="list-group mb-4">
             <a href="{{ url_for('settlement_report') }}" class="list-group-item list-group-item-action">
                 Settlement Report
             </a>
-            <!-- you can add more reports here later -->
+            <!-- You can add more reports here later -->
         </div>
 
-    {% else %}
-        <div class="alert alert-warning">Invalid section. Please check your route.</div>
+    {% elif section == 'votes' %}
+        <!-- VOTE MANAGEMENT SECTION -->
+        {% set is_edit = edit_mode|default(false) %}
+        <h5 class="mb-3">
+            {{ 'Edit Vote' if is_edit else 'Create New Vote' }}
+        </h5>
+
+        <form method="POST" {% if is_edit %}action="{{ url_for('admin_votes', edit=vote_id) }}"{% else %}action="{{ url_for('admin_votes') }}"{% endif %}>
+            {{ form.hidden_tag() }}
+            <div class="form-group mb-3">
+                {{ form.code.label }}
+                {{ form.code(class="form-control") }}
+                {% for error in form.code.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group mb-3">
+                {{ form.description.label }}
+                {{ form.description(class="form-control", rows=3) }}
+                {% for error in form.description.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-check mb-3">
+                {{ form.is_active(class="form-check-input") }}
+                {{ form.is_active.label(class="form-check-label") }}
+            </div>
+            <button type="submit" class="btn btn-primary">{{ 'Update' if is_edit else 'Save' }}</button>
+            {% if is_edit %}
+                <a href="{{ url_for('admin_votes') }}" class="btn btn-secondary">Cancel</a>
+            {% endif %}
+        </form>
+
+        <hr class="my-4">
+
+        <h5>Existing Votes</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vote in votes %}
+                        <tr>
+                            <td>{{ vote.code }}</td>
+                            <td>{{ vote.description }}</td>
+                            <td>{{ 'Active' if vote.is_active else 'Inactive' }}</td>
+                            <td class="text-center">
+                                <a href="{{ url_for('admin_votes', edit=vote.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <form action="{{ url_for('delete_vote', vote_id=vote.id) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Are you sure you want to delete this vote?');">
+                                    {{ csrf_token() if csrf_token is defined }}
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% elif section == 'pricing' %}
+        <!-- PRICING SECTION -->
+        <h2 class="mb-4">Pricing Configuration</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Add/Edit Pricing</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select" required>
+                                <option value="civil_servant">Civil Servant</option>
+                                <option value="private_sector">Private Sector</option>
+                                <option value="sme">SME</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Term (months)</label>
+                            <select name="term" class="form-select" required>
+                                {% for term in [3, 6, 9, 12, 18, 24, 36, 48] %}
+                                    <option value="{{ term }}">{{ term }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Interest Rate</label>
+                            <input type="number" step="0.001" name="interest_rate" 
+                                   class="form-control" required placeholder="0.035">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Origination Fee</label>
+                            <input type="number" step="0.001" name="origination_fee" 
+                                   class="form-control" required placeholder="0.15">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Insurance Fee</label>
+                            <input type="number" step="0.001" name="insurance_fee" 
+                                   class="form-control" required placeholder="0.026">
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Collection Fee</label>
+                            <input type="number" step="0.001" name="collection_fee" 
+                                   class="form-control" required placeholder="0.0025">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">CRB Fee (MWK)</label>
+                            <input type="number" step="0.01" name="crb_fee" 
+                                   class="form-control" required placeholder="3000">
+                        </div>
+                        <div class="col-md-3 align-self-end">
+                            <button type="submit" class="btn btn-primary w-100">
+                                Save Configuration
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3 mt-4">
+                        <div class="col-md-12">
+                            <h5>Application Scope</h5>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="apply_to_new" 
+                                       id="apply_to_new" checked>
+                                <label class="form-check-label" for="apply_to_new">
+                                    Apply to new loans
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="apply_to_existing" 
+                                       id="apply_to_existing">
+                                <label class="form-check-label" for="apply_to_existing">
+                                    Apply to existing loans
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <h6>For Existing Loans:</h6>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="apply_interest_to_existing" 
+                                       id="apply_interest_to_existing">
+                                <label class="form-check-label" for="apply_interest_to_existing">
+                                    Update interest rates
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="apply_collection_to_existing" 
+                                       id="apply_collection_to_existing">
+                                <label class="form-check-label" for="apply_collection_to_existing">
+                                    Update collection fees
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning mt-3">
+                        <strong>Warning:</strong> Changing rates on existing loans will regenerate repayment schedules
+                        and may affect customer payments. Use with caution.
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% for category, configs in configs_by_category.items() %}
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0">{{ category | replace('_', ' ') | title }} Pricing</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Term (months)</th>
+                                <th>Interest Rate</th>
+                                <th>Origination Fee</th>
+                                <th>Insurance Fee</th>
+                                <th>Collection Fee</th>
+                                <th>CRB Fee</th>
+                                <th>Applies To</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for config in configs %}
+                            <tr>
+                                <td>{{ config.term_months }}</td>
+                                <td>{{ (config.interest_rate * 100)|round(2) }}%</td>
+                                <td>{{ (config.origination_fee * 100)|round(2) }}</td>
+                                <td>{{ (config.insurance_fee * 100)|round(2) }}</td>
+                                <td>{{ (config.collection_fee * 100)|round(2) }}</td>
+                                <td>MWK {{ "{:,.2f}".format(config.crb_fee) }}</td>
+                                <td>
+                                    {% if config.apply_to_new %}New loans{% endif %}
+                                    {% if config.apply_to_existing %}
+                                        <br>Existing loans:
+                                        {% if config.apply_interest_to_existing %}Interest{% endif %}
+                                        {% if config.apply_collection_to_existing %}Collection{% endif %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-pricing" 
+                                            data-id="{{ config.id }}"
+                                            data-category="{{ config.category }}"
+                                            data-term="{{ config.term_months }}"
+                                            data-rate="{{ config.interest_rate }}"
+                                            data-origination="{{ config.origination_fee }}"
+                                            data-insurance="{{ config.insurance_fee }}"
+                                            data-collection="{{ config.collection_fee }}"
+                                            data-crb="{{ config.crb_fee }}"
+                                            data-apply-to-new="{{ 'true' if config.apply_to_new else 'false' }}"
+                                            data-apply-to-existing="{{ 'true' if config.apply_to_existing else 'false' }}"
+                                            data-apply-interest="{{ 'true' if config.apply_interest_to_existing else 'false' }}"
+                                            data-apply-collection="{{ 'true' if config.apply_collection_to_existing else 'false' }}">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    
+    {% elif section == 'batch_import' %}
+        <!-- BATCH LOAN UPDATE SECTION -->
+        <div class="card border-primary">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Batch Loan Updates</h4>
+            </div>
+            <div class="card-body">
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="mb-4">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <div class="row">
+                    <!-- Upload Form -->
+                    <div class="col-md-6">
+                        <form method="POST" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="csvFile" class="form-label">Upload CSV File</label>
+                                <input class="form-control" type="file" id="csvFile" name="file" accept=".csv" required>
+                                <div class="form-text">
+                                    Max file size: 5MB. Supported format: CSV
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload me-2"></i>Process Updates
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Instructions -->
+                    <div class="col-md-6">
+                        <div class="card border-info">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">CSV Format Instructions</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    CSV must contain at least <code>loan_number</code> column. Supported columns:
+                                </p>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Column</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>loan_number</code></td>
+                                            <td>Yes</td>
+                                            <td>Existing loan identifier</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>created_at</code></td>
+                                            <td>No</td>
+                                            <td>New backdated date (YYYY-MM-DD)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>loan_amount</code></td>
+                                            <td>No</td>
+                                            <td>New loan amount (use 0 to zeroize)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>term_months</code></td>
+                                            <td>No</td>
+                                            <td>New loan term in months</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>application_status</code></td>
+                                            <td>No</td>
+                                            <td>New application status</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>loan_state</code></td>
+                                            <td>No</td>
+                                            <td>New loan state</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>performance_status</code></td>
+                                            <td>No</td>
+                                            <td>New performance status</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <div class="alert alert-warning mt-3">
+                                    <strong>Important Operations:</strong>
+                                    <ul>
+                                        <li>Backdating: Include <code>created_at</code> to change loan dates</li>
+                                        <li>Zeroizing: Set <code>loan_amount=0</code> to zeroize loans</li>
+                                        <li>Combined: Update dates, amounts, and statuses together</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <a href="{{ url_for('download_sample_csv') }}" class="btn btn-sm btn-outline-info">
+                                        <i class="bi bi-download me-1"></i>Download Sample CSV
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Validation Tips -->
+        <div class="card mt-4 border-warning">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">Validation Rules</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Data Requirements:</h6>
+                        <ul>
+                            <li><code>loan_number</code> must exist in the system</li>
+                            <li>Dates must be in YYYY-MM-DD format</li>
+                            <li>Loan amounts must be &ge; 0</li>
+                            <li>Term months must be 3-48 months</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Operations:</h6>
+                        <ul>
+                            <li><strong>Backdating</strong>: Updates loan dates and repayment schedule</li>
+                            <li><strong>Zeroizing</strong>: Sets loan amount to 0 and clears repayment schedule</li>
+                            <li><strong>Status Updates</strong>: Modifies loan status fields</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="alert alert-danger mt-3">
+                    <strong>Warning:</strong> This will modify existing loans:
+                    <ul>
+                        <li>Backdating changes loan creation dates</li>
+                        <li>Zeroizing sets loan amount to 0</li>
+                        <li>Repayment schedules will be regenerated for non-zeroized loans</li>
+                        <li>Changes cannot be easily undone</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     {% endif %}
 </div>
 {% endblock %}

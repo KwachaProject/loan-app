@@ -1,4 +1,3 @@
-{# templates/approve_customers.html #}
 {% extends "base.html" %}
 
 {% block title %}Approve Customers{% endblock %}
@@ -42,7 +41,8 @@
                 <th>Contact Information</th>
                 <th>Financial Details</th>
                 <th>Documents</th>
-                <th style="width:40px;"></th>  {# ✓ checkbox now last #}
+                <th>Vote Selection</th>
+                <th style="width:40px;"></th>
               </tr>
             </thead>
             <tbody>
@@ -95,6 +95,20 @@
                     <i class="bi bi-file-earmark-text me-2"></i>View Docs
                   </button>
                 </td>
+                
+                <!-- Vote Selection Dropdown -->
+                <td>
+                  <select class="form-select form-select-sm" name="vote_{{ customer.id }}" required>
+                    <option value="" disabled selected>Select Vote</option>
+                    {% for vote in votes %}
+                      <option value="{{ vote.id }}">
+                        {{ vote.code }} - {{ vote.description }}
+                      </option>
+                    {% else %}
+                      <option value="" disabled>No votes available</option>
+                    {% endfor %}
+                  </select>
+                </td>
 
                 <td class="text-center">
                   <input type="checkbox" class="form-check-input customer-checkbox"
@@ -130,13 +144,13 @@
   {% endif %}
 </div>
 
-{# --------------------------- Document modals --------------------------- #}
+{# Document modals #}
 {% for customer in customers %}
 <div class="modal fade" id="docsModal{{ customer.id }}" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{ customer.first_name }}’s Documents</h5>
+        <h5 class="modal-title">{{ customer.first_name }}'s Documents</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
@@ -146,7 +160,7 @@
             <strong>{{ doc.filetype.replace('_', ' ') | title }}:</strong>
             <a href="{{ url_for('serve_document', doc_id=doc.id) }}" target="_blank" class="link-primary text-decoration-underline">
             View
-        </a>
+            </a>
         </p>
         {% else %}
         <div class="alert alert-warning">No documents found.</div>
@@ -170,13 +184,15 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".customer-checkbox:checked").length;
   }
 
-  selectAll?.addEventListener("change", () => {
-    checkboxes.forEach(cb => cb.checked = selectAll.checked);
-    updateCount();
-  });
+  if (selectAll) {
+    selectAll.addEventListener("change", () => {
+      checkboxes.forEach(cb => cb.checked = selectAll.checked);
+      updateCount();
+    });
+  }
 
   checkboxes.forEach(cb => cb.addEventListener("change", updateCount));
-  updateCount();   // initial
+  updateCount();
 });
 </script>
 {% endblock %}

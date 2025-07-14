@@ -1,0 +1,4 @@
+customer_id,loan_amount,term_months,created_at,category_code,category_label,loan_number,file_number,application_status,loan_state,performance_status,crb_fees,origination_fees,insurance_fees,collection_fees,cash_to_client,applied_interest_rate,applied_collection_fee
+31,1000000,12,4/29/2025,1,Civil Servant,112000031,2.02506E+11,Approved,Active,Performing,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,

@@ -1,133 +1,175 @@
 {% extends "base.html" %}
 
-{% block title %}Loan Statement - #{{ loan.loan_number }}{% endblock %}
+{% block title %}Loan Statement – #{{ loan.loan_number }}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <h2 class="mb-0">Loan Statement - #{{ loan.loan_number }}</h2>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Customer:</strong> {{ loan.customer.first_name }} {{ loan.customer.last_name }}</p>
-                    <p><strong>Loan Amount:</strong> MWK {{ "{:,.2f}".format(loan.loan_amount) }}</p>
-                    <p><strong>Term:</strong> {{ loan.term_months }} months</p>
-                    <p><strong>Top-Up Balance:</strong> MWK {{ "{:,.2f}".format(top_up_balance) }}</p>
-                </div>
-                <div class="col-md-6">
-                    <p><strong>Capitalized Amount:</strong> MWK {{ "{:,.2f}".format(capitalized_amount) }}</p>
-                    <p><strong>Current Balance:</strong> MWK {{ "{:,.2f}".format(current_balance) }}</p>
-                    <p><strong>Status:</strong> 
-                        <span class="badge 
-                            {% if loan.loan_state == 'active' %}bg-primary
-                            {% elif loan.loan_state == 'settled_client' %}bg-success
-                            {% elif loan.loan_state == 'written_off' %}bg-danger
-                            {% elif loan.loan_state == 'closed' %}bg-secondary
-                            {% else %}bg-warning{% endif %}">
-                            {{ loan.loan_state|upper|replace('_', ' ') }}
-                        </span>
-                    </p>
-                    <p><strong>Settlement Balance:</strong> MWK {{ "{:,.2f}".format(settlement_balance) }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Payment Summary -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card text-white bg-success h-100">
-                <div class="card-body">
-                    <h6 class="card-title">Total Paid</h6>
-                    <p class="card-text h4">MWK {{ "{:,.2f}".format(totals.paid) }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-info h-100">
-                <div class="card-body">
-                    <h6 class="card-title">Principal Paid</h6>
-                    <p class="card-text h4">MWK {{ "{:,.2f}".format(totals.principal) }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-warning h-100">
-                <div class="card-body">
-                    <h6 class="card-title">Interest Paid</h6>
-                    <p class="card-text h4">MWK {{ "{:,.2f}".format(totals.interest) }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-secondary h-100">
-                <div class="card-body">
-                    <h6 class="card-title">Fees Paid</h6>
-                    <p class="card-text h4">MWK {{ "{:,.2f}".format(totals.fees) }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Payment Details -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Payment Details</h5>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Date</th>
-                            <th class="text-end">Total Payment</th>
-                            <th class="text-end">Principal</th>
-                            <th class="text-end">Interest</th>
-                            <th class="text-end">Fees</th>
-                            <th class="text-end">Balance</th>
-                            <th>Method</th>
-                            <th>Reference</th>
-                            <th>Actions</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in statement %}
-                        <tr class="{% if not row.valid_allocation %}table-warning{% endif %}">
-                            <td>{{ row.date }}</td>
-                            <td class="text-end">{{ "{:,.2f}".format(row.total) }}</td>
-                            <td class="text-end">{{ "{:,.2f}".format(row.principal) }}</td>
-                            <td class="text-end">{{ "{:,.2f}".format(row.interest) }}</td>
-                            <td class="text-end">{{ "{:,.2f}".format(row.collection_fees) }}</td>
-                            <td class="text-end fw-bold">{{ "{:,.2f}".format(row.remaining_balance) }}</td>
-                            <td>{{ row.method|title }}</td>
-                            <td>{{ row.reference }}</td>
-                            <td>
-                                {% if not row.valid_allocation %}
-                                <span class="badge bg-danger" title="Allocation doesn't match payment amount">!</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if row.method and row.method.lower() not in ['settlement', 'internal_topup', 'internal_settlement'] %}
-                                <a href="{{ url_for('edit_payment', payment_id=row.id) }}" class="btn btn-sm btn-outline-warning">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
-                                {% else %}
-                                <span class="text-muted">System</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <td colspan="9" class="text-center py-4">No payment records found</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <!-- ── Loan header ─────────────────────────────────────────── -->
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">Loan Statement – #{{ loan.loan_number }}</h2>
     </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Customer:</strong> {{ loan.customer.first_name }} {{ loan.customer.last_name }}</p>
+          <p><strong>Loan Amount:</strong> MWK {{ "{:,.2f}".format(loan.loan_amount or 0) }}</p>
+          <p><strong>Term:</strong> {{ loan.term_months }} months</p>
+          <p><strong>Top-Up Balance:</strong> MWK {{ "{:,.2f}".format(top_up_balance or 0) }}</p>
+        </div>
+
+        <div class="col-md-6">
+          <p><strong>Capitalised Amount:</strong> MWK {{ "{:,.2f}".format(capitalized_amount or 0) }}</p>
+          <p><strong>Current Balance:</strong> MWK {{ "{:,.2f}".format(current_balance or 0) }}</p>
+          <p>
+            <strong>Status:</strong>
+            <span class="badge
+              {% if loan.loan_state == 'active' %}bg-primary
+              {% elif loan.loan_state == 'settled_client' %}bg-success
+              {% elif loan.loan_state == 'written_off' %}bg-danger
+              {% elif loan.loan_state == 'closed' %}bg-secondary
+              {% else %}bg-warning{% endif %}">
+              {{ loan.loan_state|upper|replace('_',' ') }}
+            </span>
+          </p>
+          <p><strong>Settlement Balance:</strong> MWK {{ "{:,.2f}".format(settlement_balance or 0) }}</p>
+
+          <button class="btn btn-outline-primary mt-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#repaymentScheduleModal">
+            <i class="bi bi-table"></i> View Repayment Schedule
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Payment-summary cards ───────────────────────────────── -->
+  <div class="row mb-4">
+    {% set cards = [
+      ('Total Paid', totals.paid, 'success'),
+      ('Principal Paid', totals.principal, 'info'),
+      ('Interest Paid', totals.interest, 'warning'),
+      ('Fees Paid', totals.fees, 'secondary')
+    ] %}
+    {% for label, amt, color in cards %}
+    <div class="col-md-3">
+      <div class="card text-white bg-{{ color }} h-100">
+        <div class="card-body">
+          <h6 class="card-title">{{ label }}</h6>
+          <p class="card-text h4">MWK {{ "{:,.2f}".format(amt or 0) }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- ── Payment-detail table ────────────────────────────────── -->
+  <div class="card mb-5">
+    <div class="card-header bg-light"><h5 class="mb-0">Payment Details</h5></div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th class="text-end">Total</th>
+              <th class="text-end">Principal</th>
+              <th class="text-end">Interest</th>
+              <th class="text-end">Fees</th>
+              <th class="text-end">Balance</th>
+              <th>Method</th>
+              <th>Reference</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in statement %}
+            <tr class="{% if not row.valid_allocation %}table-warning{% endif %}">
+              <td>{{ row.date }}</td>
+              <td class="text-end">{{ "{:,.2f}".format(row.total or 0) }}</td>
+              <td class="text-end">{{ "{:,.2f}".format(row.principal or 0) }}</td>
+              <td class="text-end">{{ "{:,.2f}".format(row.interest or 0) }}</td>
+              <td class="text-end">{{ "{:,.2f}".format(row.collection_fees or 0) }}</td>
+              <td class="text-end fw-bold">{{ "{:,.2f}".format(row.remaining_balance or 0) }}</td>
+              <td>{{ row.method|default('-', true)|title }}</td>
+              <td>{{ row.reference|default('-') }}</td>
+              <td class="text-center">
+                {% if row.method and row.method.lower() not in ['settlement','internal_topup','internal_settlement'] %}
+                  <a href="{{ url_for('edit_payment', payment_id=row.id) }}"
+                     class="btn btn-sm btn-outline-warning">
+                     <i class="bi bi-pencil"></i> Edit
+                  </a>
+                {% else %}
+                  <span class="text-muted">–</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="9" class="text-center py-4">No payment records found</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+
+<!-- ── Repayment-Schedule modal ─────────────────────────────── -->
+<div class="modal fade" id="repaymentScheduleModal" tabindex="-1"
+     aria-labelledby="repaymentScheduleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="repaymentScheduleModalLabel">
+          Repayment Schedule – Loan #{{ loan.loan_number }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white"
+                data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm table-striped mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Due Date</th>
+                <th class="text-end">Principal</th>
+                <th class="text-end">Interest</th>
+                <th class="text-end">Fees</th>
+                <th class="text-end">Total</th>
+                <th class="text-end">Remaining Balance</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in loan.repayment_schedules|sort(attribute='due_date') %}
+              <tr class="{% if r.status == 'paid' %}table-success{% endif %}">
+                <td>{{ r.instalment_no }}</td>
+                <td>{{ r.due_date.strftime('%d-%b-%Y') }}</td>
+                <td class="text-end">{{ "{:,.2f}".format(r.expected_principal or 0) }}</td>
+                <td class="text-end">{{ "{:,.2f}".format(r.expected_interest or 0) }}</td>
+                <td class="text-end">{{ "{:,.2f}".format(r.expected_fees or 0) }}</td>
+                <td class="text-end fw-bold">{{ "{:,.2f}".format(r.expected_amount or 0) }}</td>
+                <td class="text-end">{{ "{:,.2f}".format(r.remaining_balance or 0) }}</td>
+                <td>{{ r.status|title }}</td>
+              </tr>
+              {% else %}
+              <tr><td colspan="8" class="text-center py-4">Schedule not generated</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

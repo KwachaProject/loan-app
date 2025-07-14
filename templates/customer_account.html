@@ -212,113 +212,135 @@
               <i class="bi bi-check-circle me-2"></i>Loan Settlement
             </h4>
           </div>
+
           <div class="card-body">
-            <!-- CSV Batch Write-Off Section -->
+
+            {# -------------------- CSV batch write‑off -------------------- #}
             <div class="card mb-4 border-danger">
               <div class="card-header bg-danger text-white">
                 <h5 class="mb-0">
-                  <i class="bi bi-file-earmark-spreadsheet me-2"></i>Batch Write-Off (CSV Upload)
+                  <i class="bi bi-file-earmark-spreadsheet me-2"></i>Batch Write‑Off (CSV)
                 </h5>
               </div>
               <div class="card-body">
-                <form method="POST" action="{{ url_for('batch_write_off') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ url_for('batch_write_off') }}"
+                      enctype="multipart/form-data">
                   <div class="mb-3">
-                    <label class="form-label">Upload CSV File</label>
-                    <input type="file" name="csv_file" class="form-control" accept=".csv" required>
-                    <small class="text-muted">CSV format: loan_number,reason (must include header row)</small>
+                    <label class="form-label">Upload CSV file</label>
+                    <input type="file" name="csv_file" class="form-control"
+                          accept=".csv" required>
+                    <small class="text-muted">
+                      Format: <code>loan_number,reason</code> (include header row)
+                    </small>
                   </div>
-                  <button type="submit" class="btn btn-danger">
-                    <i class="bi bi-upload me-1"></i>Process Batch Write-Off
+                  <button class="btn btn-danger">
+                    <i class="bi bi-upload me-1"></i>Process Batch
                   </button>
                 </form>
               </div>
             </div>
 
+            {# ------------------- Individual Loan Settlement ------------------- #}
             {% set active_loans = loans | selectattr('loan_state', 'equalto', 'active') | list %}
             {% if active_loans %}
             <div class="card border-success">
               <div class="card-header bg-success text-white">
                 <h5 class="mb-0">
-                  <i class="bi bi-wallet2 me-2"></i>Individual Loan Settlement
+                  <i class="bi bi-wallet2 me-2"></i>Individual Loan Settlement
                 </h5>
               </div>
+
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table table-hover">
+                  <table class="table table-hover align-middle">
                     <thead class="bg-success text-white">
                       <tr>
-                        <th>Loan Number</th>
-                        <th>Settlement Type</th>
-                        <th>Settlement Amount</th>
-                        <th>Proof Document</th>
-                        <th>Action</th>
+                        <th>Loan #</th>
+                        <th>Closure Type</th>
+                        <th style="width:170px">Settlement Sub‑Type</th>
+                        <th>Amount (MWK)</th>
+                        <th>Proof & Submit</th>
                       </tr>
                     </thead>
+
                     <tbody>
-                      {% for loan in active_loans %}
+                    {% for loan in active_loans %}
                       <tr>
+                        {# -------- Loan number -------- #}
                         <td>{{ loan.loan_number or 'N/A' }}</td>
+
+                        {# -------- Closure type select -------- #}
                         <td>
-                          <select class="form-select form-select-sm settlement-type-select" 
+                          <select class="form-select form-select-sm closure-type" 
+                                  name="closure_type"
+                                  form="settle-form-{{ loan.id }}"
                                   data-loan-id="{{ loan.id }}"
-                                  required>
-                            <option value="settlement" data-amount="{{ loan.settlement_balance }}">Client Settled</option>
-                            <option value="insurance" data-amount="{{ loan.current_balance }}">Insurance</option>
-                            <option value="write_off" data-amount="{{ loan.current_balance }}">Write-Off</option>
+                                  required>  <!-- Added required attribute -->
+                            <option value="settlement" data-amount="{{ loan.settlement_balance }}">
+                              Client Settled
+                            </option>
+                            <option value="insurance" data-amount="{{ loan.current_balance }}">
+                              Insurance
+                            </option>
+                            <option value="write_off" data-amount="{{ loan.current_balance }}">
+                              Write-Off
+                            </option>
+                          </select>
+                        </td>
+
+                        {# -------- Settlement sub‑type block -------- #}
+                        <td>
+                          <div id="subtype-box-{{ loan.id }}">
+                          <select class="form-select form-select-sm settlement-type" 
+                                  name="settlement_type"
+                                  form="settle-form-{{ loan.id }}"
+                                  data-loan-id="{{ loan.id }}"
+                                  required>  <!-- Added required -->
+                            <option value="" disabled selected>Select Type</option>
+                            <option value="self">Self</option> 
+                            <option value="third_party">Third Party</option>
                           </select>
 
-                          <div class="mt-2 settlement-subtype-group" 
-                              id="settlement-subtype-{{ loan.id }}" 
-                              style="display: none;">
-                            <select name="settlement_type" 
-                                    class="form-select form-select-sm mt-1 settlement-subtype-select"
-                                    data-loan-id="{{ loan.id }}">
-                              <option value="">-- Select Sub-Type --</option>
-                              <option value="self">Self</option>
-                              <option value="third_party">Third Party</option>
-                            </select>
-
-                            <input type="text" 
+                            <input type="text"
+                                  class="form-control form-control-sm mt-1 third-party-inst d-none"
                                   name="settling_institution"
-                                  class="form-control form-control-sm mt-1 third-party-input"
-                                  placeholder="Settling Institution"
-                                  data-loan-id="{{ loan.id }}"
-                                  style="display: none;">
+                                  placeholder="Settling institution"
+                                  form="settle-form-{{ loan.id }}"
+                                  data-loan-id="{{ loan.id }}">
 
-                            <input type="text" 
+                            <input type="text"
+                                  class="form-control form-control-sm mt-1 third-party-reason d-none"
                                   name="settlement_reason"
-                                  class="form-control form-control-sm mt-1 third-party-reason"
-                                  placeholder="Settlement Reason"
-                                  data-loan-id="{{ loan.id }}"
-                                  style="display: none;">
+                                  placeholder="Settlement reason"
+                                  form="settle-form-{{ loan.id }}"
+                                  data-loan-id="{{ loan.id }}">
                           </div>
                         </td>
 
+                        {# -------- Dynamic amount display -------- #}
                         <td>
-                          <input type="text" 
-                                id="settle-amount-{{ loan.id }}"
+                          <input type="text"
+                                id="amount-{{ loan.id }}"
+                                class="form-control-plaintext fw-semibold ps-0"
                                 value="MWK {{ '%.2f'|format(loan.settlement_balance) }}"
-                                class="form-control-plaintext"
                                 readonly>
                         </td>
 
+                        {# -------- Proof upload + submit -------- #}
                         <td>
-                          <form id="settle-form-{{ loan.id }}" 
-                                method="POST" 
-                                action="{{ url_for('settle_loan', loan_id=loan.id) }}" 
-                                enctype="multipart/form-data">
-                            <input type="hidden" name="closure_type" value="settlement">
-                            <input type="file" name="settle_file" class="form-control form-control-sm mt-1" required>
+                          <form id="settle-form-{{ loan.id }}"
+                                action="{{ url_for('settle_loan', loan_id=loan.id) }}"
+                                method="POST" enctype="multipart/form-data"
+                                class="d-flex gap-2 flex-wrap">
+                            <input type="file" name="settle_file"
+                                  class="form-control form-control-sm" required>
+                            <button class="btn btn-success btn-sm mt-1 mt-md-0">
+                              <i class="bi bi-check-circle me-1"></i>Settle
+                            </button>
                           </form>
                         </td>
-
-                        <td>
-                          <button type="submit" form="settle-form-{{ loan.id }}" class="btn btn-sm btn-success">
-                            <i class="bi bi-check-circle me-1"></i>Settle
-                          </button>
-                        </td>
                       </tr>
-                      {% endfor %}
+                    {% endfor %}
                     </tbody>
                   </table>
                 </div>
@@ -326,7 +348,8 @@
             </div>
             {% else %}
               <div class="alert alert-warning">
-                <i class="bi bi-exclamation-triangle me-2"></i>No active loans available for settlement.
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                No active loans available for settlement.
               </div>
             {% endif %}
           </div>
@@ -336,109 +359,118 @@
 </div>
 
 <script>
- document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('topupForm');
-        const loanSelect = document.getElementById('existingLoanSelect');
-        const amountInput = form.querySelector('input[name="amount_requested"]');
-        const topUpInput = document.getElementById('topUpBalance');
-        const cashInput = document.getElementById('cashToClient');
+/* ------------------------------------------------------------------
+   Loan‑book client‑side helpers
+   – Top‑up form
+   – Settlement / Write‑off / Insurance picker
+   – Settlement sub‑type (self / third‑party)
+-------------------------------------------------------------------*/
+document.addEventListener('DOMContentLoaded', function () {
 
+  /* ===============================================================
+     1. TOP‑UP LOGIC
+  ============================================================== */
+  const topupForm = document.getElementById('topupForm');
+  if (topupForm) {
+    const loanSelect  = document.getElementById('existingLoanSelect');
+    const amountInput = topupForm.querySelector('input[name="amount_requested"]');
+    const topUpInput  = document.getElementById('topUpBalance');
+    const cashInput   = document.getElementById('cashToClient');
 
-  // Handle form submission to dynamic URL
-      form.addEventListener('submit', function (e) {
-          const selectedLoanId = loanSelect.value;
-          if (!selectedLoanId) {
-            e.preventDefault();
-            alert('Please select an existing loan.');
-            return;
-          }
-          form.action = '/topup/' + selectedLoanId;
-        });
-
-  if (loanSelect && amountInput && topUpInput && cashInput) {
-    loanSelect.addEventListener('change', function () {
-      const selectedOption = loanSelect.options[loanSelect.selectedIndex];
-      const balance = parseFloat(selectedOption.getAttribute('data-balance')) || 0;
-      topUpInput.value = balance.toFixed(2);
-      updateCashToClient();
+    // route POST → /topup/<loan_id>
+    topupForm.addEventListener('submit', (e) => {
+      const id = loanSelect.value;
+      if (!id) {
+        e.preventDefault();
+        alert('Please select an existing loan.');
+        return;
+      }
+      topupForm.action = '/topup/' + id;
     });
 
-    amountInput.addEventListener('input', updateCashToClient);
+    if (loanSelect && amountInput && topUpInput && cashInput) {
+      const updateCash = () => {
+        const amount  = parseFloat(amountInput.value)   || 0;
+        const balance = parseFloat(topUpInput.value)    || 0;
+        const cash    = Math.max(amount - balance, 0);
+        cashInput.value = cash.toFixed(2);
+      };
 
-    function updateCashToClient() {
-      const amount = parseFloat(amountInput.value) || 0;
-      const balance = parseFloat(topUpInput.value) || 0;
-      const cash = amount - balance;
-      cashInput.value = cash > 0 ? cash.toFixed(2) : '0.00';
+      loanSelect.addEventListener('change', () => {
+        const opt = loanSelect.options[loanSelect.selectedIndex];
+        const bal = parseFloat(opt.dataset.balance || 0);
+        topUpInput.value = bal.toFixed(2);
+        updateCash();
+      });
+      amountInput.addEventListener('input', updateCash);
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
-  // Handle settlement type (closure_type) select
-  document.querySelectorAll('.settlement-type-select').forEach(select => {
-    select.addEventListener('change', function () {
-      const loanId = this.dataset.loanId;
-      const selectedOption = this.options[this.selectedIndex];
-      const amount = selectedOption.getAttribute('data-amount');
+  /* ===============================================================
+     2. CLOSURE‑TYPE  (settlement / insurance / write‑off)
+  ============================================================== */
+  document.querySelectorAll('.closure-type').forEach(select => {
+    const loanId = select.dataset.loanId;
+    if (!loanId) return;
 
-      // Update amount field
-      const amountField = document.getElementById(`settle-amount-${loanId}`);
-      if (amountField) {
-        amountField.value = 'MWK ' + parseFloat(amount).toFixed(2);
-      }
-
-      // Update closure_type hidden input
-      const form = document.getElementById(`settle-form-${loanId}`);
-      const closureTypeInput = form?.querySelector('input[name="closure_type"]');
-      if (closureTypeInput) {
-        closureTypeInput.value = selectedOption.value;
-      }
-
-      // Show/hide settlement subtype section
-      const subtypeGroup = document.getElementById(`settlement-subtype-${loanId}`);
-      if (subtypeGroup) {
-        if (selectedOption.value === 'settlement') {
-          subtypeGroup.style.display = 'block';
-        } else {
-          subtypeGroup.style.display = 'none';
-
-          // Also hide nested fields if any
-          const institution = subtypeGroup.querySelector('.third-party-input');
-          const reason = subtypeGroup.querySelector('.third-party-reason');
-          if (institution && reason) {
-            institution.style.display = 'none';
-            reason.style.display = 'none';
-            institution.required = false;
-            reason.required = false;
-          }
-        }
-      }
-    });
+    const refresh = () => updateClosureType(select, loanId);
+    refresh();                    // initial
+    select.addEventListener('change', refresh);
   });
-});
 
-  // Handle settlement sub-type
-  document.querySelectorAll('.settlement-subtype-select').forEach(subtypeSelect => {
-    subtypeSelect.addEventListener('change', function () {
-      const loanId = this.dataset.loanId;
-      const institutionInput = document.querySelector(`.third-party-input[data-loan-id="${loanId}"]`);
-      const reasonInput = document.querySelector(`.third-party-reason[data-loan-id="${loanId}"]`);
+  function updateClosureType(select, loanId) {
+    const option = select.options[select.selectedIndex];
+    const amount = parseFloat(option?.dataset.amount || 0).toFixed(2);
 
-      if (this.value === 'third_party') {
-        institutionInput.style.display = 'block';
-        reasonInput.style.display = 'block';
-        institutionInput.required = true;
-        reasonInput.required = true;
-      } else {
-        institutionInput.style.display = 'none';
-        reasonInput.style.display = 'none';
-        institutionInput.required = false;
-        reasonInput.required = false;
+    // amount preview
+    const amtField = document.getElementById(`amount-${loanId}`);
+    if (amtField) amtField.value = `MWK ${amount}`;
+
+    // show / hide settlement‑subtype box
+    const box   = document.getElementById(`subtype-box-${loanId}`);
+    const isSet = select.value === 'settlement';
+    if (box) box.classList.toggle('d-none', !isSet);
+
+    // default sub-type to "self" when settlement is chosen
+    if (isSet) {
+      const subSel = document.querySelector(`.settlement-type[data-loan-id="${loanId}"]`);
+      if (subSel && !subSel.value) {
+        subSel.value = 'self';        // <-- matches your Enum value
       }
-    });
+      if (subSel) updateSettlementType(subSel, loanId);
+    }
+  }
+
+  /* ===============================================================
+     3. SETTLEMENT SUB‑TYPE  (self / third_party)
+  ============================================================== */
+  document.querySelectorAll('.settlement-type').forEach(select => {
+    const loanId = select.dataset.loanId;
+    if (!loanId) return;
+
+    const refresh = () => updateSettlementType(select, loanId);
+    refresh();                       // initial
+    select.addEventListener('change', refresh);
   });
+
+  function updateSettlementType(select, loanId) {
+    const third = select.value === 'third_party';
+
+    // toggle institution + reason inputs
+    document.querySelectorAll(`.third-party-inst[data-loan-id="${loanId}"]`).forEach(el => {
+      el.classList.toggle('d-none', !third);
+      el.required = third;
+    });
+    document.querySelectorAll(`.third-party-reason[data-loan-id="${loanId}"]`).forEach(el => {
+      el.classList.toggle('d-none', !third);
+      el.required = third;
+    });
+  }
+
 });
 </script>
+
+
 
 <style>
   .card {
@@ -460,6 +492,9 @@
     background-color: transparent;
     border: none;
     font-weight: 500;
+  }
+  .d-none {
+    display: none !important;
   }
 </style>
 {% endblock %}
