@@ -109,7 +109,9 @@ echo "🔧  Setting DB version to: $HEAD_REV"
 ###############################################################################
 echo "👥  Initializing roles and permissions…"
 python -c "from app import app, initialize_roles_permissions; \
-with app.app_context(): initialize_roles_permissions(); print('✅  RBAC initialized')" \
+app.app_context().push(); \
+initialize_roles_permissions(); \
+print('✅  RBAC initialized')" \
 || echo "⚠️  RBAC initialization failed"
 
 echo "👑  Ensuring admin account…"
@@ -118,16 +120,16 @@ from app import app, db, User; \
 from werkzeug.security import generate_password_hash; \
 email = os.environ['ADMIN_EMAIL']; \
 password = os.environ['ADMIN_PASSWORD']; \
-with app.app_context(): \
-    admin = User.query.filter_by(email=email).first(); \
-    if admin: print('✅  Admin already present'); \
-    else: \
-        username = 'admin_' + str(int(time.time())); \
-        new_admin = User(username=username, email=email, \
-                         password_hash=generate_password_hash(password)); \
-        db.session.add(new_admin); \
-        db.session.commit(); \
-        print(f'✅  Created admin user {email} ({username})')" \
+app.app_context().push(); \
+admin = User.query.filter_by(email=email).first(); \
+print('✅  Admin already present') if admin else ( \
+    username := 'admin_' + str(int(time.time())), \
+    new_admin := User(username=username, email=email, \
+                      password_hash=generate_password_hash(password)), \
+    db.session.add(new_admin), \
+    db.session.commit(), \
+    print(f'✅  Created admin user {email} ({username})') \
+)" \
 || echo "⚠️  Admin creation failed"
 
 echo "🚀  Launching Gunicorn…"
