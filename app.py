@@ -7,6 +7,7 @@ from io import BytesIO
 from fpdf import FPDF
 from contextlib import contextmanager
 from sqlalchemy import text
+from sqlalchemy import desc
 from jinja2 import TemplateNotFound
 from flask_apscheduler import APScheduler
 from sqlalchemy import or_
@@ -158,7 +159,7 @@ console_handler.setLevel(logging.DEBUG if app.debug else logging.INFO)
 console_handler.setFormatter(formatter)
 app.logger.addHandler(console_handler)
 
-password = os.getenv('MAIL_PASSWORD')
+password = os.getenv('MAIL_PASSWORD', '')
 if not password:
     raise ValueError("MAIL_PASSWORD environment variable is not set")
 
@@ -3481,7 +3482,10 @@ def admin_notifications():
         Notification.recipient_id == None  # Only global
     ).order_by(Notification.timestamp.desc()).all()
 
-    notifications = Notification.query.filter_by(recipient_id=None).order_by(Notification.timestamp.desc()).all()
+    notifications = Notification.query.filter(
+            Notification.recipient_id == None,
+            Notification.is_read.is_(False)
+        ).order_by(Notification.timestamp.desc())
     unread_count = Notification.query.filter_by(recipient_id=None, is_read=False).count()
 
     return render_template(
