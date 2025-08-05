@@ -10,6 +10,8 @@ from sqlalchemy.exc import ProgrammingError
 import inspect
 from sqlalchemy import text
 from sqlalchemy import desc
+from sqlalchemy import exc as sa_exc, inspect
+from sqlalchemy.exc import ProgrammingError
 from jinja2 import TemplateNotFound
 from flask_apscheduler import APScheduler
 from sqlalchemy import or_
@@ -5989,21 +5991,44 @@ from io import StringIO
 from flask import render_template, request, Response
 from sqlalchemy import func
 
+@app.context_processor
 def inject_notifications():
+    if not current_user.is_authenticated:
+        return dict(notifications=[])
+    
     try:
-        if current_user.is_authenticated:
-            unread = Notification.query.filter_by(
-                recipient_id=current_user.id,
-                is_read=False
-            ).order_by(Notification.timestamp.desc()).all()
-            return dict(notifications=unread)
+        unread = Notification.query.filter_by(
+            recipient_id=current_user.id,
+            is_read=False
+        ).order_by(Notification.timestamp.desc()).all()
+        return dict(notifications=unread)
+    
     except ProgrammingError as e:
         # Handle missing column error specifically
         if "email_recipients" in str(e):
             current_app.logger.error("Notification schema mismatch, returning empty list")
             return dict(notifications=[])
         raise
+    except Exception as e:
+        current_app.logger.error(f"Unexpected error fetching notifications: {str(e)}")
+        return dict(notifications=[])
+    
     return dict(notifications=[])
+
+
+def column_exists(cursor, table, column):
+    cursor.execute("""
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = %s AND column_name = %s
+    """, (table, column))
+    return cursor.fetchone() is not None
+
+def add_column(cursor, table, column, ddl):
+    try:
+        cursor.execute(f"ALTER TABLE {table} ADD COLUMN {column} {ddl}")
+        print(f"✅  Added {table}.{column}")
+    except Exception as e:
+        print(f"❌  Failed to add {table}.{column}: {e}")
 
 def check_db_schema():
     inspector = inspect(db.engine)
@@ -6783,12 +6808,7 @@ def alert_on_new_arrear(arrear):
             type='warning'
         )
 
-@app.context_processor
-def inject_notifications():
-    if current_user.is_authenticated:
-        unread = Notification.query.filter_by(recipient_id=current_user.id, is_read=False).order_by(Notification.timestamp.desc()).all()
-        return {'unread_notifications': unread}
-    return {}
+
 
 @app.route('/dashboard/credit_officer')
 @login_required
@@ -8959,6 +8979,29 @@ def format_mwk(amount):
     """Format amount as Malawian Kwacha"""
     return f"MWK {amount:,.2f}"
 
+def check_db_schema():
+    """Database schema validation function"""
+    try:
+        # FIXED: Imported inspect from sqlalchemy
+        inspector = inspect(db.engine)
+        cols = [c['name'] for c in inspector.get_columns('notifications')]
+        
+        required_columns = {
+            'email_recipients', 'email_subject', 
+            'email_content', 'email_sent', 'sent_at'
+        }
+        
+        missing = required_columns - set(cols)
+        if missing:
+            current_app.logger.critical(f"Missing notification columns: {', '.join(missing)}")
+            return False
+        
+        return True
+    except Exception as e:
+        current_app.logger.error(f"Schema validation failed: {str(e)}")
+        return False
+
+# Call during application startup   
 # Usage example:
 # sales_data['formatted_total'] = format_mwk(sales_data['total_budget'])
 
@@ -8994,50 +9037,57 @@ def initialize_application():
 
 
 
+def start_scheduler():
+    if scheduler.running:
+        return
+
+    scheduler.start()
+
+    # Add scheduled jobs here
+    scheduler.add_job(
+        id='par_calculation',
+        func=calculate_par,
+        trigger='cron',
+        hour=23,
+        minute=0,
+        timezone='Africa/Blantyre',
+        replace_existing=True
+    )
+
+    scheduler.add_job(
+        id='sales_report',
+        func=send_sales_notification_email,
+        trigger='cron',
+        hour=17,  # 5 PM
+        minute=0,
+        timezone='Africa/Blantyre',
+        max_instances=1,
+        replace_existing=True
+    )
+
+    # Add more jobs as needed
+    print("✅ Scheduler started with all jobs registered.")
+
+
+def run_app():
+    app.run(
+        host=os.environ.get('FLASK_HOST', '0.0.0.0'),
+        port=int(os.environ.get('FLASK_PORT', 5000)),
+        debug=(os.environ.get('FLASK_ENV') == 'development'),
+        use_reloader=False  # Avoid duplicate scheduler threads
+    )
+
+
 if __name__ == '__main__':
     try:
-        # Initialize the application
-        if initialize_application():
-            # Start the scheduler safely
-            if not scheduler.running:
-                scheduler.start()
-                
-                # Add scheduled jobs here
-                scheduler.add_job(
-                    id='par_calculation',
-                    func=calculate_par,
-                    trigger='cron',
-                    hour=23,
-                    minute=0,
-                    timezone='Africa/Blantyre',
-                    replace_existing=True
-                )
-                
-                # Add the new sales report job
-                scheduler.add_job(
-                    id='sales_report',
-                    func=send_sales_notification_email,
-                    trigger='cron',
-                    hour=17,  # 5 PM
-                    minute=0,
-                    timezone='Africa/Blantyre',
-                    max_instances=1,
-                    replace_existing=True
-                )
-                
-                # Add other jobs similarly
-            
-            # Run the Flask application
-            app.run(
-                host=os.environ.get('FLASK_HOST', '0.0.0.0'),
-                port=int(os.environ.get('FLASK_PORT', 5000)),
-                debug=(os.environ.get('FLASK_ENV') == 'development'),
-                use_reloader=False  # Critical for scheduler stability
-            )
+        with app.app_context():
+            if initialize_application():
+                start_scheduler()
+                run_app()
     except Exception as e:
         print(f"❌ Fatal application error: {e}")
         sys.exit(1)
     finally:
-        # Shutdown scheduler when application exits
         if scheduler.running:
             scheduler.shutdown()
+            print("🛑 Scheduler shut down cleanly.")
