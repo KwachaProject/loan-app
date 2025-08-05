@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Document Debugger{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">
+    <i class="bi bi-bug me-2"></i>Document Debugger
+  </h2>
+  
+  <div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+      <i class="bi bi-search me-2"></i>Check Document Status
+    </div>
+    <div class="card-body">
+      <form id="debugForm">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Customer ID</label>
+            <input type="text" class="form-control" name="customer_id" placeholder="Enter Customer ID">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Loan ID</label>
+            <input type="text" class="form-control" name="loan_id" placeholder="Enter Loan ID">
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-search me-1"></i>Check Documents
+            </button>
+          </div>
+        </div>
+      </form>
+      
+      <div id="results" class="mt-4" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('debugForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const params = new URLSearchParams(formData).toString();
+  
+  try {
+    const response = await fetch(`/debug/documents?${params}`);
+    const data = await response.json();
+    
+    let html = `
+      <div class="card">
+        <div class="card-header bg-info text-white">
+          Debug Results
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Storage Information</h5>
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <strong>Instance Path:</strong> ${data.instance_path}
+                </li>
+                <li class="list-group-item">
+                  <strong>Root Path:</strong> ${data.root_path}
+                </li>
+                <li class="list-group-item">
+                  <strong>Upload Folder:</strong> ${data.upload_folder}
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h5>Document Status</h5>
+              <ul class="list-group">
+    `;
+    
+    if (data.customer) {
+      html += `
+        <li class="list-group-item">
+          <strong>Customer:</strong> ${data.customer.name} (ID: ${data.customer.id})
+        </li>
+      `;
+    }
+    
+    if (data.loan) {
+      html += `
+        <li class="list-group-item">
+          <strong>Loan:</strong> ${data.loan.loan_number} (ID: ${data.loan.id})
+        </li>
+      `;
+    }
+    
+    html += `
+        <li class="list-group-item">
+          <strong>Documents Found:</strong> ${data.documents.length}
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="mt-4">
+    <h5>Document Details</h5>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Filename</th>
+          <th>Status</th>
+          <th>Path</th>
+        </tr>
+      </thead>
+      <tbody>
+    `;
+    
+    data.documents.forEach(doc => {
+      html += `
+        <tr>
+          <td>${doc.filetype || 'N/A'}</td>
+          <td>${doc.filename || 'N/A'}</td>
+          <td>
+            ${doc.exists 
+              ? '<span class="badge bg-success">Exists</span>' 
+              : '<span class="badge bg-danger">Missing</span>'}
+          </td>
+          <td class="small">
+            <div>Stored: <code>${doc.stored_path || 'None'}</code></div>
+            <div>Absolute: <code>${doc.absolute_path || 'None'}</code></div>
+          </td>
+        </tr>
+      `;
+    });
+    
+    html += `
+      </tbody>
+    </table>
+  </div>
+</div></div>`;
+    
+    document.getElementById('results').innerHTML = html;
+    document.getElementById('results').style.display = 'block';
+    
+  } catch (error) {
+    document.getElementById('results').innerHTML = `
+      <div class="alert alert-danger">
+        Error: ${error.message}
+      </div>
+    `;
+    document.getElementById('results').style.display = 'block';
+  }
+});
+</script>
+{% endblock %}

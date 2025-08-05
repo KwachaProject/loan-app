@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Liquidate Placement{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="text-danger">Liquidate Placement</h3>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.transaction_date.label(class="form-label") }}
+            {{ form.transaction_date(class="form-control") }}
+            {% for error in form.transaction_date.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-danger">Confirm Liquidation</button>
+        <a href="{{ url_for('placement_details', placement_id=placement.id) }}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

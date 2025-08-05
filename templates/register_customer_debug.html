@@ -15,13 +15,22 @@
       <i class="bi bi-upload me-1"></i>Upload CSV
     </button>
   </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="topup-tab" data-bs-toggle="tab" data-bs-target="#topup" type="button" role="tab">
+   <i class="bi bi-arrow-repeat me-1"></i>Top-Up Loan
+</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="additional-tab" data-bs-toggle="tab" data-bs-target="#additional" type="button" role="tab">
+   <i class="bi bi-plus-circle me-1"></i>Additional Loan
+</button>
+  </li>
 </ul>
 
 <div class="tab-content">
   <!-- Manual Entry Tab -->
-  <div class="tab-pane fade show active" id="manual" role="tabpanel">
-    <form method="POST" action="{{ url_for('register_customer_debug') }}" enctype="multipart/form-data" id="customerForm">
-
+   <div class="tab-pane fade show active" id="manual" role="tabpanel">
+    <form method="POST" action="{{ url_for('register_customer_debug') }}" enctype="multipart/form-data" id="manualForm">
       <!-- SECTION: Personal Information -->
       <div class="card mb-4">
         <div class="card-header bg-primary text-white">Personal Information</div>
@@ -254,16 +263,32 @@
 
             <!-- Loan Calculations -->
             <div class="col-md-4">
-              <label class="form-label">Monthly Instalment</label>
-              <input type="text" class="form-control" id="monthlyInstalment" readonly>
+              <label class="form-label">Agent</label>
+              <select name="agent_id" class="form-select">
+                <option value="">-- Select Agent --</option>
+                {% for agent in agents %}
+                  <option value="{{ agent.id }}">{{ agent.name }} ({{ agent.region }} - {{ agent.district }})</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="team_lead_id" class="form-label">Team Leader *</label>
+              <select class="form-select" id="team_lead_id" name="team_lead_id" required>
+                  {% for tl in team_leaders %}
+                  <option value="{{ tl.id }}">{{ tl.name }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+
+
+            <div class="col-md-4">
+              <label class="form-label">Region</label>
+              <input type="text" name="region" class="form-control" required>
             </div>
             <div class="col-md-4">
-              <label class="form-label">Total Repayment</label>
-              <input type="text" class="form-control" id="totalRepayment" readonly>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Effective Interest Rate (%)</label>
-              <input type="text" class="form-control" id="effectiveRate" readonly>
+              <label class="form-label">District</label>
+              <input type="text" name="district" class="form-control" required>
             </div>
           </div>
         </div>
@@ -311,7 +336,8 @@
 
   <!-- Upload CSV Tab -->
   <div class="tab-pane fade" id="upload" role="tabpanel">
-    <form method="POST" action="{{ url_for('register_customer_debug') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ url_for('register_customer_debug') }}" enctype="multipart/form-data" id="customerForm">
+    </form>
       <div class="mb-3">
         <label class="form-label">Select CSV File</label>
         <input type="file" name="csv_file" class="form-control" accept=".csv" required>
@@ -326,4 +352,76 @@
     </p>
   </div>
 </div>
+
+<!-- Top-Up Loan Tab -->
+    <div class="tab-pane fade" id="topup" role="tabpanel">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Search Customer for Top-Up</div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('customer_enquiry') }}" enctype="multipart/form-data">
+                    {{ query_form.hidden_tag() }}
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            {{ query_form.national_id.label(class="form-label") }}
+                            {{ query_form.national_id(class="form-control") }}
+                            {% if query_form.national_id.errors %}
+                                <span class="text-danger">{{ query_form.national_id.errors[0] }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            {{ query_form.employment_number.label(class="form-label") }}
+                            {{ query_form.employment_number(class="form-control") }}
+                            {% if query_form.employment_number.errors %}
+                                <span class="text-danger">{{ query_form.employment_number.errors[0] }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">&nbsp;</label>
+                            {{ query_form.query_submit(class="btn btn-primary w-100") }}
+                        </div>
+                    </div>
+                    <input type="hidden" name="section" value="topup">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Loan Tab -->
+    <div class="tab-pane fade" id="additional" role="tabpanel">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Search Customer for Additional Loan</div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('customer_enquiry') }}" enctype="multipart/form-data">
+                    {{ query_form.hidden_tag() }}
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            {{ query_form.national_id.label(class="form-label") }}
+                            {{ query_form.national_id(class="form-control") }}
+                            {% if query_form.national_id.errors %}
+                                <span class="text-danger">{{ query_form.national_id.errors[0] }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            {{ query_form.employment_number.label(class="form-label") }}
+                            {{ query_form.employment_number(class="form-control") }}
+                            {% if query_form.employment_number.errors %}
+                                <span class="text-danger">{{ query_form.employment_number.errors[0] }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">&nbsp;</label>
+                            {{ query_form.query_submit(class="btn btn-primary w-100") }}
+                        </div>
+                    </div>
+                    <input type="hidden" name="section" value="additional">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for message in get_flashed_messages(with_categories=True) %}
+    <div class="alert alert-{{ message[0] }}">{{ message[1] }}</div>
+{% endfor %}
 {% endblock %}
+

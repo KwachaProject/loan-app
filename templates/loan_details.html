@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Loan Details - {{ loan_number }}{% endblock %}
+
+{% block content %}
+<h2>Loan Details - {{ loan_number }}</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Column</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for col, val in columns %}
+        <tr>
+            <td>{{ col }}</td>
+            <td>{{ val }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

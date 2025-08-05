@@ -78,15 +78,16 @@
                     <i class="bi bi-house-door-fill me-2"></i>Dashboard
                 </a>
             </li>
+        
             <li class="nav-item">
                 <a class="nav-link {% if request.endpoint == 'register_customer_debug' %}active{% endif %}" href="{{ url_for('register_customer_debug') }}">
                     <i class="bi bi-person-plus-fill me-2"></i>Register Customer
                 </a>
-            </li>
+                </li>
             <li class="nav-item">
-                <a class="nav-link {% if request.endpoint == 'approve_customers' %}active{% endif %}" href="{{ url_for('approve_customers') }}">
-                    <i class="bi bi-person-check-fill me-2"></i>Approve Customers
-                </a>
+            <a class="nav-link {% if request.endpoint == 'approve_customers' %}active{% endif %}" href="{{ url_for('approve_customers') }}">
+                <i class="bi bi-person-check-fill me-2"></i>Approve Customers
+            </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if request.endpoint == 'customers' %}active{% endif %}" href="{{ url_for('customers') }}">
@@ -107,6 +108,22 @@
                 <a class="nav-link {% if request.endpoint == 'payments' %}active{% endif %}" href="{{ url_for('payments') }}">
                     <i class="bi bi-credit-card-2-back me-2"></i>Payments
                 </a>
+            </li> 
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'view_placements' %}active{% endif %}" href="{{ url_for('view_placements') }}">
+                    <i class="bi bi-piggy-bank-fill me-2"></i>Loan Placements
+                </a>
+            </li>           
+            <li class="nav-item dropdown {% if request.endpoint in ['view_arrears', 'par_trend', 'arrears_trend', arrears_waterfall] %}active{% endif %}">
+            <a class="nav-link dropdown-toggle" href="#" id="portfolioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Portfolio Management
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="portfolioDropdown">
+                <li><a class="dropdown-item {% if request.endpoint == 'view_arrears' %}active{% endif %}" href="{{ url_for('view_arrears') }}">Arrears</a></li>
+                <li><a class="dropdown-item {% if request.endpoint == 'par_trend' %}active{% endif %}" href="{{ url_for('par_trend') }}">PAR Trends</a></li>
+                <li><a class="dropdown-item {% if request.endpoint == 'arrears_trend' %}active{% endif %}" href="{{ url_for('arrears_trend') }}">Arrears Trends</a></li>
+                <li><a class="dropdown-item {% if request.endpoint == 'arrears_waterfall' %}active{% endif %}" href="{{ url_for('arrears_waterfall') }}">Arrears Waterfall</a></li>
+            </ul>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if request.endpoint == 'loanbook' %}active{% endif %}" href="{{ url_for('loanbook') }}">

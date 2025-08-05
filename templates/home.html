@@ -18,7 +18,7 @@
                 </div>
                 <h5 class="card-title">Register Customer</h5>
                 <p class="card-text text-muted">Create and onboard new customers into the loan system.</p>
-                <a href="{{ url_for('register_customer_debug') }}" class="btn btn-primary">Register</a>
+                <a href="{{ url_for('register_customer_debug') }}" class="btn btn-primary btn-sm">Register</a>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
                 </div>
                 <h5 class="card-title">Approve Customers</h5>
                 <p class="card-text text-muted">Checker role for verifying new registrations before activation.</p>
-                <a href="{{ url_for('approve_customers') }}" class="btn btn-primary">Approve</a>
+                <a href="{{ url_for('approve_customers') }}" class="btn btn-primary btn-sm">Approve</a>
             </div>
         </div>
     </div>
@@ -46,7 +46,35 @@
                 </div>
                 <h5 class="card-title">Loan Applications</h5>
                 <p class="card-text text-muted">Oversee applications and handle disbursements.</p>
-                <a href="{{ url_for('view_loans') }}" class="btn btn-primary">View Loans</a>
+                <a href="{{ url_for('view_loans') }}" class="btn btn-primary btn-sm">View Loans</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card: Sales Dashboard -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow h-100">
+            <div class="card-body">
+                <div class="mb-3 text-primary">
+                    <i class="bi bi-bar-chart-line-fill fs-2"></i>
+                </div>
+                <h5 class="card-title">Sales Dashboard</h5>
+                <p class="card-text text-muted">View loan sales performance by agent, district, and region.</p>
+                <a href="{{ url_for('sales_dashboard') }}" class="btn btn-primary btn-sm">View Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card: Create Agent -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow h-100">
+            <div class="card-body">
+                <div class="mb-3 text-primary">
+                    <i class="bi bi-people-fill fs-2"></i>
+                </div>
+                <h5 class="card-title">Create Agent</h5>
+                <p class="card-text text-muted">Add a new sales agent to the system and assign them to a region and district.</p>
+                <a href="{{ url_for('add_team_with_agents') }}" class="btn btn-primary btn-sm">Add Agent</a>
             </div>
         </div>
     </div>

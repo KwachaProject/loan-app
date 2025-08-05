@@ -1,0 +1,11 @@
+<ul class="nav nav-tabs mb-3" id="salesTabs">
+  <li class="nav-item">
+    <a class="nav-link {% if active_tab == 'agent' %}active{% endif %}" href="{{ url_for('sales_dashboard') }}">Agent Performance</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if active_tab == 'team' %}active{% endif %}" href="{{ url_for('team_leader_dashboard') }}">Team Leader</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if active_tab == 'analytics' %}active{% endif %}" href="{{ url_for('sales_charts') }}">Analytics</a>
+  </li>
+</ul>

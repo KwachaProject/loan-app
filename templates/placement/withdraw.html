@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h5>Withdraw from Placement: {{ placement.placement_number }}</h5>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.amount.label(class="form-label") }}
+            {{ form.amount(class="form-control") }}
+            {% if form.amount.errors %}
+                <div class="text-danger small">{{ form.amount.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.transaction_date.label(class="form-label") }}
+            {{ form.transaction_date(class="form-control") }}
+            {% if form.transaction_date.errors %}
+                <div class="text-danger small">{{ form.transaction_date.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-warning">Submit</button>
+        <a href="{{ url_for('placement_details', placement_id=placement.id) }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

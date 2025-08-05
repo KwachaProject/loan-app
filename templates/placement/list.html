@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Placements{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary">Placements Overview</h2>
+        <div>
+            <a href="{{ url_for('add_client') }}" class="btn btn-outline-secondary me-2">
+                <i class="bi bi-person-plus me-1"></i> Add Client
+            </a>
+            <a href="{{ url_for('new_placement') }}" class="btn btn-primary me-2">
+                <i class="bi bi-plus-circle me-1"></i> New Placement
+            </a>
+            <a href="{{ url_for('export_placements_excel') }}" class="btn btn-outline-success">
+                <i class="bi bi-download me-1"></i> Excel
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="interest_start" class="form-label">Interest From</label>
+            <input type="date" id="interest_start" name="interest_start" class="form-control" value="{{ request.args.get('interest_start', '') }}">
+        </div>
+        <div class="col-md-3">
+            <label for="interest_end" class="form-label">Interest To</label>
+            <input type="date" id="interest_end" name="interest_end" class="form-control" value="{{ request.args.get('interest_end', '') }}">
+        </div>
+        <div class="col-md-3">
+            <label for="maturity_start" class="form-label">Maturity From</label>
+            <input type="date" id="maturity_start" name="maturity_start" class="form-control" value="{{ request.args.get('maturity_start', '') }}">
+        </div>
+        <div class="col-md-3">
+            <label for="maturity_end" class="form-label">Maturity To</label>
+            <input type="date" id="maturity_end" name="maturity_end" class="form-control" value="{{ request.args.get('maturity_end', '') }}">
+        </div>
+        <div class="col-md-12 text-end">
+            <button type="submit" class="btn btn-outline-primary mt-2">Filter</button>
+        </div>
+    </form>
+
+    <!-- Summary -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="alert alert-info">
+                <strong>Total Interest Payable:</strong> {{ total_interest | format_currency }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="alert alert-warning">
+                <strong>Scheduled Interest (This Month):</strong> {{ total_scheduled_interest | format_currency }}
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="alert alert-secondary">
+                <strong>Weighted Cost of Finance:</strong> {{ weighted_cost | round(2) }}%
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div style="overflow-x: auto; max-height: 600px;">
+        <table class="table table-hover table-bordered align-middle shadow-sm">
+            <thead class="table-primary sticky-top">
+                <tr>
+                    <th>Client</th>
+                    <th>Start</th>
+                    <th>Maturity</th>
+                    <th>Interest Rate</th>
+                    <th>Commission %</th>
+                    <th>Arrangement Fee %</th>
+                    <th>Total Cost %</th>
+                    <th>Next Interest Date</th>
+                    <th>Scheduled Interest</th>
+                    <th>Accrued Interest</th>
+                    <th>Balance</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in placements %}
+                <tr>
+                    <td>{{ p.client.full_name if p.client else 'N/A' }}</td>
+                    <td>{{ p.start_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ p.maturity_date.strftime('%Y-%m-%d') if p.maturity_date else '-' }}</td>
+                    <td>{{ p.interest_rate }}%</td>
+                    <td>{{ p.commission_percentage }}%</td>
+                    <td>{{ p.arrangement_fee }}%</td>
+                    <td>{{ p.total_cost | round(2) }}%</td>
+                    <td>{{ p.next_interest_date.strftime('%Y-%m-%d') if p.next_interest_date else '-' }}</td>
+                    <td>{{ p.scheduled_interest | format_currency }}</td>
+                    <td>{{ p.accrued_interest() | format_currency }}</td>
+                    <td>{{ p.current_balance | format_currency }}</td>
+                    <td>{{ p.status }}</td>
+                    <td>
+                        <a href="{{ url_for('placement_details', placement_id=p.id) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="13" class="text-center">No placements found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="table-light">
+                    <td colspan="10" class="text-end fw-bold">Total Balance:</td>
+                    <td>{{ total_balance | format_currency }}</td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock %}

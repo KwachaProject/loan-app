@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Sales Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    .header {
+      background-color: #007bff;
+      color: white;
+      padding: 12px;
+      text-align: center;
+      border-radius: 4px 4px 0 0;
+      font-size: 18px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #007bff;
+    }
+    .status {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+    .status.on-track {
+      color: #28a745;
+    }
+    .status.behind {
+      color: #dc3545;
+    }
+    .footer {
+      font-size: 12px;
+      text-align: center;
+      color: #888;
+      margin-top: 20px;
+    }
+    .team-leaders-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .team-leaders-table th, .team-leaders-table td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    .progress-bar {
+      width: 100%;
+      background-color: #eee;
+      height: 10px;
+      border-radius: 5px;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 5px;
+      background-color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      📈 Daily Sales Summary – {{ notif.report_date }}
+    </div>
+
+    <div class="content">
+      <p><strong>Today's Sales:</strong> <span class="highlight">{{ notif.today_sales_mwk }}</span></p>
+      <p><strong>MTD Sales:</strong> <span class="highlight">{{ notif.mtd_sales_mwk }}</span></p>
+      <p><strong>Total Monthly Budget:</strong> <span class="highlight">{{ notif.total_budget_mwk }}</span></p>
+
+      <hr>
+
+      <p><strong>Performance vs Target:</strong></p>
+      <ul>
+        <li><strong>Current Achievement:</strong> {{ notif.sales_pct }}% (vs {{ notif.time_pct }}% of working days)</li>
+        <li><strong>Last Month (Same Period):</strong> {{ notif.last_month_sales_mwk }} ({{ notif.last_month_sales_pct }}%)</li>
+        <li><strong>Last Year (Same Period):</strong> {{ notif.last_year_sales_mwk }} ({{ notif.last_year_sales_pct }}%)</li>
+      </ul>
+
+      <p class="status {% if notif.sales_pct >= notif.time_pct %}on-track{% else %}behind{% endif %}">
+        {% if notif.sales_pct >= notif.time_pct %}
+          ✅ On Track – Keep it up!
+        {% else %}
+          ⚠️ Behind Target – Let’s catch up.
+        {% endif %}
+      </p>
+
+      <h3>Team Leader Performance</h3>
+      <table class="team-leaders-table">
+        <tr>
+          <th>Leader Name</th>
+          <th>Sales (MK)</th>
+          <th>Applications</th>
+          <th>Achievement (%)</th>
+          <th>Last Month (%)</th>
+          <th>Last Year (%)</th>
+          <th>Progress</th>
+        </tr>
+        {% for leader in notif.team_leaders %}
+        <tr>
+          <td>{{ leader.name }}</td>
+          <td>{{ "{:,.2f}".format(leader.sales) }}</td>
+          <td>{{ leader.applications }}</td>
+          <td>{{ leader.achievement }}%</td>
+          <td>{{ leader.last_month_achievement }}%</td>
+          <td>{{ leader.last_year_achievement }}%</td>
+          <td>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: {{ leader.achievement }}%;"></div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      {% if notif.custom_message %}
+      <p><strong>Message:</strong> {{ notif.custom_message }}</p>
+      {% endif %}
+    </div>
+
+    <div class="footer">
+      Sent automatically from the sales performance system.
+    </div>
+  </div>
+</body>
+</html>

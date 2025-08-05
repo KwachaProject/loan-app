@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Repayment Schedule - {{ placement.placement_number }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="font-size: 0.9rem;">
+    <h5 class="mb-3 text-primary">Repayment Schedule: {{ placement.placement_number }}</h5>
+    <p><strong>Client:</strong> {{ placement.client.full_name }}</p>
+    <p><strong>Start Date:</strong> {{ placement.start_date.strftime('%Y-%m-%d') }}</p>
+
+    <table class="table table-sm table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Due Date</th>
+                <th>Interest Due</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in schedule %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ entry.due_date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ entry.interest_due | format_currency }}</td>
+                <td>
+                    {% if entry.is_paid %}
+                        <span class="badge bg-success">Paid</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Pending</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="text-center text-muted">No schedule entries found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('placement_details', placement_id=placement.id) }}" class="btn btn-outline-secondary mt-2">
+        &larr; Back to Details
+    </a>
+</div>
+{% endblock %}

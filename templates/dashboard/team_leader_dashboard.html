@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Team Leader Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  .progress-bar-dynamic {
+    width: calc(var(--progress-width) * 1%);
+    transition: width 0.6s ease;
+  }
+</style>
+
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary">Team Leader Performance – {{ month }}</h2>
+
+  {% include "dashboard/_tabs.html" with context %}
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Team Leader</th>
+          <th>Applications</th>
+          <th>Total Loan Amount (MK)</th>
+          <th>Team Budget (MK)</th>
+          <th>Achievement (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tl in stats %}
+        <tr>
+          <td>{{ tl.team_leader.name if tl.team_leader else '-' }}</td>
+          <td>{{ tl.applications }}</td>
+          <td>{{ "{:,.2f}".format(tl.total_loan_amount or 0) }}</td>
+          <td>{{ "{:,.2f}".format(tl.team_budget or 0) }}</td>
+          <td>
+            {% if tl.achievement is not none %}
+              <div class="progress" style="height: 20px;">
+                <div class="progress-bar {% if tl.achievement < 50 %}bg-danger{% elif tl.achievement < 90 %}bg-warning text-dark{% else %}bg-success{% endif %} progress-bar-dynamic" 
+                     style="--progress-width: {{ tl.achievement }}"
+                     role="progressbar"
+                     aria-valuenow="{{ tl.achievement }}"
+                     aria-valuemin="0" 
+                     aria-valuemax="100">
+                  {{ tl.achievement }}%
+                </div>
+              </div>
+            {% else %}
+              <span class="text-muted">N/A</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

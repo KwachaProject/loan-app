@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}Add Team Leader & Agents{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary">Add Team Leader & Agents</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <!-- Team Leader Section -->
+        <h4 class="text-success">Team Leader</h4>
+
+        <div class="mb-3">
+            <label for="team_leader_select">Select Existing Team Leader</label>
+            <select class="form-select" name="existing_leader_id" id="team_leader_select">
+                <option value="">-- Add New Team Leader --</option>
+                {% for leader in team_leaders %}
+                    <option value="{{ leader.id }}">{{ leader.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="new-leader-fields">
+            <div class="mb-3">
+                <label>Full Name *</label>
+                <input type="text" class="form-control" name="leader_name">
+            </div>
+            <div class="mb-3">
+                <label>Phone</label>
+                <input type="text" class="form-control" name="leader_phone">
+            </div>
+            <div class="mb-3">
+                <label>Email</label>
+                <input type="email" class="form-control" name="leader_email">
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Agents Section -->
+        <h4 class="text-primary">Agents</h4>
+        <div id="agents-section">
+            <div class="agent-entry border rounded p-3 mb-3">
+                <div class="mb-2">
+                    <label>Agent Name *</label>
+                    <input type="text" class="form-control" name="agent_name[]" required>
+                </div>
+                <div class="mb-2">
+                    <label>Phone</label>
+                    <input type="text" class="form-control" name="agent_phone[]">
+                </div>
+                <div class="mb-2">
+                    <label>Email</label>
+                    <input type="email" class="form-control" name="agent_email[]">
+                </div>
+                <div class="mb-2">
+                    <label>District *</label>
+                    <input type="text" class="form-control" name="agent_district[]" required>
+                </div>
+                <div class="mb-2">
+                    <label>Region *</label>
+                    <input type="text" class="form-control" name="agent_region[]" required>
+                </div>
+                <div class="mb-2">
+                    <label>Monthly Budget</label>
+                    <input type="number" step="0.01" class="form-control" name="agent_budget[]">
+                </div>
+                <button type="button" class="btn btn-sm btn-danger remove-agent">Remove Agent</button>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary mb-3" id="add-agent">+ Add Another Agent</button>
+        <br>
+
+        <button type="submit" class="btn btn-primary">Save Team</button>
+        <a href="{{ url_for('view_agents') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<!-- JavaScript to handle dynamic agent form -->
+<script>
+    document.getElementById('team_leader_select').addEventListener('change', function () {
+        const newLeaderFields = document.getElementById('new-leader-fields');
+        newLeaderFields.style.display = this.value ? 'none' : 'block';
+    });
+
+    document.getElementById('add-agent').addEventListener('click', () => {
+        const section = document.getElementById('agents-section');
+        const entry = section.querySelector('.agent-entry');
+        const clone = entry.cloneNode(true);
+
+        clone.querySelectorAll('input').forEach(input => input.value = '');
+        section.appendChild(clone);
+    });
+
+    document.getElementById('agents-section').addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-agent')) {
+            const entries = document.querySelectorAll('.agent-entry');
+            if (entries.length > 1) {
+                e.target.closest('.agent-entry').remove();
+            }
+        }
+    });
+
+    // On page load, hide new leader fields if an existing leader is selected
+    window.addEventListener('DOMContentLoaded', function () {
+        const select = document.getElementById('team_leader_select');
+        if (select.value) {
+            document.getElementById('new-leader-fields').style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

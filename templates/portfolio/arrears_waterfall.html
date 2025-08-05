@@ -1,0 +1,254 @@
+<!-- templates/portfolio/arrears_waterfall.html -->
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Arrears Management</h2>
+
+<!-- Filters Form -->
+<form method="get" class="mb-3 d-flex gap-2 flex-wrap align-items-center">
+  <label for="statusSelect">Status:</label>
+  <select id="statusSelect" name="status" class="form-select" style="width: auto;">
+    <option value="unresolved" {% if status == 'unresolved' %}selected{% endif %}>Unresolved</option>
+    <option value="resolved" {% if status == 'resolved' %}selected{% endif %}>Resolved</option>
+    <option value="">All</option>
+  </select>
+  
+  <label for="tenureSelect">Tenure:</label>
+  <select id="tenureSelect" name="tenure" class="form-select" style="width: auto;">
+    <option value="">All</option>
+    {% for t in tenures %}
+    <option value="{{ t }}" {% if tenure|int == t %}selected{% endif %}>{{ t }}</option>
+    {% endfor %}
+  </select>
+
+  <label for="categorySelect">Category:</label>
+  <select id="categorySelect" name="category" class="form-select" style="width: auto;">
+    <option value="">All</option>
+    {% for c in categories %}
+    <option value="{{ c }}" {% if category == c %}selected{% endif %}>{{ c.replace('_', ' ') | title }}</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs mb-3" id="arrearsTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" 
+            type="button" role="tab" aria-controls="list" aria-selected="true">
+      Arrears List
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="chart-tab" data-bs-toggle="tab" data-bs-target="#chart" 
+            type="button" role="tab" aria-controls="chart" aria-selected="false">
+      Reasons Analysis
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content" id="arrearsTabContent">
+  <!-- First Tab: Arrears List -->
+  <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
+    <form method="post">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Loan #</th>
+              <th>Due Date</th>
+              <th>Tenure (months)</th>
+              <th>Category</th>
+              <th>Arrears Amount (MWK)</th>
+              <th>Reason</th>
+              <th>Action Plan</th>
+              <th>Status</th>
+              <th>Resolution</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for arrear in arrears %}
+            <tr>
+              <td>{{ arrear.loan_application.loan_number }}</td>
+              <td>{{ arrear.due_date.strftime('%Y-%m-%d') }}</td>
+              <td class="text-center">{{ arrear.tenure }}</td>
+              <td>{{ arrear.loan_application.category.replace('_', ' ') | title }}</td>
+              <td class="text-end">{{ arrear.total_arrears | format_currency }}</td>
+              <td>
+                <input type="text" name="reason_{{ arrear.id }}" 
+                       value="{{ arrear.arrear_reason or '' }}" 
+                       class="form-control form-control-sm">
+              </td>
+              <td>
+                <input type="text" name="action_{{ arrear.id }}" 
+                       value="{{ arrear.action_plan or '' }}" 
+                       class="form-control form-control-sm">
+              </td>
+              <td class="text-center">
+                <span class="badge {% if arrear.status == 'resolved' %}bg-success{% else %}bg-warning{% endif %}">
+                  {{ arrear.status | title }}
+                </span>
+              </td>
+              <td>
+                {% if arrear.status != 'resolved' %}
+                <div class="d-flex flex-column gap-1">
+                  <select name="resolution_type" class="form-select form-select-sm" required>
+                    <option value="">Select resolution</option>
+                    <option value="waiver">Waiver</option>
+                    <option value="paid">Paid</option>
+                    <option value="restructure">Restructure</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <input type="text" name="notes" placeholder="Notes" class="form-control form-control-sm">
+                  <button type="submit" formaction="{{ url_for('resolve_arrear', arrear_id=arrear.id) }}" 
+                          class="btn btn-sm btn-success">
+                    Resolve
+                  </button>
+                </div>
+                {% else %}
+                <div>
+                  <strong>{{ arrear.resolution_type | title }}</strong>
+                  <div class="text-muted small">{{ arrear.resolution_notes or 'No notes' }}</div>
+                  <div class="text-muted small">{{ arrear.resolution_date.strftime('%Y-%m-%d') }}</div>
+                </div>
+                {% endif %}
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="9" class="text-center">No arrears found</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <button type="submit" class="btn btn-primary">Update Reasons/Actions</button>
+    </form>
+  </div>
+
+  <!-- Second Tab: Waterfall Chart -->
+  <div class="tab-pane fade" id="chart" role="tabpanel" aria-labelledby="chart-tab">
+    <div class="d-flex align-items-center gap-2 mb-3">
+      <label for="dataTypeSelect" class="mb-0">View:</label>
+      <select id="dataTypeSelect" class="form-select" style="width: auto;">
+        <option value="count">Number of Cases</option>
+        <option value="amount">Amount (MWK)</option>
+      </select>
+    </div>
+
+    <div style="height: 500px;">
+      <canvas id="waterfallChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Embed JSON data safely -->
+<script id="summary-data" type="application/json">
+  {{ summary_data | tojson }}
+</script>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Waterfall Chart Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const rawData = JSON.parse(document.getElementById('summary-data').textContent);
+    const dataTypeSelect = document.getElementById('dataTypeSelect');
+    const ctx = document.getElementById('waterfallChart').getContext('2d');
+    
+    // Format numbers as MWK currency
+    const formatMWK = (value) => {
+      return 'MWK ' + value.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    };
+
+    let chart;
+
+    function renderChart(type) {
+      const values = (type === 'amount') ? rawData.amounts : rawData.counts;
+      const labels = rawData.labels;
+      
+      const backgroundColors = [
+        'rgba(255, 99, 132, 0.7)',   // Red
+        'rgba(54, 162, 235, 0.7)',   // Blue
+        'rgba(255, 206, 86, 0.7)',   // Yellow
+        'rgba(75, 192, 192, 0.7)',   // Teal
+        'rgba(153, 102, 255, 0.7)',  // Purple
+        'rgba(255, 159, 64, 0.7)',   // Orange
+        'rgba(199, 199, 199, 0.7)',  // Gray
+      ];
+      
+      const dataset = {
+        label: (type === 'amount') ? 'Arrears Amount (MWK)' : 'Number of Cases',
+        data: values,
+        backgroundColor: backgroundColors.slice(0, values.length),
+        borderColor: backgroundColors.map(c => c.replace('0.7', '1')),
+        borderWidth: 1
+      };
+
+      const config = {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [dataset]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const value = context.parsed.y;
+                  return (type === 'amount') 
+                    ? formatMWK(value)
+                    : `${value} case${value !== 1 ? 's' : ''}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return (type === 'amount') ? formatMWK(value) : value;
+                }
+              },
+              title: {
+                display: true,
+                text: (type === 'amount') ? 'Amount (MWK)' : 'Number of Cases'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Reason for Arrears'
+              }
+            }
+          }
+        }
+      };
+
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, config);
+    }
+
+    // Initial render
+    renderChart('count');
+    
+    // Handle data type change
+    dataTypeSelect.addEventListener('change', () => {
+      renderChart(dataTypeSelect.value === 'amount' ? 'amount' : 'count');
+    });
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+<h2>Loan Placement Report</h2>
+{% for r in report %}
+  <h3>{{ r.client }}</h3>
+  <p>Total Placed Amount: {{ r.total_amount }}</p>
+  <p>Weighted Rate: {{ r.weighted_rate }}%</p>
+  <table border="1">
+    <tr>
+      <th>Amount</th>
+      <th>Maturity</th>
+      <th>Monthly Interest</th>
+      <th>Next Interest Date</th>
+      <th>Accrued Interest</th>
+    </tr>
+    {% for p in r.placements %}
+      <tr>
+        <td>{{ p.amount }}</td>
+        <td>{{ p.maturity }}</td>
+        <td>{{ p.monthly_interest }}</td>
+        <td>{{ p.next_interest_date }}</td>
+        <td>{{ p.accrued_interest }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <hr>
+{% endfor %}

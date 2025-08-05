@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Sales Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .header {
+      background-color: #007bff;
+      color: white;
+      padding: 12px;
+      text-align: center;
+      border-radius: 4px 4px 0 0;
+      font-size: 18px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    .status {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .status.on-track {
+      color: #28a745;
+    }
+
+    .status.behind {
+      color: #dc3545;
+    }
+
+    .footer {
+      font-size: 12px;
+      text-align: center;
+      color: #888;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      📈 Daily Sales Summary
+    </div>
+
+    <div class="content">
+      <p><strong>Today's Sales:</strong> <span class="highlight">MK {{ "{:,.2f}".format(notif.today_sales) }}</span></p>
+      <p><strong>MTD Sales:</strong> <span class="highlight">MK {{ "{:,.2f}".format(notif.mtd_sales) }}</span></p>
+      <p><strong>Total Monthly Budget:</strong> <span class="highlight">MK {{ "{:,.2f}".format(notif.total_budget) }}</span></p>
+
+      <hr>
+
+      <p><strong>Achievement vs Target:</strong></p>
+      <ul>
+        <li><strong>Sales Achievement:</strong> {{ notif.sales_pct }}%</li>
+        <li><strong>Working Days Progress:</strong> {{ notif.time_pct }}%</li>
+      </ul>
+
+      <p class="status {% if notif.sales_pct >= notif.time_pct %}on-track{% else %}behind{% endif %}">
+        {% if notif.sales_pct >= notif.time_pct %}
+          ✅ On Track – Keep it up!
+        {% else %}
+          ⚠️ Behind Target – Let’s catch up.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="footer">
+      Sent automatically from the sales performance system.
+    </div>
+  </div>
+</body>
+</html>

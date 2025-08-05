@@ -120,6 +120,27 @@
                     </select>
                   </div>
                 </div>
+
+                <div class="row mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Agent</label>
+                    <select name="agent_id" class="form-select">
+                      <option value="">-- Select Agent --</option>
+                      {% for agent in agents %}
+                        <option value="{{ agent.id }}">{{ agent.name }} ({{ agent.region }} - {{ agent.district }})</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Team Leader *</label>
+                    <select class="form-select" name="team_lead_id" required>
+                      {% for tl in team_leaders %}
+                        <option value="{{ tl.id }}">{{ tl.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
                 <div class="mb-3">
                   <label class="form-label"><i class="bi bi-file-earmark-text me-1"></i>Loan Form</label>
                   <input type="file" name="loan_form" class="form-control" required>
@@ -187,6 +208,27 @@
                   {% endfor %}
                 </select>
               </div>
+
+              <div class="row mb-3">
+                <div class="col-md-4">
+                  <label class="form-label">Agent</label>
+                  <select name="agent_id" class="form-select">
+                    <option value="">-- Select Agent --</option>
+                    {% for agent in agents %}
+                      <option value="{{ agent.id }}">{{ agent.name }} ({{ agent.region }} - {{ agent.district }})</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Team Leader *</label>
+                  <select class="form-select" name="team_lead_id" required>
+                    {% for tl in team_leaders %}
+                      <option value="{{ tl.id }}">{{ tl.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
               <div class="mb-3">
                 <label class="form-label"><i class="bi bi-file-earmark-text me-1"></i>Loan Form</label>
                 <input type="file" name="loan_form" class="form-control" required>
