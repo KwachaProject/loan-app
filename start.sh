@@ -6,9 +6,9 @@ export FLASK_APP=app.py
 echo "🚀 Starting deployment script…"
 
 ###############################################################################
-# 1. Ensure critical DB columns exist
+# 1. Ensure Critical DB Columns Exist
 ###############################################################################
-echo "🧱 Checking and patching schema if needed…"
+echo "🧱 Checking and patching database schema…"
 
 python - <<'PY'
 import os
@@ -33,7 +33,7 @@ def main():
         conn = psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
         cursor = conn.cursor()
 
-        # Table: loan_applications
+        # --- loan_applications table ---
         loan_columns = {
             "current_balance": "NUMERIC(12,2) DEFAULT 0.0",
             "top_up_balance": "NUMERIC(12,2) DEFAULT 0.0",
@@ -51,7 +51,7 @@ def main():
                 print(f"➕  Adding loan_applications.{col}")
                 add_column(cursor, "loan_applications", col, ddl)
 
-        # Table: payment_allocations
+        # --- payment_allocations table ---
         payment_columns = {
             "settlement_interest": "NUMERIC(12,2) DEFAULT 0.0"
         }
@@ -63,11 +63,27 @@ def main():
                 print(f"➕  Adding payment_allocations.{col}")
                 add_column(cursor, "payment_allocations", col, ddl)
 
+        # --- notifications table ---
+        notification_columns = {
+            "email_recipients": "TEXT",
+            "email_subject": "TEXT",
+            "email_content": "TEXT",
+            "email_sent": "BOOLEAN DEFAULT FALSE",
+            "sent_at": "TIMESTAMP"
+        }
+
+        for col, ddl in notification_columns.items():
+            if column_exists(cursor, "notifications", col):
+                print(f"✔️  notifications.{col} exists")
+            else:
+                print(f"➕  Adding notifications.{col}")
+                add_column(cursor, "notifications", col, ddl)
+
         conn.commit()
-        print("✅  Schema verification complete")
+        print("✅ Schema checks complete")
 
     except Exception as e:
-        print(f"❌  Schema verification failed: {e}")
+        print(f"❌ Schema verification failed: {e}")
     finally:
         if 'conn' in locals():
             conn.close()
@@ -76,44 +92,53 @@ main()
 PY
 
 ###############################################################################
-# 2. Alembic Migration Head Management
+# 2. Alembic Migration Version Management
 ###############################################################################
-echo "📌  Managing Alembic head revision…"
+echo "📌 Managing Alembic DB version…"
 
 HEAD_REV=$(alembic heads | awk 'NR==1{print $1}' | xargs echo -n)
 if [ -z "$HEAD_REV" ]; then
-    echo "⚠️  No head revision found, using default"
-    HEAD_REV="5ada732a06fc"  # ← Set this to your last known good revision
+    echo "⚠️  No Alembic head found. Using default revision."
+    HEAD_REV="5ada732a06fc"  # Replace with your known last good revision
 fi
 
 alembic stamp "$HEAD_REV" || echo "⚠️  Alembic stamp failed"
 
 ###############################################################################
-# 3. Initialize Roles & Admin
+# 3. RBAC Roles & Admin Initialization
 ###############################################################################
-echo "👥  Initializing RBAC roles and permissions…"
-python -c "from app import app, initialize_roles_permissions; \
-with app.app_context(): \
-    initialize_roles_permissions(); \
-    print('✅  RBAC initialized')" || echo "⚠️  RBAC init failed"
+echo "👥 Initializing roles and permissions…"
 
-echo "👑  Ensuring admin user…"
-python -c "import os, time; \
-from app import app, db, User; \
-from werkzeug.security import generate_password_hash; \
-with app.app_context(): \
-    email = os.environ['ADMIN_EMAIL']; \
-    password = os.environ['ADMIN_PASSWORD']; \
-    admin = User.query.filter_by(email=email).first(); \
-    if admin: print('✅  Admin already exists') \
-    else: \
-        username = f'admin_{int(time.time())}'; \
-        admin = User(username=username, email=email, password_hash=generate_password_hash(password)); \
-        db.session.add(admin); db.session.commit(); \
-        print(f'✅  Created admin {email}')" || echo "⚠️  Admin creation failed"
+python -c "
+from app import app, initialize_roles_permissions
+with app.app_context():
+    initialize_roles_permissions()
+    print('✅ Roles/permissions initialized')
+" || echo "⚠️  RBAC initialization failed"
+
+echo "👑 Ensuring admin user exists…"
+
+python -c "
+import os, time
+from app import app, db, User
+from werkzeug.security import generate_password_hash
+
+with app.app_context():
+    email = os.environ['ADMIN_EMAIL']
+    password = os.environ['ADMIN_PASSWORD']
+    admin = User.query.filter_by(email=email).first()
+    if admin:
+        print(f'✅ Admin {email} already exists')
+    else:
+        username = 'admin_' + str(int(time.time()))
+        new_admin = User(username=username, email=email, password_hash=generate_password_hash(password))
+        db.session.add(new_admin)
+        db.session.commit()
+        print(f'✅ Created admin {email} as {username}')
+" || echo "⚠️  Admin creation failed"
 
 ###############################################################################
-# 4. Start Gunicorn
+# 4. Launch Gunicorn
 ###############################################################################
-echo "🚀  Launching Gunicorn…"
+echo "🚀 Launching Gunicorn server…"
 exec gunicorn --workers 4 --bind 0.0.0.0:${PORT:-8000} --access-logfile - app:app
