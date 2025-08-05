@@ -5770,3 +5770,15 @@ KeyError: 'start_of_last_month'
 2025-08-05 15:01:24,492 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
 2025-08-05 15:01:24,492 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-05 15:33:51,225] INFO in app: ==================================================
+[2025-08-05 15:33:51,234] INFO in app: Application logging initialized successfully
+[2025-08-05 15:33:51,236] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 15:33:51,238] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 15:33:51,240] INFO in app: System encoding: utf-8
+[2025-08-05 15:33:51,248] INFO in app: ==================================================
+2025-08-05 15:33:51,513 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-05 15:33:51,515 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-05 15:33:51,515 - INFO - Scheduler started
+2025-08-05 15:33:51,545 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-05 15:33:51,545 - INFO - [33mPress CTRL+C to quit[0m

@@ -9037,57 +9037,42 @@ def initialize_application():
 
 
 
-def start_scheduler():
-    if scheduler.running:
-        return
-
-    scheduler.start()
-
-    # Add scheduled jobs here
-    scheduler.add_job(
-        id='par_calculation',
-        func=calculate_par,
-        trigger='cron',
-        hour=23,
-        minute=0,
-        timezone='Africa/Blantyre',
-        replace_existing=True
-    )
-
-    scheduler.add_job(
-        id='sales_report',
-        func=send_sales_notification_email,
-        trigger='cron',
-        hour=17,  # 5 PM
-        minute=0,
-        timezone='Africa/Blantyre',
-        max_instances=1,
-        replace_existing=True
-    )
-
-    # Add more jobs as needed
-    print("✅ Scheduler started with all jobs registered.")
-
-
-def run_app():
-    app.run(
-        host=os.environ.get('FLASK_HOST', '0.0.0.0'),
-        port=int(os.environ.get('FLASK_PORT', 5000)),
-        debug=(os.environ.get('FLASK_ENV') == 'development'),
-        use_reloader=False  # Avoid duplicate scheduler threads
-    )
-
-
 if __name__ == '__main__':
     try:
-        with app.app_context():
-            if initialize_application():
-                start_scheduler()
-                run_app()
+        if initialize_application():
+            if not scheduler.running:
+                scheduler.start()
+
+                scheduler.add_job(
+                    id='par_calculation',
+                    func=calculate_par,
+                    trigger='cron',
+                    hour=23,
+                    minute=0,
+                    timezone='Africa/Blantyre',
+                    replace_existing=True
+                )
+
+                scheduler.add_job(
+                    id='sales_report',
+                    func=send_sales_notification_email,
+                    trigger='cron',
+                    hour=17,
+                    minute=0,
+                    timezone='Africa/Blantyre',
+                    max_instances=1,
+                    replace_existing=True
+                )
+
+            app.run(
+                host=os.environ.get('FLASK_HOST', '0.0.0.0'),
+                port=int(os.environ.get('FLASK_PORT', 5000)),
+                debug=os.environ.get('FLASK_ENV') == 'development',
+                use_reloader=False
+            )
     except Exception as e:
         print(f"❌ Fatal application error: {e}")
         sys.exit(1)
     finally:
         if scheduler.running:
             scheduler.shutdown()
-            print("🛑 Scheduler shut down cleanly.")
