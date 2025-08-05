@@ -6,6 +6,8 @@ from datetime import datetime
 from io import BytesIO
 from fpdf import FPDF
 from contextlib import contextmanager
+from sqlalchemy.exc import ProgrammingError
+import inspect
 from sqlalchemy import text
 from sqlalchemy import desc
 from jinja2 import TemplateNotFound
@@ -571,7 +573,7 @@ class Notification(db.Model):
     recipient = db.relationship('User', backref='notifications')
     
     # Email specific fields
-    email_recipients = db.Column(db.Text)  # Comma-separated email addresses
+    email_recipients = db.Column(db.Text, nullable=True)  # Comma-separated email addresses
     email_subject = db.Column(db.String(200))
     email_content = db.Column(db.Text)
     
@@ -5987,6 +5989,26 @@ from io import StringIO
 from flask import render_template, request, Response
 from sqlalchemy import func
 
+def inject_notifications():
+    try:
+        if current_user.is_authenticated:
+            unread = Notification.query.filter_by(
+                recipient_id=current_user.id,
+                is_read=False
+            ).order_by(Notification.timestamp.desc()).all()
+            return dict(notifications=unread)
+    except ProgrammingError as e:
+        # Handle missing column error specifically
+        if "email_recipients" in str(e):
+            current_app.logger.error("Notification schema mismatch, returning empty list")
+            return dict(notifications=[])
+        raise
+    return dict(notifications=[])
+
+def check_db_schema():
+    inspector = inspect(db.engine)
+    cols = [c['name'] for c in inspector.get_columns('notifications')]
+    assert 'email_recipients' in cols, "Missing notification columns"
 
 def _parse_date(s, default):
     try:

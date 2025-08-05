@@ -2117,3 +2117,65 @@ KeyError: 'start_of_last_month'
 [2025-08-05 11:17:07,981] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-05 11:17:07,985] INFO in app: System encoding: utf-8
 [2025-08-05 11:17:07,987] INFO in app: ==================================================
+[2025-08-05 11:27:49,002] INFO in app: ==================================================
+[2025-08-05 11:27:49,009] INFO in app: Application logging initialized successfully
+[2025-08-05 11:27:49,014] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 11:27:49,016] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 11:27:49,021] INFO in app: System encoding: utf-8
+[2025-08-05 11:27:49,022] INFO in app: ==================================================
+[2025-08-05 11:28:04,164] INFO in app: ==================================================
+[2025-08-05 11:28:04,174] INFO in app: Application logging initialized successfully
+[2025-08-05 11:28:04,176] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 11:28:04,177] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 11:28:04,179] INFO in app: System encoding: utf-8
+[2025-08-05 11:28:04,181] INFO in app: ==================================================
+[2025-08-05 11:28:08,736] INFO in app: ==================================================
+[2025-08-05 11:28:08,744] INFO in app: Application logging initialized successfully
+[2025-08-05 11:28:08,746] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 11:28:08,749] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 11:28:08,751] INFO in app: System encoding: utf-8
+[2025-08-05 11:28:08,758] INFO in app: ==================================================
+[2025-08-05 11:48:16,116] INFO in app: ==================================================
+[2025-08-05 11:48:16,124] INFO in app: Application logging initialized successfully
+[2025-08-05 11:48:16,126] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 11:48:16,128] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 11:48:16,131] INFO in app: System encoding: utf-8
+[2025-08-05 11:48:16,135] INFO in app: ==================================================
+[2025-08-05 11:51:45,503] INFO in app: ==================================================
+[2025-08-05 11:51:45,511] INFO in app: Application logging initialized successfully
+[2025-08-05 11:51:45,514] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 11:51:45,517] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 11:51:45,518] INFO in app: System encoding: utf-8
+[2025-08-05 11:51:45,522] INFO in app: ==================================================
+[2025-08-05 11:51:55,511] INFO in app: ==================================================
+[2025-08-05 11:51:55,517] INFO in app: Application logging initialized successfully
+[2025-08-05 11:51:55,520] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 11:51:55,524] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 11:51:55,528] INFO in app: System encoding: utf-8
+[2025-08-05 11:51:55,530] INFO in app: ==================================================
+[2025-08-05 12:06:29,447] INFO in app: ==================================================
+[2025-08-05 12:06:29,456] INFO in app: Application logging initialized successfully
+[2025-08-05 12:06:29,463] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 12:06:29,468] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 12:06:29,471] INFO in app: System encoding: utf-8
+[2025-08-05 12:06:29,474] INFO in app: ==================================================
+[2025-08-05 12:07:38,281] INFO in app: ==================================================
+[2025-08-05 12:07:38,289] INFO in app: Application logging initialized successfully
+[2025-08-05 12:07:38,290] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 12:07:38,291] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 12:07:38,292] INFO in app: System encoding: utf-8
+[2025-08-05 12:07:38,293] INFO in app: ==================================================
+[2025-08-05 12:49:42,891] INFO in app: ==================================================
+[2025-08-05 12:49:42,986] INFO in app: Application logging initialized successfully
+[2025-08-05 12:49:42,989] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 12:49:42,992] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 12:49:42,995] INFO in app: System encoding: utf-8
+[2025-08-05 12:49:42,999] INFO in app: ==================================================
+[2025-08-05 13:00:20,075] INFO in app: HTML email sent to ['alfred@kwachafinancialservices.com', 'sales@yourcompany.mw']
+[2025-08-05 13:16:27,961] INFO in app: HTML email sent to ['alfred@kwachafinancialservices.com', 'sales@yourcompany.mw']
+[2025-08-05 14:37:48,109] INFO in app: ==================================================
+[2025-08-05 14:37:48,225] INFO in app: Application logging initialized successfully
+[2025-08-05 14:37:48,227] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-05 14:37:48,229] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-05 14:37:48,234] INFO in app: System encoding: utf-8
+[2025-08-05 14:37:48,236] INFO in app: ==================================================
