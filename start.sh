@@ -92,6 +92,18 @@ main()
 PY
 
 ###############################################################################
+# 1.5 Safety: Ensure Tables Exist (First-Time Deploys)
+###############################################################################
+echo "📐 Ensuring all tables exist (first-time deploy safety net)..."
+
+python -c "
+from app import app, db
+with app.app_context():
+    db.create_all()
+    print('✅ Tables ensured with db.create_all()')
+" || echo "⚠️  Table creation fallback failed"
+
+###############################################################################
 # 2. Alembic Migration Version Management
 ###############################################################################
 echo "📌 Managing Alembic DB version…"
