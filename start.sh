@@ -1,36 +1,40 @@
 #!/usr/bin/env bash
-set -u  # Only exit on unset variables
+set -u  # Exit on unset variables
 
 export FLASK_ENV=production
 export FLASK_APP=app.py
-echo "🚀  Starting deployment script…"
-
-# ... [sanity checks] ...
+echo "🚀 Starting deployment script…"
 
 ###############################################################################
-# 1. Ensure critical columns exist (UPDATED)
+# 1. Ensure critical DB columns exist
 ###############################################################################
-echo "🆘  Ensuring critical columns exist…"
+echo "🧱 Checking and patching schema if needed…"
 
 python - <<'PY'
 import os
 import psycopg2
-import sys
+
+def column_exists(cursor, table, column):
+    cursor.execute("""
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = %s AND column_name = %s
+    """, (table, column))
+    return cursor.fetchone() is not None
+
+def add_column(cursor, table, column, ddl):
+    try:
+        cursor.execute(f"ALTER TABLE {table} ADD COLUMN {column} {ddl}")
+        print(f"✅  Added {table}.{column}")
+    except Exception as e:
+        print(f"❌  Failed to add {table}.{column}: {e}")
 
 def main():
     try:
         conn = psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
         cursor = conn.cursor()
-        
-        # 1. Check loan_applications table
-        cursor.execute("""
-            SELECT column_name 
-            FROM information_schema.columns 
-            WHERE table_name = 'loan_applications'
-        """)
-        existing_columns = {row[0] for row in cursor.fetchall()}
-        
-        LOAN_NEEDED = {
+
+        # Table: loan_applications
+        loan_columns = {
             "current_balance": "NUMERIC(12,2) DEFAULT 0.0",
             "top_up_balance": "NUMERIC(12,2) DEFAULT 0.0",
             "settlement_balance": "NUMERIC(12,2) DEFAULT 0.0",
@@ -39,98 +43,77 @@ def main():
             "settlement_reason": "TEXT",
             "parent_loan_id": "INTEGER"
         }
-        
-        for col, ddl in LOAN_NEEDED.items():
-            if col in existing_columns:
-                print(f"✅  loan_applications.{col} exists")
+
+        for col, ddl in loan_columns.items():
+            if column_exists(cursor, "loan_applications", col):
+                print(f"✔️  loan_applications.{col} exists")
             else:
-                print(f"⚠️  ADDING: loan_applications.{col}")
-                try:
-                    cursor.execute(f"ALTER TABLE loan_applications ADD COLUMN {col} {ddl}")
-                    print(f"   → Added loan_applications.{col}")
-                except Exception as e:
-                    print(f"   ❌ Failed to add {col}: {str(e)}")
-        
-        # 2. Check payment_allocations table (CRITICAL FIX)
-        cursor.execute("""
-            SELECT column_name 
-            FROM information_schema.columns 
-            WHERE table_name = 'payment_allocations'
-        """)
-        payment_columns = {row[0] for row in cursor.fetchall()}
-        
-        PAYMENT_NEEDED = {
+                print(f"➕  Adding loan_applications.{col}")
+                add_column(cursor, "loan_applications", col, ddl)
+
+        # Table: payment_allocations
+        payment_columns = {
             "settlement_interest": "NUMERIC(12,2) DEFAULT 0.0"
         }
-        
-        for col, ddl in PAYMENT_NEEDED.items():
-            if col in payment_columns:
-                print(f"✅  payment_allocations.{col} exists")
+
+        for col, ddl in payment_columns.items():
+            if column_exists(cursor, "payment_allocations", col):
+                print(f"✔️  payment_allocations.{col} exists")
             else:
-                print(f"⚠️  ADDING: payment_allocations.{col}")
-                try:
-                    cursor.execute(f"ALTER TABLE payment_allocations ADD COLUMN {col} {ddl}")
-                    print(f"   → Added payment_allocations.{col}")
-                except Exception as e:
-                    print(f"   ❌ Failed to add {col}: {str(e)}")
-        
+                print(f"➕  Adding payment_allocations.{col}")
+                add_column(cursor, "payment_allocations", col, ddl)
+
         conn.commit()
-        return True
-        
+        print("✅  Schema verification complete")
+
     except Exception as e:
-        print(f"❌  Column check failed: {str(e)}")
-        return False
+        print(f"❌  Schema verification failed: {e}")
     finally:
         if 'conn' in locals():
             conn.close()
 
-if not main():
-    print("⚠️  Proceeding without column verification")
+main()
 PY
 
 ###############################################################################
-# 2. Robust Alembic Version Management
+# 2. Alembic Migration Head Management
 ###############################################################################
-echo "🗄️  Managing Alembic version with error tolerance…"
+echo "📌  Managing Alembic head revision…"
 
-# Get head revision safely
 HEAD_REV=$(alembic heads | awk 'NR==1{print $1}' | xargs echo -n)
 if [ -z "$HEAD_REV" ]; then
-    echo "⚠️  Could not determine head revision - using default"
-    HEAD_REV="5ada732a06fc"  # Use your known revision
+    echo "⚠️  No head revision found, using default"
+    HEAD_REV="5ada732a06fc"  # ← Set this to your last known good revision
 fi
 
-echo "🔧  Setting DB version to: $HEAD_REV"
-
-# ... [version management code] ...
+alembic stamp "$HEAD_REV" || echo "⚠️  Alembic stamp failed"
 
 ###############################################################################
-# 3. Start Application Services
+# 3. Initialize Roles & Admin
 ###############################################################################
-echo "👥  Initializing roles and permissions…"
+echo "👥  Initializing RBAC roles and permissions…"
 python -c "from app import app, initialize_roles_permissions; \
-app.app_context().push(); \
-initialize_roles_permissions(); \
-print('✅  RBAC initialized')" \
-|| echo "⚠️  RBAC initialization failed"
+with app.app_context(): \
+    initialize_roles_permissions(); \
+    print('✅  RBAC initialized')" || echo "⚠️  RBAC init failed"
 
-echo "👑  Ensuring admin account…"
+echo "👑  Ensuring admin user…"
 python -c "import os, time; \
 from app import app, db, User; \
 from werkzeug.security import generate_password_hash; \
-email = os.environ['ADMIN_EMAIL']; \
-password = os.environ['ADMIN_PASSWORD']; \
-app.app_context().push(); \
-admin = User.query.filter_by(email=email).first(); \
-print('✅  Admin already present') if admin else ( \
-    username := 'admin_' + str(int(time.time())), \
-    new_admin := User(username=username, email=email, \
-                      password_hash=generate_password_hash(password)), \
-    db.session.add(new_admin), \
-    db.session.commit(), \
-    print(f'✅  Created admin user {email} ({username})') \
-)" \
-|| echo "⚠️  Admin creation failed"
+with app.app_context(): \
+    email = os.environ['ADMIN_EMAIL']; \
+    password = os.environ['ADMIN_PASSWORD']; \
+    admin = User.query.filter_by(email=email).first(); \
+    if admin: print('✅  Admin already exists') \
+    else: \
+        username = f'admin_{int(time.time())}'; \
+        admin = User(username=username, email=email, password_hash=generate_password_hash(password)); \
+        db.session.add(admin); db.session.commit(); \
+        print(f'✅  Created admin {email}')" || echo "⚠️  Admin creation failed"
 
+###############################################################################
+# 4. Start Gunicorn
+###############################################################################
 echo "🚀  Launching Gunicorn…"
 exec gunicorn --workers 4 --bind 0.0.0.0:${PORT:-8000} --access-logfile - app:app
