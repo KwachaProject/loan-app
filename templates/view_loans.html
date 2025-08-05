@@ -1,4 +1,3 @@
-{# templates/view_loans.html #}
 {% extends "base.html" %}
 
 {% block title %}View Loans{% endblock %}
@@ -9,7 +8,6 @@
     <i class="bi bi-clipboard-data me-2"></i>Loan Applications
   </h2>
 
-  {# flash messages --------------------------------------------------------- #}
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% for category, message in messages %}
@@ -40,7 +38,6 @@
             <th class="text-primary">Actions</th>
           </tr>
         </thead>
-
         <tbody>
           {% for entry in loans %}
           <tr>
@@ -48,8 +45,6 @@
             <td>{{ "%.2f"|format(entry.loan.loan_amount or 0) }}</td>
             <td>{{ entry.loan.term_months }}</td>
             <td class="text-nowrap">{{ "%.2f"|format(entry.loan.monthly_instalment or 0) }}</td>
-
-            {# loan status badge --------------------------------------------- #}
             <td>
               {% if entry.loan.application_status == 'approved' %}
                 <span class="badge
@@ -70,35 +65,25 @@
                 </span>
               {% endif %}
             </td>
-
-            <td>{{ entry.loan.created_at.strftime('%d %b %Y') if entry.loan.created_at else '' }}</td>
-
+            <td>{{ entry.loan.created_at.strftime('%d %b %Y') if entry.loan.created_at }}</td>
             <td>
               <span class="badge bg-primary-soft text-primary">{{ entry.loan.category }}</span>
             </td>
-
-            {# actions ------------------------------------------------------- #}
             <td class="text-nowrap">
               <div class="d-flex gap-2">
-                {# 1. docs modal trigger #}
                 <button type="button"
                         class="btn btn-sm btn-outline-primary"
                         data-bs-toggle="modal"
                         data-bs-target="#loanDocsModal{{ entry.loan.id }}">
                   <i class="bi bi-file-earmark-text me-1"></i>Docs
                 </button>
-
-                {# 2. approve / reject buttons #}
-                <form method="POST"
-                      action="{{ url_for('process_loan', loan_id=entry.loan.id, action='approve') }}">
+                <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='approve') }}">
                   <button class="btn btn-success-soft btn-sm px-3 py-1" type="submit"
                           {% if entry.loan.application_status == 'approved' %}disabled{% endif %}>
                     <i class="bi bi-check2"></i>
                   </button>
                 </form>
-
-                <form method="POST"
-                      action="{{ url_for('process_loan', loan_id=entry.loan.id, action='reject') }}">
+                <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='reject') }}">
                   <button class="btn btn-danger-soft btn-sm px-3 py-1" type="submit"
                           {% if entry.loan.application_status == 'rejected' %}disabled{% endif %}>
                     <i class="bi bi-x"></i>
@@ -114,49 +99,97 @@
   </div>
 </div>
 
-{# --------------------------- loan document modals ------------------------- #}
-{% for entry in loans %}
-<div class="modal fade" id="loanDocsModal{{ entry.loan.id }}" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">
-          {{ entry.customer.first_name }} {{ entry.customer.last_name }} — Loan #{{ entry.loan.loan_number or entry.loan.id }}
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
+{% set label_map = {
+  'loan_form': 'Loan Form',
+  'live_photo': 'Live Photo',
+  'payslip': 'Payslip',
+  'id_front': 'National ID (Front)',
+  'id_back': 'National ID (Back)',
+  'other': 'Other Document'
+} %}
 
-      <div class="modal-body">
-        {% set loan_docs = entry.customer.documents
-                           | selectattr('filetype', 'in', ['loan_form', 'live_photo', 'payslip'])
-                           | list %}
-        {% if loan_docs %}
-          {% for doc in loan_docs %}
-          <p class="mb-2">
-            <strong>{{ doc.filetype.replace('_', ' ') | title }}:</strong>
-            <a href="{{ url_for('serve_document', doc_id=doc.id) }}" target="_blank" class="link-primary text-decoration-underline">
-              View
-            </a>
-          </p>
-          {% endfor %}
-        {% else %}
-          <div class="alert alert-warning">No loan‑related documents available for this customer.</div>
-        {% endif %}
+{% for entry in loans %}
+  <div class="modal fade" id="loanDocsModal{{ entry.loan.id }}" tabindex="-1"
+       aria-labelledby="loanDocsModalLabel{{ entry.loan.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loanDocsModalLabel{{ entry.loan.id }}">
+            {{ entry.customer.first_name }} {{ entry.customer.last_name }} — Loan #{{ entry.loan.loan_number or entry.loan.id }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          {% set all_docs = entry.unique_docs %}
+          {% if all_docs %}
+            <div class="document-list">
+              {% for doc in all_docs %}
+              <div class="document-item mb-2 p-2 border rounded">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{{ label_map.get(doc.filetype, doc.filetype|replace('_', ' ')|title) }}</strong>
+                    <div class="text-muted small">{{ doc.filename }}</div>
+                    <div class="status-badge mt-1">
+                      {% if doc.file_exists %}
+                        <span class="badge bg-success">File exists</span>
+                      {% else %}
+                        <span class="badge bg-danger">File missing</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <a href="{{ url_for('view_document', doc_id=doc.id) }}" 
+                     class="btn btn-sm btn-outline-primary {% if not doc.file_exists %}disabled{% endif %}"
+                     {% if not doc.file_exists %}title="File not found"{% endif %}>
+                    <i class="bi bi-eye me-1"></i>View
+                  </a>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-warning">No documents found for this customer or loan.</div>
+          {% endif %}
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endfor %}
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}  {# keeps any JS from base.html #}
+{{ super() }}
 <script>
-  // DataTables init (if jQuery + DataTables are loaded in base.html)
   document.addEventListener('DOMContentLoaded', () => {
+    // Initialize DataTables
     $('#loanTable').DataTable({
       order: [[5, 'desc']],
       columnDefs: [{ orderable: false, targets: [7] }]
+    });
+    
+    // Debug modal events
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
+      button.addEventListener('click', function() {
+        const target = this.getAttribute('data-bs-target');
+        console.log('Opening modal:', target);
+        
+        const modal = new bootstrap.Modal(document.querySelector(target));
+        modal.show();
+      });
+    });
+    
+    // Add error handling for document links
+    document.querySelectorAll('.document-item a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        if(this.classList.contains('disabled')) {
+          e.preventDefault();
+          alert('Document file is missing. Please check server logs for details.');
+        }
+      });
     });
   });
 </script>
@@ -165,18 +198,34 @@
 {% block styles %}
 {{ super() }}
 <style>
-  .bg-light-primary { background-color:#e3f2fd; }
-  .bg-primary-soft  { background-color:#e3f2fd; }
-  .bg-success-soft  { background-color:#d1e7dd; }
-  .bg-warning-soft  { background-color:#fff3cd; }
-  .bg-danger-soft   { background-color:#f8d7da; }
-  .btn-outline-primary {
-    border-color:#0d6efd; color:#0d6efd;
+  /* Fix modal backdrop */
+  .modal-backdrop {
+    z-index: 1040 !important;
   }
-  .btn-outline-primary:hover {
-    background:#0d6efd; color:#fff;
+  
+  .modal {
+    z-index: 1050 !important;
+    display: block !important;
+    opacity: 0;
+    transition: opacity 0.3s;
   }
-  .btn-success-soft { background:#d1e7dd; color:#198754; border:1px solid #19875440; }
-  .btn-danger-soft  { background:#f8d7da; color:#dc3545; border:1px solid #dc354540; }
+  
+  .modal.show {
+    opacity: 1;
+  }
+  
+  .document-item {
+    transition: all 0.2s;
+  }
+  
+  .document-item:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+  }
+  
+  .status-badge .badge {
+    font-size: 0.75rem;
+    padding: 0.25em 0.4em;
+  }
 </style>
 {% endblock %}

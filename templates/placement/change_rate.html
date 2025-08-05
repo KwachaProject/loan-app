@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h5>Change Interest Rate: {{ placement.placement_number }}</h5>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.new_rate.label(class="form-label") }}
+            {{ form.new_rate(class="form-control") }}
+            {% if form.new_rate.errors %}
+                <div class="text-danger small">{{ form.new_rate.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.effective_date.label(class="form-label") }}
+            {{ form.effective_date(class="form-control") }}
+            {% if form.effective_date.errors %}
+                <div class="text-danger small">{{ form.effective_date.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-info">Submit</button>
+        <a href="{{ url_for('placement_details', placement_id=placement.id) }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

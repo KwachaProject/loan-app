@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+  {{ super() }}
+  <ul class="navbar-nav ms-auto">
+    <!-- Notifications Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        🔔 Notifications
+        {% if unread_notifications|length > 0 %}
+          <span class="badge bg-danger">{{ unread_notifications|length }}</span>
+        {% endif %}
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown">
+        {% if unread_notifications %}
+          {% for n in unread_notifications %}
+            <li>
+              <a class="dropdown-item" href="#">
+                <small class="text-muted">{{ n.timestamp.strftime('%Y-%m-%d %H:%M') }}</small><br>
+                {{ n.message }}
+              </a>
+            </li>
+          {% endfor %}
+        {% else %}
+          <li><span class="dropdown-item text-muted">No new notifications</span></li>
+        {% endif %}
+      </ul>
+    </li>
+  </ul>
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>Credit Officer Dashboard</h2>
+
+    <h4>My Tasks</h4>
+    <ul class="list-group">
+      {% for task in tasks %}
+        <li class="list-group-item">
+          <a href="{{ task.url }}">{{ task.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

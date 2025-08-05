@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block title %}Approve Customers{% endblock %}
 
 {% block content %}
@@ -23,10 +22,9 @@
           </h5>
 
           <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch"
-                   id="selectAll" style="transform: scale(1.3)">
+            <input class="form-check-input" type="checkbox" id="selectAll" style="transform: scale(1.3)">
             <label class="form-check-label small ms-2" for="selectAll">
-              Select&nbsp;All
+              Select All
             </label>
           </div>
         </div>
@@ -95,8 +93,7 @@
                     <i class="bi bi-file-earmark-text me-2"></i>View Docs
                   </button>
                 </td>
-                
-                <!-- Vote Selection Dropdown -->
+
                 <td>
                   <select class="form-select form-select-sm" name="vote_{{ customer.id }}" required>
                     <option value="" disabled selected>Select Vote</option>
@@ -104,8 +101,6 @@
                       <option value="{{ vote.id }}">
                         {{ vote.code }} - {{ vote.description }}
                       </option>
-                    {% else %}
-                      <option value="" disabled>No votes available</option>
                     {% endfor %}
                   </select>
                 </td>
@@ -144,7 +139,6 @@
   {% endif %}
 </div>
 
-{# Document modals #}
 {% for customer in customers %}
 <div class="modal fade" id="docsModal{{ customer.id }}" tabindex="-1">
   <div class="modal-dialog modal-lg">
@@ -153,18 +147,36 @@
         <h5 class="modal-title">{{ customer.first_name }}'s Documents</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-
       <div class="modal-body">
-        {% for doc in customer.documents %}
-        <p class="mb-2">
-            <strong>{{ doc.filetype.replace('_', ' ') | title }}:</strong>
-            <a href="{{ url_for('serve_document', doc_id=doc.id) }}" target="_blank" class="link-primary text-decoration-underline">
-            View
-            </a>
-        </p>
+        {% set customer_docs = customer.customer_documents %}
+        {% if customer_docs %}
+          <div class="table-responsive">
+            <table class="table table-sm table-striped">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Uploaded</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for doc in customer_docs %}
+                <tr>
+                  <td>{{ doc.filetype.replace('_', ' ') | title }}</td>
+                  <td>{{ doc.uploaded_at.strftime('%Y-%m-%d %H:%M') if doc.uploaded_at else 'N/A' }}</td>
+                  <td>
+                    <a href="{{ url_for('serve_document', doc_id=doc.id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                      <i class="bi bi-eye"></i> View
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         {% else %}
-        <div class="alert alert-warning">No documents found.</div>
-        {% endfor %}
+          <div class="alert alert-warning">No documents found for this customer.</div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -175,8 +187,8 @@
 {% block scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const selectAll     = document.getElementById("selectAll");
-  const checkboxes    = document.querySelectorAll(".customer-checkbox");
+  const selectAll = document.getElementById("selectAll");
+  const checkboxes = document.querySelectorAll(".customer-checkbox");
   const selectedCount = document.getElementById("selectedCount");
 
   function updateCount() {

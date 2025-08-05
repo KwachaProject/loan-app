@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Capitalize Interest{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="text-primary">Capitalize Interest</h3>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.transaction_date.label(class="form-label") }}
+            {{ form.transaction_date(class="form-control") }}
+            {% for error in form.transaction_date.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Capitalize</button>
+        <a href="{{ url_for('placement_details', placement_id=placement.id) }}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

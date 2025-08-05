@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Update Placement - {{ placement.placement_number }}</h2>
+    
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Effective Date</label>
+                {{ form.effective_date(class="form-control") }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Description</label>
+                {{ form.description(class="form-control", placeholder="e.g. Adjustment reason") }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Amount (positive = deposit, negative = withdrawal)</label>
+                {{ form.amount(class="form-control", placeholder="e.g. 5000 or -2000") }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">New Interest Rate (%)</label>
+                {{ form.new_interest_rate(class="form-control", step="0.01") }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">New Tenure (Months)</label>
+                {{ form.new_tenure_months(class="form-control") }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">New Payment Frequency (Months)</label>
+                {{ form.new_payment_frequency(class="form-control") }}
+            </div>
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">Submit Update</button>
+            <a href="{{ url_for('placement_details', placement_id=placement.id) }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -29,6 +29,11 @@
             <a class="nav-link {% if section == 'reports' %}active{% endif %}" href="{{ url_for('admin_reports') }}">Reports</a>
         </li>
         <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'sales_report' %}active{% endif %}" href="{{ url_for('admin_dashboard', section='sales_report') }}">
+                Sales Report
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
             <a class="nav-link {% if section == 'votes' %}active{% endif %}" href="{{ url_for('admin_votes') }}">Vote Management</a>
         </li>
         <li class="nav-item" role="presentation">
@@ -253,6 +258,51 @@
             </a>
             <!-- You can add more reports here later -->
         </div>
+
+        {% elif section == 'sales_report' %}
+        <!-- SALES REPORT CONFIGURATION SECTION -->
+        <div class="container mt-4">
+            <h2>Configure Sales Report</h2>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-group mb-3">
+                    {{ form.emails.label }}
+                    {{ form.emails(class="form-control", placeholder="email1@example.com, email2@example.com") }}
+                    <small class="form-text text-muted">Separate multiple emails with commas</small>
+                </div>
+                
+                <div class="form-group mb-3">
+                    {{ form.subject.label }}
+                    {{ form.subject(class="form-control") }}
+                </div>
+                
+                <div class="form-group mb-3">
+                    {{ form.message.label }}
+                    {{ form.message(class="form-control", rows=4) }}
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex">
+                    <button type="submit" class="btn btn-primary me-md-2">Send Test Report</button>
+                    <a href="{{ url_for('test_email_now') }}" class="btn btn-secondary">Send to Default Recipients</a>
+                </div>
+            </form>
+            
+            <div class="mt-4">
+                <h4>Recent Recipients</h4>
+                <ul class="list-group">
+                    {% for note in recent_recipients %}
+                    <li class="list-group-item">
+                        {{ note.email_recipients }} - {{ note.timestamp.strftime('%Y-%m-%d %H:%M') }}
+                    </li>
+                    {% else %}
+                    <li class="list-group-item">No recent recipients found</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+
 
     {% elif section == 'votes' %}
         <!-- VOTE MANAGEMENT SECTION -->

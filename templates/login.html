@@ -12,14 +12,27 @@
                     <h3 class="h4">Loan Management System</h3>
                 </div>
 
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for category, message in messages %}
+                        {{ message }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
+
                 <form method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" required>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 position-relative">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
+                        <span id="toggleIcon" class="position-absolute top-50 end-0 translate-middle-y me-3 bi bi-eye" 
+                              style="cursor:pointer;" 
+                              onclick="togglePassword()"></span>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                 </form>
@@ -28,7 +41,6 @@
     </div>
 </div>
 
-<!-- Password toggle script -->
 <script>
     function togglePassword() {
         const input = document.getElementById("password");

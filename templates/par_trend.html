@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}PAR Trend Comparison{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">PAR Trend Comparison</h2>
+
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+      <label for="period1" class="form-label">First Period</label>
+      <select id="period1" name="period1" class="form-select">
+        <option value="this_quarter" {% if period1 == 'this_quarter' %}selected{% endif %}>This Quarter</option>
+        <option value="last_quarter" {% if period1 == 'last_quarter' %}selected{% endif %}>Last Quarter</option>
+        <option value="same_quarter_last_year" {% if period1 == 'same_quarter_last_year' %}selected{% endif %}>Same Quarter Last Year</option>
+        <option value="12w" {% if period1 == '12w' %}selected{% endif %}>Last 12 Weeks</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="period2" class="form-label">Second Period</label>
+      <select id="period2" name="period2" class="form-select">
+        <option value="this_quarter" {% if period2 == 'this_quarter' %}selected{% endif %}>This Quarter</option>
+        <option value="last_quarter" {% if period2 == 'last_quarter' %}selected{% endif %}>Last Quarter</option>
+        <option value="same_quarter_last_year" {% if period2 == 'same_quarter_last_year' %}selected{% endif %}>Same Quarter Last Year</option>
+        <option value="12w" {% if period2 == '12w' %}selected{% endif %}>Last 12 Weeks</option>
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <label for="bucket" class="form-label">PAR Bucket</label>
+      <select id="bucket" name="bucket" class="form-select">
+        <option value="all" {% if bucket == 'all' %}selected{% endif %}>All (Avg)</option>
+        <option value="30" {% if bucket == '30' %}selected{% endif %}>PAR 30</option>
+        <option value="60" {% if bucket == '60' %}selected{% endif %}>PAR 60</option>
+        <option value="90" {% if bucket == '90' %}selected{% endif %}>PAR 90</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="category" class="form-label">Category</label>
+      <select id="category" name="category" class="form-select">
+        <option value="" {% if not category %}selected{% endif %}>All</option>
+        <option value="personal" {% if category == 'personal' %}selected{% endif %}>Personal</option>
+        <option value="business" {% if category == 'business' %}selected{% endif %}>Business</option>
+        <option value="education" {% if category == 'education' %}selected{% endif %}>Education</option>
+      </select>
+    </div>
+
+    <div class="col-md-1 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">Compare</button>
+    </div>
+  </form>
+
+  <div class="mb-3">
+    <a href="{{ url_for('download_par_csv', period1=period1, period2=period2, category=category, tenure=tenure, bucket=bucket) }}" class="btn btn-success">
+      Download CSV
+    </a>
+  </div>
+
+  <canvas id="parChart" height="140"></canvas>
+
+  <div id="par-data"
+       data-wks='{{ week_labels | tojson | safe }}'
+       data-parpercent1='{{ par_percent1 | tojson | safe }}'
+       data-paramount1='{{ par_amount1 | tojson | safe }}'
+       data-parpercent2='{{ par_percent2 | tojson | safe }}'
+       data-paramount2='{{ par_amount2 | tojson | safe }}'>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <h5>Period 1</h5>
+      <table class="table table-bordered table-sm">
+        <thead class="table-dark">
+          <tr><th>Week</th><th>PAR %</th><th>Amount (MWK)</th></tr>
+        </thead>
+        <tbody>
+          {% for w, p, a in zipped1 %}
+            <tr>
+              <td>{{ w }}</td>
+              <td>{{ p }}%</td>
+              <td>MWK {{ '{:,.0f}'.format(a) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-md-6">
+      <h5>Period 2</h5>
+      <table class="table table-bordered table-sm">
+        <thead class="table-dark">
+          <tr><th>Week</th><th>PAR %</th><th>Amount (MWK)</th></tr>
+        </thead>
+        <tbody>
+          {% for w, p, a in zipped2 %}
+            <tr>
+              <td>{{ w }}</td>
+              <td>{{ p }}%</td>
+              <td>MWK {{ '{:,.0f}'.format(a) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  const parData = document.getElementById('par-data');
+  const wks = JSON.parse(parData.dataset.wks || '[]');
+  const parpercent1 = JSON.parse(parData.dataset.parpercent1 || '[]');
+  const paramount1 = JSON.parse(parData.dataset.paramount1 || '[]');
+  const parpercent2 = JSON.parse(parData.dataset.parpercent2 || '[]');
+  const paramount2 = JSON.parse(parData.dataset.paramount2 || '[]');
+
+  new Chart(document.getElementById('parChart'), {
+    type: 'line',
+    data: {
+      labels: wks,
+      datasets: [
+        {
+          label: 'PAR % (Period 1)',
+          data: parpercent1,
+          yAxisID: 'y1',
+          borderColor: '#0d6efd',
+          backgroundColor: 'rgba(13, 110, 253, 0.2)',
+          tension: 0.3,
+          pointRadius: 3,
+          borderWidth: 2
+        },
+        {
+          label: 'Amount (Period 1)',
+          data: paramount1,
+          yAxisID: 'y',
+          borderColor: '#ffc107',
+          backgroundColor: 'rgba(255, 193, 7, 0.2)',
+          tension: 0.3,
+          pointRadius: 3,
+          borderWidth: 2
+        },
+        {
+          label: 'PAR % (Period 2)',
+          data: parpercent2,
+          yAxisID: 'y1',
+          borderColor: '#198754',
+          backgroundColor: 'rgba(25, 135, 84, 0.2)',
+          borderDash: [5, 5],
+          tension: 0.3,
+          pointRadius: 3,
+          borderWidth: 2
+        },
+        {
+          label: 'Amount (Period 2)',
+          data: paramount2,
+          yAxisID: 'y',
+          borderColor: '#dc3545',
+          backgroundColor: 'rgba(220, 53, 69, 0.2)',
+          borderDash: [5, 5],
+          tension: 0.3,
+          pointRadius: 3,
+          borderWidth: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      stacked: false,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const value = context.parsed.y;
+              if (context.dataset.label.includes('Amount')) {
+                return context.dataset.label + ': MWK ' + value.toLocaleString();
+              } else {
+                return context.dataset.label + ': ' + value.toFixed(2) + '%';
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          type: 'linear',
+          position: 'left',
+          suggestedMax: 10000,
+          title: {
+            display: true,
+            text: 'Amount (MWK)'
+          }
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          suggestedMax: 40,
+          grid: {
+            drawOnChartArea: false
+          },
+          title: {
+            display: true,
+            text: 'PAR Percentage (%)'
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

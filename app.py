@@ -5,10 +5,24 @@ from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 from io import BytesIO
 from fpdf import FPDF
+from contextlib import contextmanager
+from sqlalchemy import text
+from jinja2 import TemplateNotFound
+from flask_apscheduler import APScheduler
+from sqlalchemy import or_
 from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import func
+from flask_apscheduler import APScheduler
+from flask_mail import Message
+from wtforms.validators import DataRequired, Length, Optional
 import calendar
+from urllib.parse import quote
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy import event
+import shutil
+import mimetypes
 import csv
 import io
 import os
@@ -29,6 +43,7 @@ today = date.today()
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
+from flask import make_response
 import click
 from flask import Flask
 from sqlalchemy import func, extract
@@ -46,6 +61,32 @@ from sqlalchemy.orm import validates
 import enum
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 from flask import Blueprint
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask_wtf import FlaskForm
+from wtforms.validators import DataRequired, Email
+from wtforms import StringField, FloatField, IntegerField, SelectField, DateField, SubmitField
+import os
+import re
+import time
+from werkzeug.utils import secure_filename
+from sqlalchemy.orm import joinedload
+from flask import Flask
+from flask_mail import Mail, Message
+from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import date, datetime, timedelta
+from flask import Flask, render_template
+from flask_mail import Mail, Message
+from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import date, datetime, timedelta
+import calendar
+import os
+from sqlalchemy import create_engine, func, extract
+from sqlalchemy.orm import sessionmaker
+import pandas as pd
+import numpy as np
+import calendar
+from sqlalchemy import func
+
 # Load environment variables first
 load_dotenv()
 
@@ -95,6 +136,10 @@ main_handler.setLevel(logging.INFO)  # Only INFO and higher
 main_handler.setFormatter(formatter)
 app.logger.addHandler(main_handler)
 
+app.config.update({
+    'UPLOAD_FOLDER': os.path.join(app.instance_path, 'documents'),
+    'MAX_CONTENT_LENGTH': 16 * 1024 * 1024,  # 16MB max upload
+})
 # Handler 2: Detailed debug log (logs/loan_app.log)
 debug_handler = ConcurrentRotatingFileHandler(
     os.path.join(log_dir, 'loan_app.log'),
@@ -112,6 +157,11 @@ console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG if app.debug else logging.INFO)
 console_handler.setFormatter(formatter)
 app.logger.addHandler(console_handler)
+
+password = os.getenv('MAIL_PASSWORD')
+safe_password = re.escape(password)
+
+safe_password = quote(password)
 
 # Windows-specific UTF-8 console configuration
 if os.name == 'nt':
@@ -173,12 +223,22 @@ def utility_processor():
             return "0.00"
     return dict(format_currency=format_currency)
 
+def format_currency(value):
+    try:
+        value = float(value)
+        return "MWK{:,.2f}".format(value)
+    except (ValueError, TypeError):
+        return value
+
+
 @app.template_filter('money')
 def money_format(value):
     try:
         return f"{float(value):,.2f}"
     except Exception:
         return "0.00"
+
+
 
 @app.template_filter('time_ago')
 def time_ago_filter(dt):
@@ -226,6 +286,9 @@ def format_currency_filter(value):
     except (ValueError, TypeError):
         return "0.00"
 
+# In your app.py or __init__.py
+
+
 logging.basicConfig(
     filename='app.log',
     filemode='a',
@@ -239,10 +302,24 @@ db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 
+# Initialize APScheduler
+from flask_apscheduler import APScheduler
+scheduler = APScheduler()
+scheduler.init_app(app)  # Make sure 'app' is your Flask application instance
 # Create Flask app
 app = Flask(__name__)
 
 
+@app.template_filter('unique')
+def unique_filter(items, attribute):
+    seen = set()
+    result = []
+    for item in items:
+        value = getattr(item, attribute)
+        if value not in seen:
+            seen.add(value)
+            result.append(item)
+    return result
 # Use Postgres in production, SQLite locally
 # Database configuration
 database_url = os.getenv("DATABASE_URL", "")
@@ -260,17 +337,29 @@ else:
     print("Connected to DEVELOPMENT DB: sqlite:///customers.db")
 
 # Email config (example: Gmail — replace with your own)
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'youremail@example.com'      # ✅ Replace!
-app.config['MAIL_PASSWORD'] = 'your_app_password_here'     # ✅ Replace!
-app.config['MAIL_DEFAULT_SENDER'] = 'youremail@example.com'
+app.config.update(
+    MAIL_SERVER='mail.kwachafinancialservices.com',
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME=os.getenv('MAIL_USERNAME'),
+    MAIL_PASSWORD=os.getenv('MAIL_PASSWORD'),
+    MAIL_DEFAULT_SENDER=os.getenv('MAIL_USERNAME'),
+    SQLALCHEMY_TRACK_MODIFICATIONS=False
+)
+
+app.config['SCHEDULER_API_ENABLED'] = True
+app.config['SCHEDULER_TIMEZONE'] = 'Africa/Blantyre' 
 
 # File upload settings
 app.config['UPLOAD_FOLDER'] = 'uploads/documents'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'pdf', 'doc', 'docx'}
+
+mail = Mail(app)
+
+
+from apscheduler.schedulers.background import BackgroundScheduler
+scheduler = BackgroundScheduler(daemon=True)
 
 # Security
 app.config['SECRET_KEY'] = 'your-secret-key-123'  # ✅ Change this in production!
@@ -288,9 +377,9 @@ UPLOAD_FOLDER = 'uploads/documents'
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max upload size
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf', 'doc', 'docx'}
 
-bp = Blueprint('admin', __name__, url_prefix='/admin')
-import socket
 
+import socket
+app.jinja_env.filters['format_currency'] = format_currency
 
 @app.route("/server-info")
 def server_info():
@@ -306,28 +395,40 @@ def server_info():
 from flask import send_file, abort
 from werkzeug.exceptions import NotFound
 
+db.metadata.clear()
 
-@app.route("/documents/id/<int:doc_id>")
-@login_required
-def serve_document(doc_id: int):
-    """
-    Streams any uploaded document (image, PDF, DOCX …) back to the browser.
-    Large files are forced to download (`as_attachment=True`) so Office apps
-    / photo viewers take over.
-    """
-    doc = Document.query.get_or_404(doc_id)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('email_scheduler.log')
+    ]
+)
+logger = logging.getLogger(__name__)
 
+
+@contextmanager
+def app_context():
+    """Ensure application context"""
+    ctx = app.app_context()
     try:
-        # `download_name` keeps the original filename for the user
-        return send_file(
-            doc.path,
-            as_attachment=doc.filetype not in ("id_front", "id_back", "live_photo", "payslip", "photo"),
-            download_name=doc.filename,
-            max_age=0               # don’t cache sensitive docs
-        )
-    except FileNotFoundError:
-        raise NotFound("File is missing on the server.")
+        ctx.push()
+        yield
+    finally:
+        ctx.pop()
 
+
+@app.route('/serve_document/<int:doc_id>')
+def serve_document(doc_id):
+    doc = Document.query.get_or_404(doc_id)
+    abs_path = doc.get_absolute_path()
+    
+    if not abs_path or not os.path.exists(abs_path):
+        app.logger.error(f"Document file missing: {doc.path}")
+        abort(404)
+    
+    return send_file(abs_path)
 
 # ---------------- Pricing Configuration ----------------
 
@@ -345,7 +446,9 @@ PRICING = {
 
 # ---------------- Models ----------------
 class PricingConfig(db.Model):
+
     __tablename__ = 'pricing_configs'
+    __table_args__ = {'extend_existing': True}
     
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(50), nullable=False)  # civil_servant, private_sector, sme
@@ -453,18 +556,35 @@ class Notification(db.Model):
     __tablename__ = 'notifications'
 
     id = db.Column(db.Integer, primary_key=True)
-    
-    # Correct FK target → users.id, matching your User model
     recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Null = global
-    recipient = db.relationship('User', backref='notifications')  # user.notifications access
-
+    recipient = db.relationship('User', backref='notifications')
+    
+    # Email specific fields
+    email_recipients = db.Column(db.Text)  # Comma-separated email addresses
+    email_subject = db.Column(db.String(200))
+    email_content = db.Column(db.Text)
+    
+    # Status tracking
+    email_sent = db.Column(db.Boolean, default=False)
+    sent_at = db.Column(db.DateTime)
+    
     message = db.Column(db.Text, nullable=False)
-    type = db.Column(db.String(50), default='info')  # Types: info, approval, warning, etc.
+    type = db.Column(db.String(50), default='info')
     is_read = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f'<Notification type={self.type}, to={self.recipient_id or "Admin"}>'
+        return f'<Notification {self.type} to {self.email_recipients or self.recipient_id}>'
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired, Email
+
+class RecipientForm(FlaskForm):
+    emails = StringField('Recipients', validators=[DataRequired()], description='Comma-separated email addresses')
+    subject = StringField('Subject', validators=[DataRequired()])
+    message = TextAreaField('Custom Message')
+    submit = SubmitField('Send Report')
 
 from functools import wraps
 from flask import redirect, url_for, flash
@@ -503,11 +623,77 @@ class AccountingError(Exception):
         self.message = message
         super().__init__(self.message)
 
+class Agent(db.Model):
+    __tablename__ = 'agents'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    contact = db.Column(db.String(20))
+    email = db.Column(db.String(100))
+    district = db.Column(db.String(100))
+    region = db.Column(db.String(100))
+    monthly_budget = db.Column(db.Float, default=0.0)
+    role = db.Column(db.String(50))
+    active = db.Column(db.Boolean, default=True)
+
+    # Self-referencing relationship
+    team_leader_id = db.Column(db.Integer, db.ForeignKey('agents.id'), nullable=True)
+    team_leader = db.relationship('Agent', remote_side=[id], backref='team_members')
+
+    # If you have customers
+    customers = db.relationship('Customer', back_populates='agent', lazy=True)
+
+    @property
+    def team_sales(self):
+        """Get MTD sales for the team"""
+        from datetime import datetime
+        today = datetime.utcnow().date()
+        month_start = today.replace(day=1)
+        
+        return db.session.query(
+            func.sum(LoanApplication.loan_amount)
+        ).join(Agent).filter(
+            LoanApplication.disbursement_date >= month_start,
+            LoanApplication.disbursement_date <= today,
+            LoanApplication.disbursed == True,
+            or_(
+                LoanApplication.agent_id == self.id,
+                Agent.team_leader_id == self.id
+            )
+        ).scalar() or 0.0
+    
+    @property
+    def achievement_percentage(self):
+        """Calculate achievement percentage"""
+        if self.monthly_budget:
+            return min(round((self.team_sales / self.monthly_budget) * 100, 1), 150)
+        return 0.0
+    
+    @property
+    def performance_status(self):
+        """Get performance status label"""
+        achievement = self.achievement_percentage
+        if achievement >= 100:
+            return "exceeded"
+        elif achievement >= 75:
+            return "on-track"
+        else:
+            return "needs-improvement"
+    
 
 
 class Customer(db.Model):
     __tablename__ = 'customers'
-
+    __table_args__ = (
+        db.UniqueConstraint('national_id', name='uq_customers_national_id'),
+        db.UniqueConstraint('file_number', name='uq_customers_file_number'),
+        db.UniqueConstraint('employment_number', name='uq_customers_employment_number'),
+        db.Index('idx_customers_national_id', 'national_id'),
+        db.Index('idx_customers_file_number', 'file_number'),
+        db.Index('idx_customers_employment_number', 'employment_number'),
+        db.Index('idx_customers_agent_id', 'agent_id'),
+    )
+    
     id = db.Column(db.Integer, primary_key=True)
     national_id = db.Column(db.String(20), unique=True, nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
@@ -540,9 +726,14 @@ class Customer(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     date_joined = db.Column(db.Date, nullable=True, index=True)
     is_voluntary_retirement_candidate = db.Column(db.Boolean, default=False)
+    agent_id = db.Column(db.Integer, db.ForeignKey('agents.id'), nullable=True)
+    employment_number = db.Column(db.String(20), unique=True, nullable=True) 
 
     loans = db.relationship('LoanApplication', back_populates='customer')
     
+    agent = db.relationship('Agent', back_populates='customers')
+
+    customer_documents = db.relationship("Document", back_populates="customer", lazy=True)
 
     def __repr__(self):
         return f'<Customer {self.first_name} {self.last_name}, Status: {self.status}>'
@@ -569,6 +760,11 @@ class Customer(db.Model):
 def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+class CustomerQueryForm(FlaskForm):
+    national_id = StringField('National ID', validators=[Optional()])
+    employment_number = StringField('Employment Number', validators=[Optional()])
+    query_submit = SubmitField('Search Customer')
+
 class CutoffDateConfig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(50), unique=True, nullable=False)  # 'civil_servant', 'private_sector', etc.
@@ -578,6 +774,15 @@ class CutoffDateConfig(db.Model):
 
 class LoanApplication(db.Model):
     __tablename__ = 'loan_applications'
+    __table_args__ = (
+        db.UniqueConstraint('loan_number', name='uq_loan_applications_loan_number'),
+        db.Index('ix_loan_applications_created_at', 'created_at'),
+        db.Index('ix_loan_applications_region_category', 'region', 'category'),
+        db.Index('idx_loan_applications_loan_number', 'loan_number'),
+        db.Index('idx_loan_applications_customer_id', 'customer_id'),
+        db.Index('idx_loan_applications_agent_id', 'agent_id'),
+    )
+
 
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
@@ -589,6 +794,7 @@ class LoanApplication(db.Model):
     total_repayment = db.Column(db.Float)
     effective_rate = db.Column(db.Float)
     category = db.Column(db.String(50))
+    region = db.Column(db.String(50))
     loan_category = db.Column(db.Integer, nullable=False)
     disbursed = db.Column(db.Boolean, default=False)
     disbursed_bank = db.Column(db.String(100))
@@ -628,14 +834,17 @@ class LoanApplication(db.Model):
     applied_collection_fee = db.Column(db.Float)
     written_off_amount = db.Column(db.Float, default=0.0)
     insurance_settlement_amount = db.Column(db.Float, default=0.0)
-    
+    agent_id = db.Column(db.Integer, db.ForeignKey('agents.id'), nullable=True)
+
     parent_loan_id = db.Column(
         db.Integer, 
         db.ForeignKey('loan_applications.id'),
         nullable=True
     )
-
+    
     vote = db.relationship('Vote', backref='loan_applications')
+
+    documents = db.relationship("Document", back_populates="loan", lazy=True)
 
     topups = db.relationship(
         'LoanApplication',
@@ -644,6 +853,7 @@ class LoanApplication(db.Model):
         cascade='all, delete-orphan'
     )
 
+    agent = db.relationship("Agent", backref="loan_applications", foreign_keys=[agent_id])
     payments = db.relationship('Payment', back_populates='loan', cascade='all, delete-orphan')
     customer = db.relationship('Customer', back_populates='loans') 
     repayment_schedules = db.relationship(
@@ -950,56 +1160,60 @@ class LoanApplication(db.Model):
         remaining = payment.amount
         method = (payment.method or "normal").lower()
 
-        # Normalize payment method
         if "top_up" in method:
             method = "top_up"
         elif "settlement" in method:
             method = "settlement"
 
-        ### 🟩 HANDLE TOP-UP ALLOCATION AND EXIT EARLY
         if method == "top_up":
-            principal_alloc = min(self.top_up_balance, remaining)
-            self.top_up_balance -= principal_alloc
+            principal_alloc = min(self.top_up_balance - (self.top_up_interest or 0.0), remaining)
+            self.current_balance -= principal_alloc
             remaining -= principal_alloc
 
-            interest_alloc = min(self.top_up_interest or 0.0, remaining)
-            self.top_up_interest = (self.top_up_interest or 0.0) - interest_alloc
+            interest_alloc = min((self.top_up_interest or 0.0), remaining)
+            self.top_up_interest = max((self.top_up_interest or 0.0) - interest_alloc, 0.0)
             remaining -= interest_alloc
 
+            # Save allocation
             db.session.add(PaymentAllocation(
                 payment_id=payment.id,
                 principal=principal_alloc,
-                interest=interest_alloc,
+                interest=0.0,
+                top_up_interest=interest_alloc,
+                settlement_interest=0.0,
                 fees=0.0
             ))
 
-            app.logger.info(f"[{self.loan_number}] Top-up payment → principal: {principal_alloc}, interest: {interest_alloc}")
+            app.logger.info(f"[{self.loan_number}] Top-up payment → principal: {principal_alloc}, top-up interest: {interest_alloc}")
 
-            # CLOSE IF FULLY PAID
-            if self.top_up_balance <= 0 and self.top_up_interest <= 0:
+            # Commit changes to LoanApplication and allocations
+            db.session.commit()
+
+            # Close if fully paid
+            if self.current_balance <= 0 and (self.top_up_interest or 0.0) <= 0:
                 self.status = "closed"
                 self.loan_state = "settled_client"
                 app.logger.info(f"[{self.loan_number}] Loan marked as closed after top-up.")
 
-                # Cancel all schedules since this is a top-up closure
                 for schedule in self.repayment_schedules:
                     if schedule.status not in {"paid", "cancelled"}:
                         schedule.status = "cancelled"
 
+                db.session.commit()
+
             if remaining > 0:
                 self.record_loan_credit(payment, remaining)
 
-            return  # ❗ Ensure we do NOT proceed to normal schedule allocation
+            return  # skip normal schedule allocation
 
-        ### 🟧 HANDLE SETTLEMENT (Similar Exit)
         if method == "settlement":
+            interest_alloc = min(self.settlement_interest or 0.0, remaining)
+            self.settlement_interest = max((self.settlement_interest or 0.0) - interest_alloc, 0.0)
+            remaining -= interest_alloc
+
             principal_alloc = min(self.current_balance, remaining)
             self.current_balance -= principal_alloc
             remaining -= principal_alloc
-
-            interest_alloc = min(self.settlement_interest or 0.0, remaining)
-            self.settlement_interest = (self.settlement_interest or 0.0) - interest_alloc
-            remaining -= interest_alloc
 
             db.session.add(PaymentAllocation(
                 payment_id=payment.id,
@@ -1009,23 +1223,25 @@ class LoanApplication(db.Model):
                 fees=0.0
             ))
 
-            app.logger.info(f"[{self.loan_number}] Settlement payment → principal: {principal_alloc}, interest: {interest_alloc}")
+            app.logger.info(f"[{self.loan_number}] Settlement payment → settlement_interest: {interest_alloc}, principal: {principal_alloc}")
 
-            if self.current_balance <= 0:
+            # Commit changes to LoanApplication and allocations
+            db.session.commit()
+
+            # Close loan if fully paid
+            if self.current_balance <= 0 and (self.settlement_interest or 0.0) <= 0:
                 self.status = "closed"
                 self.loan_state = "settled_client"
-                app.logger.info(f"[{self.loan_number}] Loan marked as closed after settlement.")
-
-                for schedule in self.repayment_schedules:
-                    if schedule.status not in {"paid", "cancelled"}:
-                        schedule.status = "cancelled"
+                app.logger.info(f"[{self.loan_number}] Loan marked as closed after settlement payment.")
+                db.session.commit()
 
             if remaining > 0:
                 self.record_loan_credit(payment, remaining)
 
             return
 
-        ### 🟥 NORMAL SCHEDULE ALLOCATION (only reached if NOT top_up/settlement)
+        # --- Normal payment allocation logic (fees → interest → principal) ---
+
         schedules = sorted(self.repayment_schedules, key=lambda s: s.due_date)
         schedule_updated = False
 
@@ -1069,6 +1285,7 @@ class LoanApplication(db.Model):
 
         if schedule_updated:
             self.recalculate_balance()
+            db.session.commit()
 
         if remaining > 0:
             self.record_loan_credit(payment, remaining)
@@ -1149,6 +1366,14 @@ class LoanApplication(db.Model):
                 if existing.total_arrears <= 0:
                     existing.status = 'resolved'
 
+
+    def update_arrears_status(self):
+        """Automatically update arrear status based on payments"""
+        for arrear in self.arrears:
+            if arrear.status == 'unresolved' and arrear.total_arrears <= 0:
+                arrear.status = 'resolved'
+                arrear.resolution_date = datetime.utcnow()
+                
 from app import db, app
 
 
@@ -1357,23 +1582,20 @@ class PaymentAllocation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     payment_id = db.Column(db.Integer, db.ForeignKey('payments.id'), nullable=False)
+    schedule_id = db.Column(db.Integer, db.ForeignKey('repayment_schedules.id'), nullable=True)
 
-    principal = db.Column(db.Float, nullable=False)
-    interest = db.Column(db.Float, nullable=False)
+    principal = db.Column(db.Float, default=0.0)
+    interest = db.Column(db.Float, default=0.0)
+    fees = db.Column(db.Float, default=0.0)
+
+    # ✅ These must be defined
+    top_up_interest = db.Column(db.Float, default=0.0)  # <-- THIS LINE IS REQUIRED
     settlement_interest = db.Column(db.Float, default=0.0)
-    fees = db.Column(db.Float, nullable=False)
 
-    schedule_id = db.Column(db.Integer, db.ForeignKey('repayment_schedules.id'), nullable=True)  # Keep this once only
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-
-    # Remove unique constraint on payment_id to allow multiple allocations per payment
-    # __table_args__ = (
-    #     db.UniqueConstraint('payment_id', name='uq_payment_allocation_payment_id'),
-    # )
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
-    payment = db.relationship('Payment', back_populates='allocations')  # plural
+    payment = db.relationship('Payment', back_populates='allocations')
     schedule = db.relationship(
         'RepaymentSchedule',
         primaryjoin='PaymentAllocation.schedule_id == RepaymentSchedule.id',
@@ -1381,6 +1603,12 @@ class PaymentAllocation(db.Model):
         backref='allocations'
     )
 
+    # Remove unique constraint on payment_id to allow multiple allocations per payment
+    # __table_args__ = (
+    #     db.UniqueConstraint('payment_id', name='uq_payment_allocation_payment_id'),
+    # )
+
+    
 class JournalEntry(db.Model):
     __tablename__ = 'journal_entries'
     id = db.Column(db.Integer, primary_key=True)
@@ -1406,8 +1634,59 @@ class Document(db.Model):
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
-    customer = db.relationship('Customer', backref=db.backref('documents', lazy=True))
-    loan = db.relationship('LoanApplication', backref=db.backref('documents', lazy=True))
+    customer = db.relationship("Customer", back_populates="customer_documents")
+    loan = db.relationship("LoanApplication", back_populates="documents")
+
+    def get_absolute_path(self):
+        """Get absolute file path with safety checks"""
+        if not self.path:
+            return None
+            
+        try:
+            # Handle absolute paths directly
+            if os.path.isabs(self.path):
+                return self.path
+                
+            # First try: app root relative path
+            root_relative = os.path.join(app.root_path, self.path)
+            if os.path.exists(root_relative):
+                return root_relative
+                
+            # Second try: instance documents folder
+            instance_path = os.path.join(app.instance_path, 'documents', os.path.basename(self.path))
+            if os.path.exists(instance_path):
+                return instance_path
+                
+            # Third try: original path as is
+            if os.path.exists(self.path):
+                return self.path
+                
+            return None
+        except Exception:
+            # Log error in production
+            app.logger.error(f"Error resolving path for document {self.id}")
+            return None
+    
+    @property
+    def absolute_path(self):
+        return self.get_absolute_path()
+    
+    @property
+    def file_exists(self):
+        """Check if file exists on filesystem"""
+        path = self.absolute_path
+        return path and os.path.exists(path)
+    
+class PARSnapshot(db.Model):
+    __tablename__ = 'par_snapshots'
+
+    id = db.Column(db.Integer, primary_key=True)
+    snapshot_date = db.Column(db.Date, nullable=False, unique=True)
+    par_30 = db.Column(db.Float, nullable=False)
+    par_60 = db.Column(db.Float, nullable=False)
+    par_90 = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
 
 class Arrear(db.Model):
     __tablename__ = 'arrears'
@@ -1428,6 +1707,17 @@ class Arrear(db.Model):
     paid_fees = db.Column(db.Float, default=0.0)
     payment_status = db.Column(db.String(20), default='pending')
     status = db.Column(db.String(20), default='unresolved')  # unresolved, resolved
+    resolution_date = db.Column(db.DateTime, nullable=True)
+    resolution_type = db.Column(db.String(20), nullable=True)  # 'payment', 'waiver', 'restructure'
+    resolved_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    resolution_notes = db.Column(db.Text, nullable=True)
+    tenure = db.Column(db.Integer)
+    probability_of_default = db.Column(db.Float, default=0.0)
+    loss_given_default = db.Column(db.Float, default=0.0)
+    provision_amount = db.Column(db.Float, default=0.0)
+    arrear_reason = db.Column(db.String(100), nullable=True)
+    action_plan = db.Column(db.Text, nullable=True)
+
 
     __table_args__ = (
     db.Index('ix_loan_schedule', 'loan_id', 'schedule_id'),
@@ -1480,6 +1770,8 @@ class Arrear(db.Model):
 
         return ", ".join(flags) if flags else None
     
+
+
     @property
     def voluntary_flag_reason(self):
         customer = self.customer
@@ -1499,10 +1791,294 @@ class Arrear(db.Model):
 
         return ", ".join(flags) if flags else None
 
-# Add after models
-from datetime import datetime
-from app import db
-from app import PaymentAllocation, RepaymentSchedule, LoanCredit
+    @property
+    def days_past_due(self):
+        if self.due_date:
+            delta = datetime.utcnow().date() - self.due_date
+            return delta.days if delta.days > 0 else 0
+        return 0
+
+    @property
+    def aging(self):
+        days = self.days_past_due
+        if days <= 30:
+            return '1-30 days'
+        elif days <= 60:
+            return '31-60 days'
+        elif days <= 90:
+            return '61-90 days'
+        else:
+            return '90+ days'
+class ProvisionSetting(db.Model):
+    __tablename__ = 'provision_settings'
+
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String(50), nullable=False)
+    tenure = db.Column(db.Integer, nullable=False)  # in months
+    probability_of_default = db.Column(db.Float, nullable=False)
+    loss_given_default = db.Column(db.Float, nullable=False)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
+    
+    __table_args__ = (db.UniqueConstraint('category', 'tenure', name='uq_category_tenure'),)
+
+from wtforms.validators import DataRequired, NumberRange
+from datetime import datetime, timedelta, date
+from decimal import Decimal, ROUND_HALF_UP
+
+# Database Models (unchanged from your specification)
+class RelationshipManager(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(20))
+    email = db.Column(db.String(120))
+    clients = db.relationship('Client', backref='relationship_manager', lazy=True)
+
+class Client(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(120), nullable=False)
+    national_id = db.Column(db.String(20), unique=True, nullable=False)
+    phone = db.Column(db.String(20))
+    email = db.Column(db.String(120))
+    relationship_manager_id = db.Column(db.Integer, db.ForeignKey('relationship_manager.id'))
+    placements = db.relationship('Placement', backref='client', lazy=True)
+
+class Placement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    interest_rate = db.Column(db.Float, nullable=False)
+    interest_type = db.Column(db.String(20), default='Simple')
+    tenure_months = db.Column(db.Integer, nullable=False)
+    start_date = db.Column(db.Date, default=datetime.utcnow)
+    payment_frequency = db.Column(db.String(20), default='Monthly')
+    commission_percentage = db.Column(db.Float, default=0.0)
+    arrangement_fee = db.Column(db.Float, default=0.0)
+    collateral = db.Column(db.String(255))
+    
+    # New fields for enhanced functionality
+    current_balance = db.Column(db.Float, default=0.0)
+    status = db.Column(db.String(20), default='Active')  # Active, Partially Liquidated, Fully Liquidated
+    last_interest_calculation = db.Column(db.Date)
+    placement_number = db.Column(db.String(20), unique=True, nullable=False)
+    interest_payment_frequency = db.Column(db.String(20), nullable=True)
+    payment_frequency_months = db.Column(db.Integer, nullable=True)
+
+    due_date = db.Column(db.Date, nullable=False)
+    interest_due = db.Column(db.Float, nullable=False, default=0.0)
+    principal_due = db.Column(db.Float, default=0.0)
+    total_due = db.Column(db.Float, nullable=False, default=0.0)
+    is_paid = db.Column(db.Boolean, default=False)
+
+    schedules = db.relationship('PlacementSchedule', back_populates='placement', cascade='all, delete-orphan')
+   
+    def calculate_daily_interest(self, as_of_date=None):
+        if as_of_date is None:
+            as_of_date = date.today()
+
+        # Default to start_date if last_interest_calculation is not set
+        from_date = self.last_interest_calculation or self.start_date
+        if not from_date:
+            return 0.0
+
+        if self.current_balance is None or self.interest_rate is None:
+            return 0.0
+
+        days = (as_of_date - from_date).days
+        daily_rate = self.interest_rate / 36500
+        return round(self.current_balance * daily_rate * days, 2)
+
+    
+    def monthly_interest(self):
+        if self.current_balance is None or self.interest_rate is None:
+            return 0.0
+        return self.current_balance * (self.interest_rate / 1200)
+    
+    def accrued_interest(self):
+        try:
+            return self.calculate_daily_interest()
+        except Exception:
+            return 0.0
+
+
+    def add_deposit(self, amount, deposit_date=None):
+        """Add additional funds to the placement"""
+        if not deposit_date:
+            deposit_date = datetime.utcnow().date()
+            
+        # Capitalize accrued interest before deposit
+        self.capitalize_interest(deposit_date)
+        
+        # Add deposit to balance
+        self.current_balance += float(amount)
+        self.amount += float(amount)  # Also update the original amount
+        self.last_interest_calculation = deposit_date
+        
+        # Record transaction
+        transaction = PlacementTransaction(
+            placement_id=self.id,
+            transaction_date=deposit_date,
+            amount=amount,
+            transaction_type='Deposit',
+            description=f"Additional deposit: ${amount:,.2f}"
+        )
+        db.session.add(transaction)
+    
+    def withdraw_funds(self, amount, withdrawal_date=None):
+        """Withdraw funds from the placement"""
+        if not withdrawal_date:
+            withdrawal_date = datetime.utcnow().date()
+            
+        # Capitalize accrued interest before withdrawal
+        self.capitalize_interest(withdrawal_date)
+        
+        # Check sufficient funds
+        if amount > self.current_balance:
+            raise ValueError("Withdrawal amount exceeds available balance")
+        
+        # Process withdrawal
+        self.current_balance -= float(amount)
+        self.last_interest_calculation = withdrawal_date
+        
+        # Update status
+        if self.current_balance <= 0.01:  # Account for floating point precision
+            self.status = 'Fully Liquidated'
+        else:
+            self.status = 'Partially Liquidated'
+        
+        # Record transaction
+        transaction = PlacementTransaction(
+            placement_id=self.id,
+            transaction_date=withdrawal_date,
+            amount=-amount,
+            transaction_type='Withdrawal',
+            description=f"Withdrawal: ${amount:,.2f}"
+        )
+        db.session.add(transaction)
+        
+        return self.current_balance
+    
+    def change_interest_rate(self, new_rate, effective_date=None):
+        """Change the interest rate for the placement"""
+        if not effective_date:
+            effective_date = datetime.utcnow().date()
+            
+        # Capitalize accrued interest before rate change
+        self.capitalize_interest(effective_date)
+        
+        # Update rate
+        self.interest_rate = new_rate
+        self.last_interest_calculation = effective_date
+        
+        # Record transaction
+        transaction = PlacementTransaction(
+            placement_id=self.id,
+            transaction_date=effective_date,
+            amount=0,
+            transaction_type='RateChange',
+            description=f"Rate changed to {new_rate}%"
+        )
+        db.session.add(transaction)
+    
+    def capitalize_interest(self, as_of_date=None):
+        """Capitalize accrued interest into principal"""
+        if not as_of_date:
+            as_of_date = datetime.utcnow().date()
+            
+        # Calculate and capitalize interest
+        interest = self.calculate_daily_interest(as_of_date)
+        if interest > 0:
+            self.current_balance += interest
+            self.last_interest_calculation = as_of_date
+            
+            # Record transaction
+            transaction = PlacementTransaction(
+                placement_id=self.id,
+                transaction_date=as_of_date,
+                amount=interest,
+                transaction_type='Interest',
+                description=f"Interest capitalization: ${interest:,.2f}"
+            )
+            db.session.add(transaction)
+            return interest
+        return 0.0
+    
+    def liquidate(self, liquidation_date=None):
+        """Fully liquidate the placement"""
+        if not liquidation_date:
+            liquidation_date = datetime.utcnow().date()
+            
+        # Capitalize final interest
+        self.capitalize_interest(liquidation_date)
+        
+        # Withdraw remaining balance
+        final_balance = self.current_balance
+        self.withdraw_funds(final_balance, liquidation_date)
+        self.status = 'Fully Liquidated'
+        
+        return final_balance
+    
+    def accrued_interest(self, as_of_date=None):
+        """Calculate accrued interest not yet capitalized"""
+        if not as_of_date:
+            as_of_date = datetime.utcnow().date()
+        return self.calculate_daily_interest(as_of_date)
+    
+
+    @property
+    def maturity_date(self):
+        if self.start_date and self.tenure_months:
+            return self.start_date + timedelta(days=30 * self.tenure_months)
+        return None
+
+    @property
+    def next_interest_date(self):
+        if self.last_interest_calculation:
+            return self.last_interest_calculation + timedelta(days=30)
+        return None
+
+    def change_tenure(self, new_tenure, effective_date):
+        self.tenure_months = new_tenure
+        self.due_date = self.start_date + relativedelta(months=new_tenure)
+
+        # Log transaction
+        transaction = PlacementTransaction(
+            placement_id=self.id,
+            transaction_type='Tenure Change',
+            amount=0.0,
+            description=f'Tenure changed to {new_tenure} months, effective {effective_date.strftime("%Y-%m-%d")}'
+        )
+        db.session.add(transaction)
+        db.session.commit()
+
+        # Optionally regenerate the schedule
+        new_schedule = generate_placement_schedule(self)
+        if new_schedule:
+            # Delete old unpaid schedules first
+            PlacementSchedule.query.filter_by(placement_id=self.id, is_paid=False).delete()
+            db.session.bulk_save_objects(new_schedule)
+
+
+# New model for transaction history
+class PlacementTransaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    placement_id = db.Column(db.Integer, db.ForeignKey('placement.id'), nullable=False)
+    transaction_date = db.Column(db.Date, default=datetime.utcnow)
+    amount = db.Column(db.Float, nullable=False)
+    transaction_type = db.Column(db.String(20), nullable=False)  # Deposit, Withdrawal, Interest, RateChange
+    description = db.Column(db.String(255))
+
+class PlacementSchedule(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    placement_id = db.Column(db.Integer, db.ForeignKey('placement.id'), nullable=True)
+    due_date = db.Column(db.Date, nullable=False)
+    interest_due = db.Column(db.Float, default=0.0)
+    principal_due = db.Column(db.Float, default=0.0)  # ← ADD THIS
+    total_due = db.Column(db.Float, default=0.0)
+    is_paid = db.Column(db.Boolean, default=False)
+
+    placement = db.relationship('Placement', back_populates='schedules')
 
 class PaymentAllocator:
     NORMAL_METHODS = {"normal", "bank_transfer", "cash", "mobile_money", "payroll_deduction"}
@@ -1714,7 +2290,121 @@ class PaymentAllocator:
     def _persist_allocations(self):
         for alloc in self.allocations:
             db.session.add(alloc)
-                        
+
+from flask_wtf import FlaskForm
+from wtforms import (
+    StringField, SubmitField, FloatField,
+    IntegerField, SelectField, DateField
+)
+from wtforms.validators import DataRequired, Email, NumberRange, Optional
+from datetime import datetime
+from wtforms.validators import DataRequired, NumberRange, Optional, Email
+
+# ==============================
+# Client Form
+# ==============================
+class ClientForm(FlaskForm):
+    full_name = StringField("Full Name", validators=[DataRequired()])
+    national_id = StringField("National ID", validators=[DataRequired()])
+    phone = StringField("Phone", validators=[Optional()])
+    email = StringField("Email", validators=[Optional(), Email()])
+    submit = SubmitField("Save Client")
+
+# ==============================
+# Placement Form
+# ==============================
+from flask_wtf import FlaskForm
+from wtforms.validators import DataRequired, NumberRange, Optional, Email
+from wtforms import StringField, DecimalField, IntegerField, SelectField, DateField, FloatField, IntegerField, SubmitField
+
+class PlacementForm(FlaskForm):
+    client_id = SelectField("Client", coerce=int, validators=[DataRequired()])
+    amount = FloatField("Amount", validators=[DataRequired(), NumberRange(min=0.01)])
+    interest_rate = FloatField("Interest Rate (%)", validators=[DataRequired(), NumberRange(min=0)])
+    
+    interest_type = SelectField(
+        "Interest Type",
+        choices=[("Simple", "Simple"), ("Compound", "Compound")],
+        validators=[DataRequired()]
+    )
+    
+    tenure_months = IntegerField("Tenure (Months)", validators=[DataRequired(), NumberRange(min=1)])
+    start_date = DateField("Start Date", format="%Y-%m-%d", validators=[DataRequired()])
+
+
+    payment_frequency_months = IntegerField(
+        "Payment Frequency (Months)",
+        validators=[DataRequired()],
+        default=1
+    )
+
+    commission_percentage = FloatField("Commission to RM (%)", default=0.0, validators=[Optional()])
+    arrangement_fee = FloatField("Arrangement Fee", default=0.0, validators=[Optional()])
+    collateral = StringField("Collateral Info", validators=[Optional()])
+    
+    submit = SubmitField("Create Placement")
+
+
+# ==============================
+# Deposit Form
+# ==============================
+class DepositForm(FlaskForm):
+    amount = FloatField("Amount", validators=[DataRequired(), NumberRange(min=0.01)])
+    transaction_date = DateField("Transaction Date", default=datetime.utcnow, validators=[DataRequired()])
+    submit = SubmitField("Add Deposit")
+
+# ==============================
+# Withdrawal Form
+# ==============================
+class WithdrawalForm(FlaskForm):
+    amount = FloatField("Amount", validators=[DataRequired(), NumberRange(min=0.01)])
+    transaction_date = DateField("Transaction Date", default=datetime.utcnow, validators=[DataRequired()])
+    submit = SubmitField("Process Withdrawal")
+
+# ==============================
+# Rate Change Form
+# ==============================
+class RateChangeForm(FlaskForm):
+    new_rate = FloatField("New Interest Rate (%)", validators=[DataRequired(), NumberRange(min=0)])
+    effective_date = DateField("Effective Date", default=datetime.utcnow, validators=[DataRequired()])
+    submit = SubmitField("Change Rate")
+
+# ==============================
+# Capitalize Interest Form
+# ==============================
+class CapitalizeForm(FlaskForm):
+    transaction_date = DateField("Transaction Date", default=datetime.utcnow, validators=[DataRequired()])
+    submit = SubmitField("Capitalize Interest")
+
+# ==============================
+# Liquidate Placement Form
+# ==============================
+class LiquidateForm(FlaskForm):
+    transaction_date = DateField("Transaction Date", default=datetime.utcnow, validators=[DataRequired()])
+    submit = SubmitField("Liquidate Placement")
+
+from flask_wtf import FlaskForm
+from wtforms import (
+    SelectField,
+    DecimalField,
+    IntegerField,
+    DateField,
+    StringField,
+    SubmitField
+)
+from wtforms.validators import DataRequired, Optional, NumberRange
+from datetime import date
+
+class PlacementUpdateForm(FlaskForm):
+    amount = DecimalField("Amount (positive = deposit, negative = withdrawal)", places=2, validators=[Optional()])
+    new_interest_rate = DecimalField("New Interest Rate (%)", places=2, validators=[Optional()])
+    new_tenure_months = IntegerField("New Tenure (Months)", validators=[Optional()])
+    new_payment_frequency = IntegerField("New Payment Frequency (Months)", validators=[Optional()])
+    
+    effective_date = DateField("Effective Date", format="%Y-%m-%d", validators=[DataRequired()])
+    transaction_date = DateField("Transaction Date", default=date.today, validators=[DataRequired()])
+    description = StringField("Description", validators=[Optional()])
+
 def backfill_schedule_ids():
     allocations = PaymentAllocation.query.filter_by(schedule_id=None).all()
     print(f"Found {len(allocations)} allocations to backfill.")
@@ -1871,6 +2561,11 @@ def generate_repayment_schedule(loan):
     # Set total fees
     loan.outstanding_fees = collection_fee * loan.term_months
 
+def regenerate_schedule(self):
+    PlacementSchedule.query.filter_by(placement_id=self.id).delete()
+    schedule = generate_placement_schedule(self)
+    db.session.bulk_save_objects(schedule)
+
 # Update disbursement route
 
 from flask_wtf import FlaskForm
@@ -2013,23 +2708,34 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Function to save documents
-def save_document(file, customer_id, document_type):
-    if file and allowed_file(file.filename):
-        # Create unique filename
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        ext = file.filename.rsplit('.', 1)[1].lower()
-        filename = f"{customer_id}_{document_type}_{timestamp}.{ext}"
-        filename = secure_filename(filename)
+def save_document(file, customer_id, doc_type):
+    """Save uploaded document to filesystem and return (filename, filepath)"""
+    if not file or file.filename == '':
+        return None, None
         
-        # Ensure upload directory exists
-        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-        filepath = os.path.join(UPLOAD_FOLDER, filename)
+    try:
+        # Create secure filename
+        filename = secure_filename(file.filename)
+        unique_filename = f"{customer_id}_{int(time.time())}_{filename}"
+        
+        # Get absolute upload path
+        upload_folder = os.path.abspath(app.config['UPLOAD_FOLDER'])
+        
+        # Ensure directory exists
+        os.makedirs(upload_folder, exist_ok=True)
         
         # Save file
+        filepath = os.path.join(upload_folder, unique_filename)
         file.save(filepath)
-        return filename, filepath
-    return None, None
-
+        
+        # Return relative path for database storage
+        relative_path = os.path.relpath(filepath, start=app.root_path)
+        return unique_filename, relative_path
+        
+    except Exception as e:
+        app.logger.error(f"Error saving document: {str(e)}")
+        return None, None
+    
 def send_notification(message, type='info', recipient_id=None):
     notification = Notification(
         message=message,
@@ -2040,6 +2746,14 @@ def send_notification(message, type='info', recipient_id=None):
     db.session.commit()
 
 from datetime import date
+
+def notify_client(client, message):
+    print(f"📲 SMS to {client.phone}: {message}")
+    # Use Twilio here
+
+def notify_rm(rm, message):
+    print(f"📧 Email to {rm.email}: {message}")
+    # Use Flask-Mail or SMTP
 
 def calculate_age(dob):
     if not dob:
@@ -2082,7 +2796,7 @@ def voluntary_retirement_alerts():
 from flask import request, abort, render_template
 from flask_login import login_required, current_user
 
-@app.route('/admin/dashboard')
+@app.route('/admin/dashboard', methods=['GET', 'POST'])
 @login_required
 def admin_dashboard():
     if current_user.role.name != 'admin':
@@ -2090,6 +2804,9 @@ def admin_dashboard():
     
     # Moved to top: Get section parameter first with default value
     section = request.args.get('section', 'users')  # Default to 'users'
+
+    form = RecipientForm()
+    recent_recipients = []
 
     cutoff_configs = {
         c.category: c.cutoff_dt
@@ -2140,19 +2857,63 @@ def admin_dashboard():
             users=[],  # Added for template consistency
             roles=[]   # Added for template consistency
         )
+    
+    elif section == 'sales_report':
+        # Pre-populate only on GET
+        if request.method == 'GET':
+            last_notification = Notification.query.filter(
+                Notification.email_recipients.isnot(None)
+            ).order_by(Notification.timestamp.desc()).first()
+            if last_notification:
+                form.emails.data = last_notification.email_recipients
+                form.subject.data = last_notification.email_subject
 
-    # Non-pricing section (default: 'users')
+        recent_recipients = Notification.query.filter(
+            Notification.email_recipients.isnot(None)
+        ).order_by(Notification.timestamp.desc()).limit(5).all()
+
+        if form.validate_on_submit():
+            app.logger.info(f"Sending email to: {form.emails.data}")
+            recipients = [email.strip() for email in form.emails.data.split(',')]
+            success = send_sales_notification_email(
+                recipients=recipients,
+                custom_message=form.message.data
+            )
+
+            if success:
+                flash('Report sent successfully!', 'success')
+            else:
+                flash('Failed to send report', 'danger')
+
+            return redirect(url_for('admin_dashboard', section='sales_report'))
+
+        return render_template(
+            'admin_dashboard.html',
+            section=section,
+            users=[],
+            roles=[],
+            cutoff_configs={},
+            configs_by_category={},
+            categories=[],
+            terms=[],
+            form=form,
+            recent_recipients=recent_recipients
+        )
+
+    # Default section: users
     users = User.query.all()
     roles = Role.query.all()
     return render_template(
         'admin_dashboard.html',
+        section=section,
         users=users,
         roles=roles,
-        section=section,
         cutoff_configs=cutoff_configs,
         configs_by_category={},
         categories=[],
-        terms=[]
+        terms=[],
+        form=None,
+        recent_recipients=[]
     )
 
 # Route to view a document
@@ -2592,6 +3353,8 @@ def new_vote():
         return redirect(url_for('manage_votes'))
     return render_template('admin/vote_form.html', form=form, title='Add New Vote')
 
+
+
 @app.route('/admin/votes/edit/<int:vote_id>', methods=['GET', 'POST'])
 @login_required
 @role_required('admin')
@@ -2733,6 +3496,30 @@ def mark_notification_read(notification_id):
         db.session.commit()
 
     return redirect(url_for('admin_notifications'))
+
+def generate_placement_schedule(placement):
+    rate = placement.interest_rate / 100
+    principal = placement.amount
+    frequency = placement.repayment_frequency_days
+    total_days = placement.tenure_months * 30  # approx.
+    num_payments = total_days // frequency
+
+    for i in range(1, num_payments + 1):
+        due_date = placement.start_date + timedelta(days=i * frequency)
+
+        if placement.interest_type == 'Simple':
+            interest = (principal * rate * frequency) / 365
+        else:  # Compound
+            interest = principal * ((1 + rate / 365) ** frequency - 1)
+
+        schedule = PlacementSchedule(
+            placement_id=placement.id,
+            due_date=due_date,
+            interest_due=round(interest, 2)
+        )
+        db.session.add(schedule)
+
+    db.session.commit()
 
 
 @app.route('/admin/reports')
@@ -2920,22 +3707,71 @@ from flask_login import login_required
 from sqlalchemy.orm import joinedload
 from datetime import datetime
 
+@app.route('/customer/enquiry', methods=['POST'])
+@login_required
+@role_required('admin')
+def customer_enquiry():
+    query_form = CustomerQueryForm()
+
+    if not query_form.validate_on_submit():
+        flash('Invalid input', 'danger')
+        return redirect(url_for('register_customer'))
+
+    national_id = query_form.national_id.data
+    employment_number = query_form.employment_number.data
+    section = request.form.get('section', 'topup')
+
+    if not national_id and not employment_number:
+        flash('Please provide National ID or Employment Number', 'danger')
+        return redirect(url_for('register_customer'))
+
+    # Build dynamic query
+    filters = []
+    if national_id:
+        filters.append(Customer.national_id == national_id)
+    if employment_number:
+        filters.append(Customer.employment_number == employment_number)
+
+    customer = Customer.query.filter(*filters).first()
+
+    if not customer:
+        flash('Customer not found', 'danger')
+        return redirect(url_for('register_customer'))
+
+    flash(f'Customer found: {customer.first_name} {customer.last_name}', 'success')
+
+    return redirect(url_for(
+        'customer_account',
+        file_number=customer.file_number,  # REQUIRED path variable
+        employment_number=customer.employment_number or 'PLACEHOLDER',
+        national_id=customer.national_id or 'PLACEHOLDER',
+        section=section
+    ))
+
+
+from flask import request
+
 @app.route('/customer/<file_number>/account')
 @login_required
 @role_required('admin')
 def customer_account(file_number: str):
     try:
+        # Retrieve optional query parameters
+        employment_number = request.args.get('employment_number')
+        national_id = request.args.get('national_id')
+        section = request.args.get('section', 'statement')
+
         customer = Customer.query.filter_by(file_number=file_number).first_or_404()
+
+        agents = Agent.query.filter_by(active=True).order_by(Agent.name).all()
+        team_leaders = Agent.query.filter_by(role="Team Leader").all()
 
         loans = (
             LoanApplication.query
-            .options(joinedload(LoanApplication.payments))
+            .options(joinedload(LoanApplication.payments).joinedload(Payment.allocations))
             .filter(LoanApplication.customer_id == customer.id)
             .all()
         )
-        app.logger.info(f"Found {len(loans)} loans for customer {file_number}")
-        app.logger.info(f"Customer ID: {customer.id}")
-        app.logger.info(f"Found Loans: {[(loan.loan_number, loan.loan_state) for loan in loans]}")
 
         def calculate_capitalized_amount(loan_amount: float, config: dict) -> float:
             try:
@@ -2967,9 +3803,9 @@ def customer_account(file_number: str):
             payments_made = 0
 
             for p in payments:
-                for allocation in p.allocations:
-                    if allocation.principal:
-                        remaining_balance -= allocation.principal
+                for a in p.allocations:
+                    if a.principal:
+                        remaining_balance -= a.principal
                         remaining_balance = max(remaining_balance, 0)
                         payments_made += 1
 
@@ -2989,6 +3825,16 @@ def customer_account(file_number: str):
                     temp_balance -= principal
                 return round(total_interest, 2)
 
+            if loan.status == 'closed' or loan.loan_state == 'settled_client':
+                return {
+                    'capitalized_amount': capitalized,
+                    'current_balance': 0.0,
+                    'top_up_balance': 0.0,
+                    'settlement_balance': 0.0,
+                    'top_up_interest': 0.0,
+                    'settlement_interest': 0.0,
+                }
+
             return {
                 'capitalized_amount': capitalized,
                 'current_balance': current_balance,
@@ -2998,25 +3844,54 @@ def customer_account(file_number: str):
                 'settlement_interest': projected_interest(6),
             }
 
+        statement = []
         for loan in loans:
             balances = calculate_balances(loan)
+            running_balance_display = balances.get('capitalized_amount', 0.0)
+
+            for payment in sorted(loan.payments, key=lambda p: p.created_at):
+                for allocation in payment.allocations:
+                    principal = allocation.principal or 0
+                    interest = allocation.interest or 0
+                    fees = allocation.fees or 0
+
+                    running_balance_display -= principal
+                    running_balance_display = max(running_balance_display, 0)
+
+                    allocated_total = principal + interest + fees
+                    valid_allocation = abs(allocated_total - payment.amount) < 0.01
+
+                    statement.append({
+                        'id': payment.id,
+                        'date': payment.created_at.strftime('%Y-%m-%d'),
+                        'total': payment.amount,
+                        'principal': principal,
+                        'interest': interest,
+                        'collection_fees': fees,
+                        'remaining_balance': round(running_balance_display, 2),
+                        'method': payment.method,
+                        'reference': payment.reference,
+                        'valid_allocation': valid_allocation
+                    })
+
             loan.capitalized_amount = balances.get('capitalized_amount', 0.0)
             loan.current_balance = balances.get('current_balance', 0.0)
             loan.top_up_balance = balances.get('top_up_balance', 0.0)
             loan.settlement_balance = balances.get('settlement_balance', 0.0)
             loan.top_up_interest = balances.get('top_up_interest', 0.0)
             loan.settlement_interest = balances.get('settlement_interest', 0.0)
-
-            if loan.loan_state == 'active':
-                loan.cash_to_client = round(loan.loan_amount - loan.top_up_balance, 2)
-            else:
-                loan.cash_to_client = loan.loan_amount
+            loan.cash_to_client = round(loan.loan_amount - loan.top_up_balance, 2) if loan.loan_state == 'active' else loan.loan_amount
 
         return render_template(
             'customer_account.html',
             customer=customer,
             loans=loans,
-            section=request.args.get('section', 'statement')
+            agents=agents,
+            team_leaders=team_leaders,
+            statement=statement,
+            section=section,
+            employment_number=employment_number,
+            national_id=national_id
         )
 
     except Exception as e:
@@ -3024,22 +3899,25 @@ def customer_account(file_number: str):
         flash("Error loading account details", "danger")
         return redirect(url_for('home'))
 
+
 from datetime import date
 
 @app.route('/loan/<loan_number>/statement')
 def loan_statement(loan_number):
     try:
-        loan = (LoanApplication.query
-                .options(
-                    db.joinedload(LoanApplication.customer),
-                    db.joinedload(LoanApplication.payments)
-                        .joinedload(Payment.allocations)
-                )
-                .filter_by(loan_number=loan_number)
-                .first_or_404())
+        loan = (
+            LoanApplication.query
+            .options(
+                db.joinedload(LoanApplication.customer),
+                db.joinedload(LoanApplication.payments).joinedload(Payment.allocations)
+            )
+            .filter_by(loan_number=loan_number)
+            .first_or_404()
+        )
 
         config = get_pricing_config(loan.category, loan.term_months, loan)
         loan_amount = loan.loan_amount or 0
+
         capitalized_amount = (
             loan_amount +
             (loan_amount * config.get('origination', 0)) +
@@ -3047,21 +3925,30 @@ def loan_statement(loan_number):
             config.get('crb', 0)
         )
 
-        running_balance = capitalized_amount
-        payments_made = 0
-        for payment in sorted(loan.payments, key=lambda p: p.created_at):
-            for allocation in payment.allocations:
-                if allocation.principal:
-                    running_balance -= allocation.principal
-                    payments_made += 1
-        current_balance = max(round(running_balance, 2), 0.00)
-
         monthly_rate = config.get('rate', 0)
-        term = loan.term_months
-        remaining_term = term - payments_made
+        term = loan.term_months or 0
 
+        # Compute current balance
+        if loan.status == 'closed' or loan.loan_state == 'settled_client':
+            current_balance = 0.0
+            payments_made = 0
+        else:
+            running_balance = capitalized_amount
+            payments_made = 0
+            for payment in sorted(loan.payments, key=lambda p: p.created_at):
+                for allocation in payment.allocations:
+                    running_balance -= allocation.principal or 0
+                running_balance = max(running_balance, 0)
+                payments_made += 1
+            current_balance = round(running_balance, 2)
+
+        remaining_term = max(term - payments_made, 0)
+
+        # Calculate annuity
         if monthly_rate > 0 and term > 0:
-            annuity_factor = (monthly_rate * (1 + monthly_rate) ** term) / ((1 + monthly_rate) ** term - 1)
+            annuity_factor = (
+                monthly_rate * (1 + monthly_rate) ** term
+            ) / ((1 + monthly_rate) ** term - 1)
             annuity_payment = capitalized_amount * annuity_factor
         else:
             annuity_payment = 0
@@ -3079,23 +3966,41 @@ def loan_statement(loan_number):
                 temp_balance -= principal
             return total_interest
 
-        top_up_balance = round(current_balance + calculate_projected_interest(3), 2)
-        settlement_balance = round(current_balance + calculate_projected_interest(6), 2)
+        if current_balance > 0:
+            top_up_balance = round(current_balance + calculate_projected_interest(3), 2)
+            settlement_balance = round(current_balance + calculate_projected_interest(6), 2)
+        else:
+            top_up_balance = settlement_balance = 0.0
 
+        # Build statement
         statement = []
         running_balance_display = capitalized_amount
+
         for payment in sorted(loan.payments, key=lambda p: p.created_at):
+            is_top_up = payment.method.lower() == 'top_up'
+
             for allocation in payment.allocations:
-                running_balance_display -= allocation.principal or 0
-                allocated_total = (allocation.principal or 0) + (allocation.interest or 0) + (allocation.fees or 0)
+                principal = allocation.principal or 0
+                interest = allocation.interest or 0
+                fees = allocation.fees or 0
+
+                # If this is a top-up payment, it clears the balance
+                if is_top_up:
+                    running_balance_display = 0.0
+                else:
+                    running_balance_display -= principal
+                    running_balance_display = max(running_balance_display, 0)
+
+                allocated_total = principal + interest + fees
                 valid_allocation = abs(allocated_total - payment.amount) < 0.01
+
                 statement.append({
                     'id': payment.id,
                     'date': payment.created_at.strftime('%Y-%m-%d'),
                     'total': payment.amount,
-                    'principal': allocation.principal,
-                    'interest': allocation.interest,
-                    'collection_fees': allocation.fees,
+                    'principal': principal,
+                    'interest': interest,
+                    'collection_fees': fees,
                     'remaining_balance': round(running_balance_display, 2),
                     'method': payment.method,
                     'reference': payment.reference,
@@ -3104,12 +4009,11 @@ def loan_statement(loan_number):
 
         totals = {
             'paid': sum(p.amount for p in loan.payments),
-            'principal': sum(a.principal for p in loan.payments for a in p.allocations),
-            'interest': sum(a.interest for p in loan.payments for a in p.allocations),
-            'fees': sum(a.fees for p in loan.payments for a in p.allocations)
+            'principal': sum(a.principal or 0 for p in loan.payments for a in p.allocations),
+            'interest': sum(a.interest or 0 for p in loan.payments for a in p.allocations),
+            'fees': sum(a.fees or 0 for p in loan.payments for a in p.allocations)
         }
 
-        print(f"current_balance={current_balance}, top_up_balance={top_up_balance}, settlement_balance={settlement_balance}")
         return render_template(
             'loan_statement.html',
             loan=loan,
@@ -3122,9 +4026,12 @@ def loan_statement(loan_number):
             date=date,
             totals=totals
         )
+
     except Exception as e:
         flash(f"Error generating statement: {str(e)}", "danger")
         return redirect(url_for('loanbook'))
+
+
 
 @app.route("/customer/debug-loans/<file_number>")
 def customer_debug_loans(file_number):
@@ -3203,100 +4110,157 @@ def home():
     return render_template('home.html')
 
 @app.route('/document/<int:doc_id>')
+@login_required
 def view_document(doc_id):
-    doc = Document.query.get_or_404(doc_id)
-    directory = os.path.dirname(doc.path)
-    filename = os.path.basename(doc.path)
-    return send_from_directory(directory, filename)
+    """Serve a document file with proper security checks"""
+    try:
+        # Retrieve document with existence check
+        doc = Document.query.get(doc_id)
+        if not doc:
+            app.logger.warning(f"Document not found: {doc_id}")
+            abort(404, description="Document not found")
+        
+        # Get absolute path with fallbacks
+        abs_path = doc.absolute_path
+        if not abs_path:
+            app.logger.error(f"Document path missing: {doc_id}")
+            abort(404, description="Document path not configured")
+        
+        # Verify file exists
+        if not os.path.exists(abs_path):
+            app.logger.error(f"Document file missing: {abs_path}")
+            abort(404, description="Document file not found")
+        
+        # Determine MIME type
+        mime_type, _ = mimetypes.guess_type(doc.filename)
+        if not mime_type:
+            # Fallback for common types
+            if doc.filename.lower().endswith('.pdf'):
+                mime_type = 'application/pdf'
+            elif doc.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+                mime_type = 'image/' + doc.filename.split('.')[-1].lower()
+            else:
+                mime_type = 'application/octet-stream'
+        
+        # Send file with security headers
+        response = send_file(
+            abs_path,
+            mimetype=mime_type,
+            as_attachment=False,
+            conditional=True
+        )
+        
+        # Security headers
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['Content-Disposition'] = f'inline; filename="{doc.filename}"'
+        
+        return response
+        
+    except Exception as e:
+        app.logger.exception(f"Error serving document {doc_id}: {str(e)}")
+        abort(500, description="Internal server error")
 
+def convert_legacy_paths():
+    """Convert any existing paths to the new relative format"""
+    docs = Document.query.all()
+    updated = 0
+    
+    for doc in docs:
+        if doc.path and os.path.isabs(doc.path):
+            try:
+                doc.path = os.path.relpath(doc.path, start=app.root_path)
+                updated += 1
+            except ValueError:
+                continue
+    
+    if updated:
+        db.session.commit()
+    
+    return updated
 
 @app.route('/register', methods=['GET', 'POST'])
 @role_required("sales_ops", "admin")
 def register_customer_debug():
+    agents = Agent.query.filter_by(active=True).order_by(Agent.name).all()
+    team_leaders = Agent.query.filter_by(role="Team Leader").all()
+    query_form = CustomerQueryForm()
+
     if request.method == 'POST':
         file = request.files.get('csv_file')
-        if file and file.filename.endswith('.csv'):
-            # Handle CSV upload
-            try:
+        try:
+            if file and file.filename.endswith('.csv'):
                 stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
-                csv_input = csv.DictReader(stream)
-                for row in csv_input:
+                for row in csv.DictReader(stream):
                     process_customer_registration(row)
-                flash("CSV upload processed successfully.", "success")
-            except Exception as e:
-                db.session.rollback()
-                flash(f"CSV upload failed: {str(e)}", "danger")
-            return redirect(url_for('register_customer_debug'))
-        else:
-            # Manual entry
-            try:
-                process_customer_registration(request.form)
-                flash("Customer and loan registered successfully.", "success")
-            except Exception as e:
-                db.session.rollback()
-                flash(str(e), "danger")
-            return redirect(url_for('register_customer_debug'))
-    return render_template('register_customer_debug.html')
+                flash("✅ CSV upload processed successfully.", "success")
+            else:
+                process_customer_registration(request.form, files=request.files)
+                flash("✅ Customer and loan registered successfully.", "success")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"❌ Error: {str(e)}", "danger")
 
-def process_customer_registration(data):
+        return redirect(url_for('register_customer_debug'))
+
+    return render_template(
+        'register_customer_debug.html',
+        agents=agents,
+        team_leaders=team_leaders,
+         query_form=query_form
+    )
+
+
+def process_customer_registration(data, files=None):
     try:
-        loan_amount = float(data.get('loan_amount', 0))
-        if loan_amount < 0:
-            raise ValueError("Loan amount cannot be negative")
+        loan_amount = max(float(data.get('loan_amount', 0)), 0.0)
     except (TypeError, ValueError):
-        loan_amount = 0.0
+        raise Exception("Invalid loan amount.")
 
-    term_months = int(data['loan_term'])
+    # Loan category setup
     category_code = int(data.get('loan_category'))
-
     CATEGORY_MAP = {
         1: {'prefix': '1', 'label': 'civil_servant'},
         2: {'prefix': '2', 'label': 'private_sector'},
         3: {'prefix': '3', 'label': 'sme'}
     }
-
     category_info = CATEGORY_MAP.get(category_code)
     if not category_info:
         raise Exception("Invalid loan category selected.")
 
-    prefix = category_info['prefix']
-    category = category_info['label']
-
-    config = get_pricing_config(category, term_months)
+    term_months = int(data.get('loan_term', 0))
+    config = get_pricing_config(category_info['label'], term_months)
     if not config:
         raise Exception("Invalid loan term selected.")
 
-    # Validate Date of Birth
+    # Validate date of birth
     dob = datetime.strptime(data['dob'], "%Y-%m-%d").date()
     today = date.today()
     age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
     if age < 16:
         raise Exception("Customer must be at least 16 years old.")
+    if age + (term_months // 12) > 60:
+        raise Exception("Loan tenure will exceed retirement age (60 years).")
 
-    # Validate and parse date joined
+    # Validate employment start date
     date_joined = data.get("date_joined")
+    years_in_service = None
     if date_joined:
         date_joined = datetime.strptime(date_joined, "%Y-%m-%d").date()
         years_in_service = today.year - date_joined.year - ((today.month, today.day) < (date_joined.month, date_joined.day))
         if years_in_service >= 20:
-            flash("⚠️ Customer is eligible for voluntary retirement (20+ years in service)", "warning")
-    else:
-        years_in_service = None
+            flash("⚠️ Customer may be eligible for voluntary retirement.", "warning")
 
-    # Check for retirement age at loan completion
-    if age + (term_months // 12) > 60:
-        raise Exception("Loan tenure will exceed retirement age (60 years).")
-
-    # Pricing
+    # Pricing fees
     crb_fees = 3000
     origination_fees = loan_amount * config['origination']
     insurance_fees = loan_amount * config['insurance']
     collection_fees = loan_amount * config['collection']
     capitalized_amount = loan_amount + origination_fees + insurance_fees + crb_fees
 
-    annuity_factor = (config['rate'] * (1 + config['rate']) ** term_months) / \
-                     ((1 + config['rate']) ** term_months - 1)
-    monthly_instalment = (capitalized_amount * annuity_factor) + collection_fees
+    # Calculate monthly repayment
+    r = config['rate']
+    annuity = (r * (1 + r) ** term_months) / ((1 + r) ** term_months - 1)
+    monthly_payment = (capitalized_amount * annuity) + collection_fees
 
     # Check for duplicates
     if Customer.query.filter_by(email=data['email']).first():
@@ -3304,13 +4268,13 @@ def process_customer_registration(data):
     if Customer.query.filter_by(national_id=data['national_id']).first():
         raise Exception("National ID already exists.")
 
-    # Generate file number
+    # Generate customer file number
     now = datetime.utcnow()
-    customer_count = db.session.query(Customer).count()
-    file_sequence = str(customer_count + 1).zfill(6)
-    file_number = f"{now.year}{str(now.month).zfill(2)}{file_sequence}"
+    file_number = f"{now.year}{now.month:02d}{db.session.query(Customer).count() + 1:06d}"
 
-    # Create customer
+    agent_id = int(data['agent_id']) if data.get('agent_id') else None
+
+    # Create customer record
     customer = Customer(
         national_id=data['national_id'],
         first_name=data['first_name'],
@@ -3337,14 +4301,14 @@ def process_customer_registration(data):
         file_number=file_number,
         status=data.get('status', 'pending'),
         is_approved_for_creation=False,
-        maker_id=1
+        agent_id=agent_id,
+        maker_id=current_user.id
     )
-
     db.session.add(customer)
     db.session.flush()
 
-    # Upload documents
-    document_types = {
+    # Attach documents
+    document_fields = {
         'national_id_front': 'id_front',
         'form': 'form',
         'customer_photo': 'photo',
@@ -3352,42 +4316,32 @@ def process_customer_registration(data):
         'bank_statement': 'bank_statement',
         'letter_of_undertaking': 'undertaking_letter'
     }
+    for field, dtype in document_fields.items():
+        if files and (file := files.get(field)) and file.filename:
+            filename, path = save_document(file, customer.id, dtype)
+            db.session.add(Document(
+                customer_id=customer.id,
+                filename=filename,
+                filetype=dtype,
+                path=path
+            ))
 
-    for form_field, doc_type in document_types.items():
-        file = request.files.get(form_field)
-        if file:
-            filename, filepath = save_document(file, customer.id, doc_type)
-            if filename:
-                document = Document(
-                    customer_id=customer.id,
-                    filename=filename,
-                    filetype=doc_type,
-                    path=filepath
-                )
-                db.session.add(document)
+    # Loan number generation
+    loan_number = f"{category_info['prefix']}{str(term_months).zfill(2)}{db.session.query(LoanApplication).count() + 1:06d}"
 
-    # Loan logic
-    tenure = str(term_months).zfill(2)
-    loan_count = db.session.query(LoanApplication).count()
-    loan_sequence = str(loan_count + 1).zfill(6)
-    loan_number = f"{prefix}{tenure}{loan_sequence}"
-
-    previous_loan = LoanApplication.query.filter_by(customer_id=customer.id).order_by(LoanApplication.id.desc()).first()
-    top_up_balance = 0
-    if previous_loan and previous_loan.loan_state in ['active', 'closed']:
-        balances = calculate_balances(previous_loan)
-        top_up_balance = balances.get('top_up_balance', 0)
-
+    # Top-up balance if applicable
+    previous = LoanApplication.query.filter_by(customer_id=customer.id).order_by(LoanApplication.id.desc()).first()
+    top_up_balance = calculate_balances(previous).get('top_up_balance', 0) if previous else 0
     cash_to_client = max(loan_amount - top_up_balance, 0)
 
     loan = LoanApplication(
         customer_id=customer.id,
         loan_amount=loan_amount,
         term_months=term_months,
-        monthly_instalment=round(monthly_instalment, 2),
-        total_repayment=round(monthly_instalment * term_months, 2),
+        monthly_instalment=round(monthly_payment, 2),
+        total_repayment=round(monthly_payment * term_months, 2),
         effective_rate=calculate_eir(loan_amount, term_months, config),
-        category=category,
+        category=category_info['label'],
         loan_category=category_code,
         loan_number=loan_number,
         file_number=file_number,
@@ -3395,6 +4349,7 @@ def process_customer_registration(data):
         loan_state='application',
         performance_status='pending',
         crb_fees=crb_fees,
+        agent_id=current_user.id,
         origination_fees=round(origination_fees, 2),
         insurance_fees=round(insurance_fees, 2),
         collection_fees=round(collection_fees, 2),
@@ -3402,23 +4357,20 @@ def process_customer_registration(data):
         applied_interest_rate=config['rate'],
         applied_collection_fee=config['collection']
     )
-
     db.session.add(loan)
     db.session.flush()
 
     loan.generate_repayment_schedule()
 
-    disbursement = Disbursement(
+    db.session.add(Disbursement(
         loan_id=loan.id,
         amount=cash_to_client,
         method='bank',
         status='pending',
         reference=f"Initial disbursement for {loan.loan_number}"
-    )
-    db.session.add(disbursement)
+    ))
 
     db.session.commit()
-
 
 
 
@@ -3432,70 +4384,75 @@ def customers():
 def approve_customers():
     if request.method == 'POST':
         selected_ids = request.form.getlist('customer_ids')
-        
+
         if selected_ids:
             customers = Customer.query.filter(Customer.id.in_(selected_ids)).all()
             approved_count = 0
-            
+
             for customer in customers:
                 vote_id = request.form.get(f'vote_{customer.id}')
-                
                 if not vote_id:
                     flash(f"No vote selected for {customer.first_name} {customer.last_name}", "warning")
                     continue
-                
+
                 vote = Vote.query.get(vote_id)
                 if not vote:
                     flash(f"Invalid vote selected for {customer.first_name} {customer.last_name}", "danger")
                     continue
-                
+
                 customer.is_approved_for_creation = True
                 customer.checker_id = current_user.id
-                
+
+                # Only create a loan if customer doesn't already have one
                 if not customer.loans:
                     loan = LoanApplication(
                         customer_id=customer.id,
                         loan_amount=customer.amount_requested or 0.0,
-                        loan_category="SME",
+                        loan_category="SME",  # You can make dynamic
                         status='pending',
                         loan_state='Active',
                         application_status='awaiting_approval',
                         vote_id=vote.id
                     )
                     db.session.add(loan)
+                    db.session.flush()
+
+                    # ✅ Link customer documents to this new loan
+                    for doc in customer.customer_documents:
+                        doc.loan_id = loan.id
+
                     approved_count += 1
+
                 else:
                     for loan in customer.loans:
                         loan.status = 'pending'
                         loan.vote_id = vote.id
+
+                        for doc in customer.customer_documents:
+                            if not doc.loan_id:
+                                doc.loan_id = loan.id
+
                     approved_count += 1
-            
+
             db.session.commit()
             flash(f"{approved_count} customer(s) approved with vote assignments!", "success")
         else:
             flash("No customers selected.", "warning")
         return redirect(url_for('approve_customers'))
-    
-    # GET request handling
-    unapproved_customers = Customer.query.filter_by(is_approved_for_creation=False).all()
-    
-    # Get all active votes (fallback to all votes if none active)
+
+    # GET
+    unapproved_customers = Customer.query \
+        .options(joinedload(Customer.customer_documents)) \
+        .filter_by(is_approved_for_creation=False) \
+        .all()
+
     active_votes = Vote.query.filter_by(is_active=True).order_by(Vote.code.asc()).all()
     if not active_votes:
         active_votes = Vote.query.order_by(Vote.code.asc()).all()
-    
-    # Normalize amount_requested
-    for customer in unapproved_customers:
-        try:
-            customer.amount_requested = float(customer.amount_requested)
-        except (TypeError, ValueError):
-            customer.amount_requested = 0.0
-    
-    return render_template(
-        'approve_customers.html', 
-        customers=unapproved_customers,
-        votes=active_votes
-    )
+
+    return render_template('approve_customers.html',
+                           customers=unapproved_customers,
+                           votes=active_votes)
 
 @app.route('/customer/<int:customer_id>')
 def view_customer(customer_id):
@@ -3523,27 +4480,41 @@ def edit_customer(customer_id):
     return render_template('edit_customer.html', customer=customer)
 
 @app.route('/loans')
+@login_required
 def view_loans():
-    loans = (
-        LoanApplication.query
-        .join(Customer)
-        .filter(Customer.is_approved_for_creation.is_(True))
-        .filter(LoanApplication.status.in_(['pending', 'approved']))
-        .options(joinedload(LoanApplication.documents))  # <-- eager‑load docs
-        .add_entity(Customer)
+    # MODIFIED: Eager load all necessary data
+    loans = db.session.query(LoanApplication, Customer) \
+        .join(Customer, LoanApplication.customer_id == Customer.id) \
+        .options(
+            joinedload(LoanApplication.customer).load_only(Customer.first_name, Customer.last_name),
+            joinedload(LoanApplication.documents),
+            joinedload(LoanApplication.customer).joinedload(Customer.customer_documents)
+        ) \
+        .filter(Customer.is_approved_for_creation == True) \
+        .filter(LoanApplication.application_status.in_(['pending', 'approved'])) \
         .all()
-    )
 
-    processed_loans = [
-        {
-            "loan":      loan_app,
-            "customer":  customer,
-            "current_balance": loan_app.balance or 0.0,
-        }
-        for loan_app, customer in loans
-    ]
+    # Combine documents and deduplicate
+    processed_loans = []
+    for loan, customer in loans:
+        # Combine all documents
+        all_docs = list(loan.documents) + list(customer.customer_documents)
+        
+        # Deduplicate by filename
+        seen_filenames = set()
+        unique_docs = []
+        for doc in all_docs:
+            if doc.filename not in seen_filenames:
+                unique_docs.append(doc)
+                seen_filenames.add(doc.filename)
+        
+        processed_loans.append({
+            'loan': loan,
+            'customer': customer,
+            'unique_docs': unique_docs
+        })
 
-    return render_template("view_loans.html", loans=processed_loans)
+    return render_template('view_loans.html', loans=processed_loans)
        
 @app.route('/process_loan/<int:loan_id>/<action>', methods=['POST'])
 def process_loan(loan_id, action):
@@ -3743,7 +4714,9 @@ def disbursements():
                 loan.disbursed = True
                 loan.disbursed_bank = selected_bank
                 loan.disbursement_date = datetime.utcnow().date()
-                loan.generate_repayment_schedule()
+                if not loan.repayment_schedule or len(loan.repayment_schedule) == 0:
+                    loan.generate_repayment_schedule()
+
                 db.session.add(loan)
 
                 disbursement = Disbursement(
@@ -4179,25 +5152,81 @@ def loanbook():
 
         all_loans = loans_query.all()
 
+        def calculate_capitalized_amount(loan_amount, config):
+            try:
+                origination = loan_amount * config.get('origination', 0)
+                insurance = loan_amount * config.get('insurance', 0)
+                crb = config.get('crb', 0)
+                return round(loan_amount + origination + insurance + crb, 2)
+            except Exception:
+                return loan_amount
+
+        def calculate_balances(loan):
+            config = get_pricing_config(loan.category, loan.term_months, loan)
+            if not config:
+                return {}
+
+            capitalized = calculate_capitalized_amount(loan.loan_amount or 0, config)
+            monthly_rate = config.get('rate', 0)
+            term = loan.term_months or 0
+
+            if monthly_rate > 0 and term > 0:
+                factor = (monthly_rate * (1 + monthly_rate) ** term) / ((1 + monthly_rate) ** term - 1)
+                annuity = capitalized * factor
+            else:
+                annuity = 0
+
+            payments = sorted(loan.payments, key=lambda p: p.created_at)
+            remaining_balance = capitalized
+            payments_made = 0
+
+            for p in payments:
+                for allocation in p.allocations:
+                    if allocation.principal:
+                        remaining_balance -= allocation.principal
+                        remaining_balance = max(remaining_balance, 0)
+                        payments_made += 1
+
+            current_balance = round(remaining_balance, 2)
+            remaining_term = max(term - payments_made, 0)
+
+            def projected_interest(months_ahead):
+                temp_balance = current_balance
+                total_interest = 0.0
+                for _ in range(min(months_ahead, remaining_term)):
+                    if temp_balance <= 0:
+                        break
+                    interest = temp_balance * monthly_rate
+                    principal = annuity - interest
+                    principal = min(principal, temp_balance)
+                    total_interest += interest
+                    temp_balance -= principal
+                return round(total_interest, 2)
+
+            # For closed & settled loans, balances are zero
+            if loan.status == 'closed' and loan.loan_state == 'settled_client':
+                return {
+                    'capitalized_amount': capitalized,
+                    'current_balance': 0.0,
+                    'top_up_balance': 0.0,
+                    'settlement_balance': 0.0,
+                    'top_up_interest': 0.0,
+                    'settlement_interest': 0.0,
+                }
+
+            return {
+                'capitalized_amount': capitalized,
+                'current_balance': current_balance,
+                'top_up_balance': round(current_balance + projected_interest(3), 2),
+                'settlement_balance': round(current_balance + projected_interest(6), 2),
+                'top_up_interest': projected_interest(3),
+                'settlement_interest': projected_interest(6),
+            }
+
         processed_loans = []
         for loan in all_loans:
             customer = loan.customer
-            config = get_pricing_config(loan.category, loan.term_months, loan)
-            loan_amount = loan.loan_amount or 0
-
-            capitalized = (
-                loan_amount
-                + (loan_amount * config.get('origination', 0))
-                + (loan_amount * config.get('insurance', 0))
-                + config.get('crb', 0)
-            )
-
-            total_principal_paid = sum(
-                (alloc.principal or 0)
-                for p in loan.payments
-                for alloc in p.allocations
-            )
-            remaining_balance = capitalized - (total_principal_paid or 0)
+            balances = calculate_balances(loan)
 
             processed_loans.append({
                 'customer': {
@@ -4207,25 +5236,26 @@ def loanbook():
                 },
                 'loan': {
                     'loan_number': loan.loan_number,
-                    'amount': loan_amount,
+                    'amount': loan.loan_amount or 0,
                     'term': loan.term_months,
                     'category': loan.category,
                     'monthly_instalment': loan.monthly_instalment,
                     'total_repayment': loan.total_repayment,
-                    'balance': round(remaining_balance, 2),
+                    'balance': balances.get('current_balance', 0.0),
                     'disbursed': loan.disbursed,
-                    'collection_fee': loan_amount * config.get('collection', 0)
+                    'collection_fee': (loan.loan_amount or 0) * get_pricing_config(loan.category, loan.term_months, loan).get('collection', 0)
                 },
                 'fees': {
-                    'crb': config.get('crb', 0),
-                    'origination': loan_amount * config.get('origination', 0),
-                    'insurance': loan_amount * config.get('insurance', 0),
+                    'crb': get_pricing_config(loan.category, loan.term_months, loan).get('crb', 0),
+                    'origination': (loan.loan_amount or 0) * get_pricing_config(loan.category, loan.term_months, loan).get('origination', 0),
+                    'insurance': (loan.loan_amount or 0) * get_pricing_config(loan.category, loan.term_months, loan).get('insurance', 0),
                     'total': (
-                        config.get('crb', 0)
-                        + (loan_amount * config.get('origination', 0))
-                        + (loan_amount * config.get('insurance', 0))
+                        get_pricing_config(loan.category, loan.term_months, loan).get('crb', 0)
+                        + (loan.loan_amount or 0) * get_pricing_config(loan.category, loan.term_months, loan).get('origination', 0)
+                        + (loan.loan_amount or 0) * get_pricing_config(loan.category, loan.term_months, loan).get('insurance', 0)
                     )
-                }
+                },
+                'balances': balances
             })
 
         # Pagination logic
@@ -4259,7 +5289,6 @@ def loanbook():
                 "totals": ajax_totals
             })
 
-        # Totals for full (non-AJAX) page
         totals = {
             "loan_amount": sum(loan["loan"]["amount"] or 0 for loan in processed_loans),
             "crb_fees": sum(loan["fees"]["crb"] or 0 for loan in processed_loans),
@@ -4291,7 +5320,6 @@ def loanbook():
 
 
 
-
 def save_file(file_obj, subfolder=''):
     if file_obj:
         filename = secure_filename(file_obj.filename)
@@ -4310,6 +5338,7 @@ def process_topup_registration(data, base_loan, loan_form=None, bank_payslip=Non
         term_months = int(data['tenure'])
     except (ValueError, KeyError):
         raise Exception("Invalid input for loan amount or tenure.")
+        
 
     category_code = base_loan.loan_category
     CATEGORY_MAP = {
@@ -4392,6 +5421,8 @@ def process_topup_registration(data, base_loan, loan_form=None, bank_payslip=Non
     loan_sequence = str(db.session.query(LoanApplication).count() + 1).zfill(6)
     loan_number = f"{category_info['prefix']}{str(term_months).zfill(2)}{loan_sequence}"
 
+    agent_id = int(data['agent_id']) if data.get('agent_id') else None
+
     # --- Create New Top-up Loan
     topup_loan = LoanApplication(
         customer_id=base_loan.customer_id,
@@ -4404,6 +5435,7 @@ def process_topup_registration(data, base_loan, loan_form=None, bank_payslip=Non
         loan_category=category_code,
         loan_number=loan_number,
         file_number=base_loan.file_number,
+        agent_id=agent_id,
         application_status='pending',
         loan_state='application',
         performance_status='pending',
@@ -4456,10 +5488,11 @@ def process_topup_registration(data, base_loan, loan_form=None, bank_payslip=Non
 
     # --- Pay Off Base Loan
     if top_up_balance > 0:
+        # --- Create payment for top-up balance ---
         payment = Payment(
             loan_id=base_loan.id,
             amount=top_up_balance,
-            method='topup',
+            method='top_up',
             status='successful',
             reference=f"Top-Up from {loan_number}",
             created_at=datetime.utcnow()
@@ -4467,15 +5500,25 @@ def process_topup_registration(data, base_loan, loan_form=None, bank_payslip=Non
         db.session.add(payment)
         db.session.flush()
 
+        # Allocate payment while loan is still open
         base_loan.allocate_payment(payment)
-        base_loan.recalculate_balance()
 
-        base_loan.status = 'closed'
-        base_loan.loan_state = 'topped_up'
-        base_loan.closure_type = 'topup'
-        base_loan.closure_date = datetime.utcnow()
+        # Commit so allocations are persisted
+        db.session.commit()
 
-    return topup_loan
+        # Now close the base loan ONLY if fully paid
+        if base_loan.top_up_balance <= 0 and (base_loan.top_up_interest or 0) <= 0:
+            base_loan.status = 'closed'
+            base_loan.loan_state = 'settled_client'
+            base_loan.closure_type = 'topup'
+            base_loan.closure_date = datetime.utcnow()
+
+            # Cancel all remaining repayment schedules
+            for schedule in base_loan.repayment_schedules:
+                if schedule.status not in {"paid", "cancelled"}:
+                    schedule.status = "cancelled"
+
+            db.session.commit()
 
 
 
@@ -4581,6 +5624,8 @@ def process_additional_registration(data, base_loan, new_category=None,
     loan_sequence = str(db.session.query(LoanApplication).count() + 1).zfill(6)
     loan_number = f"{prefix}{str(term_months).zfill(2)}{loan_sequence}"
 
+    agent_id = int(data['agent_id']) if data.get('agent_id') else None
+
     additional_loan = LoanApplication(
         customer_id=base_loan.customer_id,
         loan_amount=new_amount,
@@ -4592,6 +5637,7 @@ def process_additional_registration(data, base_loan, new_category=None,
         loan_category=int(prefix),  # keep the numeric loan_category consistent
         loan_number=loan_number,
         file_number=base_loan.file_number,
+        agent_id=agent_id,
         application_status='pending',
         loan_state='active',
         crb_fees=crb_fees,
@@ -4935,11 +5981,59 @@ def _parse_date(s, default):
         return default
 
 
+@app.route('/income_report', methods=['GET', 'POST'])
+@login_required
+@role_required('finance_officer', 'admin')
+def income_report():
+    today = date.today()
+    default_start = date(today.year, today.month, 1)
+    default_end = date(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
+
+    if request.method == 'POST':
+        start_date = _parse_date(request.form.get('start_date'), default_start)
+        end_date = _parse_date(request.form.get('end_date'), default_end)
+    else:
+        start_date, end_date = default_start, default_end
+
+    one_time, scheduled, event_based = _compute_income_db(start_date, end_date)
+
+    categories = ['civil_servant', 'private_sector', 'sme']
+    report = {cat: dict(origination=0, crb=0, insurance=0, collection=0, interest=0) for cat in categories}
+
+    for row in one_time:
+        if row.category in report:
+            report[row.category]['origination'] += row.origination
+            report[row.category]['crb'] += row.crb
+            report[row.category]['insurance'] += row.insurance
+
+    for row in scheduled:
+        if row.category in report:
+            report[row.category]['interest'] += row.interest
+            report[row.category]['collection'] += row.collection
+
+    for row in event_based:
+        if row.category in report:
+            total_event_interest = row.settlement_interest + row.top_up_interest
+            report[row.category]['interest'] += total_event_interest
+
+    totals = {k: sum(report[cat][k] for cat in categories) for k in report[categories[0]]}
+    grand_total = sum(totals.values())
+
+    return render_template('income_report.html',
+                           report=report,
+                           totals=totals,
+                           grand_total=grand_total,
+                           start_date=start_date.isoformat(),
+                           end_date=end_date.isoformat(),
+                           categories=categories)
+
+
+# === Income computation helper ===
 def _compute_income_db(start_date, end_date):
     start_dt = datetime.combine(start_date, datetime.min.time())
     end_dt = datetime.combine(end_date + timedelta(days=1), datetime.min.time())
 
-    # One-time income (based on creation date)
+    # One-time income: fees at loan creation
     one_time = (
         db.session.query(
             LoanApplication.category,
@@ -4956,8 +6050,8 @@ def _compute_income_db(start_date, end_date):
         .all()
     )
 
-    # Accrued income (scheduled interest & fees)
-    accrued = (
+    # Scheduled income: interest and collection fees
+    scheduled_income = (
         db.session.query(
             LoanApplication.category,
             func.coalesce(func.sum(RepaymentSchedule.expected_interest), 0).label('interest'),
@@ -4973,33 +6067,33 @@ def _compute_income_db(start_date, end_date):
         .all()
     )
 
-    # Cash-based payments (optional but retained)
-    recurring = (
+    # Settlement and top-up interest (recognized at event month)
+    event_interest = (
         db.session.query(
             LoanApplication.category,
-            func.coalesce(func.sum(PaymentAllocation.fees), 0).label('collection'),
-            func.coalesce(func.sum(PaymentAllocation.interest), 0).label('interest')
+            func.coalesce(func.sum(LoanApplication.settlement_interest), 0).label('settlement_interest'),
+            func.coalesce(func.sum(LoanApplication.top_up_interest), 0).label('top_up_interest')
         )
-        .join(Payment, Payment.id == PaymentAllocation.payment_id)
-        .join(LoanApplication, LoanApplication.id == Payment.loan_id)
         .filter(
-            Payment.created_at >= start_dt,
-            Payment.created_at < end_dt,
-            Payment.status == 'successful'
+            LoanApplication.closure_date != None,
+            LoanApplication.closure_date >= start_dt,
+            LoanApplication.closure_date < end_dt
         )
         .group_by(LoanApplication.category)
         .all()
     )
 
-    return one_time, accrued, recurring
+    return one_time, scheduled_income, event_interest
 
 
+from flask import render_template, request
+from datetime import datetime, timedelta, date
+from sqlalchemy import func
 
-
-@app.route('/income_report', methods=['GET', 'POST'])
+@app.route('/detailed_income_breakdown', methods=['GET', 'POST'])
 @login_required
 @role_required('finance_officer', 'admin')
-def income_report():
+def detailed_income_breakdown():
     today = date.today()
     default_start = date(today.year, today.month, 1)
     default_end = date(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
@@ -5010,30 +6104,41 @@ def income_report():
     else:
         start_date, end_date = default_start, default_end
 
-    one_time, accrued, recurring = _compute_income_db(start_date, end_date)
+    # Get loans with scheduled income (interest & collection fees)
+    results = (
+        db.session.query(
+            LoanApplication.id.label('loan_id'),
+            LoanApplication.loan_number,
+            LoanApplication.category,
+            LoanApplication.loan_amount,
+            func.sum(RepaymentSchedule.expected_interest).label('expected_interest'),
+            func.sum(RepaymentSchedule.expected_fees).label('expected_fees')
+        )
+        .join(RepaymentSchedule, RepaymentSchedule.loan_id == LoanApplication.id)
+        .filter(
+            RepaymentSchedule.due_date >= start_date,
+            RepaymentSchedule.due_date <= end_date,
+            LoanApplication.loan_state.in_(['active', 'topped_up'])
+        )
+        .group_by(
+            LoanApplication.id,
+            LoanApplication.loan_number,
+            LoanApplication.category,
+            LoanApplication.loan_amount
+        )
+        .having(
+            or_(
+                func.sum(RepaymentSchedule.expected_interest) > 0,
+                func.sum(RepaymentSchedule.expected_fees) > 0
+            )
+        ))
 
-    categories = ['civil_servant', 'private_sector', 'sme']
-    report = {cat: dict(origination=0, crb=0, insurance=0, collection=0, interest=0) for cat in categories}
-
-    for row in one_time:
-        if row.category in report:
-            report[row.category].update(origination=row.origination, crb=row.crb, insurance=row.insurance)
-
-    for row in accrued:
-        if row.category in report:
-            report[row.category]['interest'] = row.interest
-            report[row.category]['collection'] = row.collection
-
-    totals = {k: sum(report[cat][k] for cat in categories) for k in report[categories[0]]}
-    grand_total = sum(totals.values())
-
-    return render_template('income_report.html',
-                           report=report,
-                           totals=totals,
-                           grand_total=grand_total,
-                           start_date=start_date.isoformat(),
-                           end_date=end_date.isoformat(),
-                           categories=categories)
+    return render_template(
+        'detailed_income_breakdown.html',
+        results=results,
+        start_date=start_date.isoformat(),
+        end_date=end_date.isoformat()
+    )
 
 
 @app.route('/export_income_report_csv')
@@ -5378,8 +6483,9 @@ def batch_import_loans():
                     
                     # Regenerate repayment schedule if needed
                     if regenerate_schedule:
-                        # Explicitly delete existing repayment schedule
                         RepaymentSchedule.query.filter_by(loan_id=loan.id).delete()
+                        if loan.loan_amount > 0:
+                            loan.generate_repayment_schedule(disbursement_date=loan.disbursement_date)
                         
                         # Only regenerate if not zeroized
                         if loan.loan_amount > 0:
@@ -5443,6 +6549,580 @@ LOAN-2023-003,2023-07-10,,,,Approved,Active,Performing,Robert Brown,,,,,,"""
         headers={"Content-disposition": "attachment; filename=loan_updates_sample.csv"}
     )
 
+# utils/arrears.p
+def refresh_all_arrears():
+    print("Refreshing arrears...")
+    db.session.query(Arrear).delete()  # Clear all previous arrears
+
+    loans = LoanApplication.query.all()
+
+    for loan in loans:
+        overdue_schedules = [s for s in loan.repayment_schedule if s.due_date < date.today() and not s.fully_paid]
+
+        for schedule in overdue_schedules:
+            arrear = Arrear(
+                loan_id=loan.id,
+                schedule_id=schedule.id,
+                due_date=schedule.due_date,
+                recorded_at=date.today(),
+                expected_principal=schedule.principal_due or 0,
+                expected_interest=schedule.interest_due or 0,
+                expected_fees=schedule.fees_due or 0,
+                paid_principal=schedule.paid_principal or 0,
+                paid_interest=schedule.paid_interest or 0,
+                paid_fees=schedule.paid_fees or 0,
+                payment_status='unpaid',
+                status='unresolved',
+                category=loan.category,
+                tenure=loan.tenure
+            )
+
+            # Calculate aging
+            age = (date.today() - arrear.due_date).days
+            arrear.aging = age  # store on model
+
+            if age <= 30:
+                bracket = "1-30"
+            elif age <= 60:
+                bracket = "31-60"
+            elif age <= 90:
+                bracket = "61-90"
+            elif age <= 180:
+                bracket = "91-180"
+            else:
+                bracket = "180+"
+
+            # Lookup provision rule
+            rule = ProvisionSetting.query.filter_by(category=loan.category, tenure=loan.tenure).first()
+            if rule:
+                total_due = arrear.expected_principal + arrear.expected_interest + arrear.expected_fees
+                provision = total_due * rule.probability_of_default * rule.loss_given_default
+                arrear.probability_of_default = rule.probability_of_default
+                arrear.loss_given_default = rule.loss_given_default
+                arrear.provision_amount = round(provision, 2)
+
+            db.session.add(arrear)
+
+    db.session.commit()
+    print("Arrears refreshed.")
+
+
+@click.command("refresh-arrears")
+@with_appcontext
+def refresh_arrears():
+    """Recalculate and update all arrears from repayment schedules."""
+    refresh_all_arrears()
+
+app.cli.add_command(refresh_arrears)
+
+@app.route('/arrears')
+@login_required
+@role_required('admin', 'finance_officer')
+def view_arrears():
+    status = request.args.get('status', 'unresolved')
+    aging = request.args.get('aging')
+    tenure = request.args.get('tenure')
+    category = request.args.get('category')
+
+    query = Arrear.query.join(LoanApplication).join(Customer)
+
+    if status:
+        query = query.filter(Arrear.status == status)
+    if aging:
+        try:
+            days = int(aging.split('-')[0])
+            cutoff_date = datetime.utcnow().date() - timedelta(days=days)
+            query = query.filter(Arrear.due_date <= cutoff_date)
+        except:
+            flash("Invalid aging filter", "danger")
+    if tenure:
+        query = query.filter(Arrear.tenure == int(tenure))
+    if category:
+        query = query.filter(LoanApplication.category == category)
+
+    arrears = query.order_by(Arrear.due_date.asc()).all()
+
+    # Distinct filters
+    tenures = sorted(set([a.tenure for a in Arrear.query.distinct(Arrear.tenure).all() if a.tenure]))
+    categories = sorted(set([la.category for la in LoanApplication.query.distinct(LoanApplication.category).all() if la.category]))
+
+    # Tab 1: Aging Schedule
+    aging_brackets = ['1-30', '31-60', '61-90', '91-180', '180+']
+    aging_schedule = []
+
+    for bracket in aging_brackets:
+        loans = [a for a in arrears if get_bracket(a.days_past_due) == bracket]
+        total_value = sum((a.expected_principal + a.expected_interest + a.expected_fees) for a in loans)
+        total_prov = sum(a.provision_amount or 0 for a in loans)
+        aging_schedule.append({
+            'bracket': bracket.replace("-", " - "),
+            'num_loans': len(loans),
+            'value': total_value,
+            'provision': total_prov
+        })
+
+    # Tab 2: Aging Summary
+    total_arrears_value = sum((a.expected_principal + a.expected_interest + a.expected_fees) for a in arrears)
+    aging_summary = []
+    for row in aging_schedule:
+        percentage = (row['value'] / total_arrears_value) * 100 if total_arrears_value else 0
+        aging_summary.append({
+            'bracket': row['bracket'],
+            'amount': row['value'],
+            'percentage': percentage
+        })
+
+    return render_template(
+        'portfolio/arrears_report.html',
+        arrears=arrears,
+        status=status,
+        aging=aging,
+        tenure=tenure,
+        category=category,
+        tenures=tenures,
+        categories=categories,
+        aging_schedule=aging_schedule,
+        aging_summary=aging_summary
+    )
+
+def get_bracket(age):
+    if age <= 30:
+        return "1-30"
+    elif age <= 60:
+        return "31-60"
+    elif age <= 90:
+        return "61-90"
+    elif age <= 180:
+        return "91-180"
+    return "180+"
+
+
+
+@app.route('/resolve_arrear/<int:arrear_id>', methods=['POST'])
+@login_required
+@role_required('admin', 'finance_officer')
+def resolve_arrear(arrear_id):
+    arrear = Arrear.query.get_or_404(arrear_id)
+    resolution_type = request.form.get('resolution_type')
+    notes = request.form.get('notes', '')
+
+    if resolution_type == 'waiver':
+        journal = JournalEntry(
+            description=f"Arrear waiver for loan {arrear.loan.loan_number}",
+            amount=arrear.total_arrears,
+            entry_type='waiver',
+            gl_account='income_waiver',
+            user_id=current_user.id,
+            loan_id=arrear.loan_id
+        )
+        db.session.add(journal)
+
+    arrear.status = 'resolved'
+    arrear.resolution_type = resolution_type
+    arrear.resolution_notes = notes
+    arrear.resolved_by = current_user.id
+    arrear.resolution_date = datetime.utcnow()
+
+    db.session.commit()
+    flash('Arrear resolved successfully', 'success')
+    return redirect(url_for('arrears_waterfall'))
+
+def create_notification(message, recipient_id=None, type='info'):
+    note = Notification(
+        message=message,
+        recipient_id=recipient_id,
+        type=type,
+        is_read=False
+    )
+    db.session.add(note)
+    db.session.commit()
+
+def alert_on_new_arrear(arrear):
+    # Fetch users to notify — e.g., credit officers role users
+    credit_officers = User.query.filter(User.role == 'credit_officer').all()
+    for officer in credit_officers:
+        create_notification(
+            message=f"New arrear recorded on Loan #{arrear.loan_id} with due date {arrear.due_date}.",
+            recipient_id=officer.id,
+            type='warning'
+        )
+
+@app.context_processor
+def inject_notifications():
+    if current_user.is_authenticated:
+        unread = Notification.query.filter_by(recipient_id=current_user.id, is_read=False).order_by(Notification.timestamp.desc()).all()
+        return {'unread_notifications': unread}
+    return {}
+
+@app.route('/dashboard/credit_officer')
+@login_required
+@role_required('credit_officer', 'admin')
+def credit_officer_dashboard():
+    # Get unread notifications for current user
+    unread_notifications = Notification.query.filter_by(
+        recipient_id=current_user.id,
+        is_read=False
+    ).order_by(Notification.timestamp.desc()).all()
+
+    # Define tasks with their display names and URLs (adjust URLs as needed)
+    tasks = [
+        
+        {'name': 'Approve Loans', 'url': url_for('approve_loans')},
+        {'name': 'View Arrears', 'url': url_for('view_arrears')},
+        # add other tasks here...
+    ]
+
+    return render_template('dashboard/credit_officer.html',
+                           unread_notifications=unread_notifications,
+                           tasks=tasks)
+
+
+@app.route('/provision-rule', methods=['POST'])
+@login_required
+def save_provision_rule():
+    category = request.form['category']
+    tenure_group = request.form['tenure_group']
+    if '+' in tenure_group:
+        tenure = int(tenure_group.replace('+', ''))
+    else:
+        tenure = int(tenure_group.split('-')[0])
+
+  # or parse tenure_group appropriately
+    pd = float(request.form['pd'])
+    lgd = float(request.form['lgd'])
+
+    rule = ProvisionSetting.query.filter_by(category=category, tenure=tenure).first()
+    if rule:
+        rule.probability_of_default = pd
+        rule.loss_given_default = lgd
+    else:
+        rule = ProvisionSetting(category=category, tenure=tenure, probability_of_default=pd, loss_given_default=lgd)
+        db.session.add(rule)
+
+    db.session.commit()
+    flash(f'Provision rule saved for {category} [{tenure}]', 'success')
+    return redirect(url_for('view_arrears'))
+
+def calculate_par(loans, threshold):
+    total = sum(loan.balance for loan in loans)
+    overdue = sum(loan.balance for loan in loans if loan.days_past_due >= threshold)
+    return round((overdue / total) * 100, 2) if total > 0 else 0.0
+
+def snapshot_par():
+    with app.app_context():
+        loans = LoanApplication.query.all()
+        snapshot_date = date.today()
+        if PARSnapshot.query.filter_by(snapshot_date=snapshot_date).first():
+            return
+        par_30 = calculate_par(loans, 30)
+        par_60 = calculate_par(loans, 60)
+        par_90 = calculate_par(loans, 90)
+        snapshot = PARSnapshot(snapshot_date=snapshot_date, par_30=par_30, par_60=par_60, par_90=par_90)
+        db.session.add(snapshot)
+        db.session.commit()
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(snapshot_par, 'cron', day_of_week='sun', hour=0, minute=0)
+scheduler.start()
+
+
+from flask import request, render_template, make_response
+from datetime import datetime, timedelta
+import csv, io
+
+def get_par_data_for_period(period_key, category=None, tenure=None):
+    today = datetime.today()
+
+    if period_key == 'this_quarter':
+        start = today - timedelta(weeks=12)
+        factor = 1.0
+    elif period_key == 'last_quarter':
+        start = today - timedelta(weeks=24)
+        factor = 0.8
+    elif period_key == 'same_quarter_last_year':
+        start = today - timedelta(weeks=56)
+        factor = 1.3
+    elif period_key == '12w':
+        start = today - timedelta(weeks=12)
+        factor = 0.9
+    else:
+        start = today - timedelta(weeks=12)
+        factor = 1.0
+
+    weeks = list(range(12))
+    dates = [(start + timedelta(weeks=i)).strftime('%Y-%m-%d') for i in weeks]
+
+    # Simulated PAR % values
+    par30_percent = [round(factor * (5 + i * 0.4), 2) for i in weeks]
+    par60_percent = [round(factor * (3 + i * 0.25), 2) for i in weeks]
+    par90_percent = [round(factor * (1 + i * 0.15), 2) for i in weeks]
+
+    # Compute MWK amounts from % of total portfolio
+    base_portfolio_amount = 100000  # In MWK
+    par30_amount = [round(base_portfolio_amount * p / 100) for p in par30_percent]
+    par60_amount = [round(base_portfolio_amount * p / 100) for p in par60_percent]
+    par90_amount = [round(base_portfolio_amount * p / 100) for p in par90_percent]
+
+    return dates, weeks, {
+        'par30': {'percent': par30_percent, 'amount': par30_amount},
+        'par60': {'percent': par60_percent, 'amount': par60_amount},
+        'par90': {'percent': par90_percent, 'amount': par90_amount},
+    }
+
+
+@app.route('/par-trend', methods=['GET'])
+def par_trend():
+    # Get query parameters
+    period1 = request.args.get('period1', '12w')
+    period2 = request.args.get('period2', 'last_quarter')
+    category = request.args.get('category')
+    tenure = request.args.get('tenure')
+    par_filter = int(request.args.get('par', 30))  # 30, 60, or 90
+
+    # Get structured data for both periods
+    dates1, weeks1, data1 = get_par_data_for_period(period1, category, tenure)
+    dates2, weeks2, data2 = get_par_data_for_period(period2, category, tenure)
+
+    # Extract relevant PAR level data
+    key = f'par{par_filter}'
+    par_percent1 = data1[key]['percent']
+    par_amount1 = data1[key]['amount']
+    par_percent2 = data2[key]['percent']
+    par_amount2 = data2[key]['amount']
+
+    # Combine data for display or chart
+    zipped1 = list(zip(dates1, par_amount1, par_percent1))
+    zipped2 = list(zip(dates2, par_amount2, par_percent2))
+
+    return render_template(
+        'par_trend.html',
+        period1=period1,
+        period2=period2,
+        category=category,
+        tenure=tenure,
+        par=par_filter,
+        week_labels=dates1,
+        par_amount1=par_amount1,
+        par_percent1=par_percent1,
+        par_amount2=par_amount2,
+        par_percent2=par_percent2,
+        zipped1=zipped1,
+        zipped2=zipped2
+    )
+
+
+
+@app.route('/par-trend/download', methods=['GET'])
+def download_par_csv():
+    period1 = request.args.get('period1', 'this_quarter')
+    period2 = request.args.get('period2', 'last_quarter')
+    category = request.args.get('category')
+    tenure = request.args.get('tenure')
+    par_bucket = request.args.get('par_bucket', 'all')
+
+    dates1, weeks1, data1 = get_par_data_for_period(period1, category, tenure)
+    dates2, weeks2, data2 = get_par_data_for_period(period2, category, tenure)
+
+    if par_bucket in ['par30', 'par60', 'par90']:
+        parPercent_1 = data1[par_bucket]['percent']
+        parPercent_2 = data2[par_bucket]['percent']
+        parAmount_1 = data1[par_bucket]['amount']
+        parAmount_2 = data2[par_bucket]['amount']
+    else:
+        parPercent_1 = [round((data1['par30']['percent'][i] + data1['par60']['percent'][i] + data1['par90']['percent'][i]) / 3, 2) for i in range(12)]
+        parPercent_2 = [round((data2['par30']['percent'][i] + data2['par60']['percent'][i] + data2['par90']['percent'][i]) / 3, 2) for i in range(12)]
+        parAmount_1 = [data1['par30']['amount'][i] + data1['par60']['amount'][i] + data1['par90']['amount'][i] for i in range(12)]
+        parAmount_2 = [data2['par30']['amount'][i] + data2['par60']['amount'][i] + data2['par90']['amount'][i] for i in range(12)]
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow([
+        'Date (Period 1)', 'PAR % (P1)', 'PAR Amount (P1)',
+        'Date (Period 2)', 'PAR % (P2)', 'PAR Amount (P2)'
+    ])
+
+    max_len = max(len(dates1), len(dates2))
+    for i in range(max_len):
+        row = []
+        row.extend([dates1[i], parPercent_1[i], parAmount_1[i]] if i < len(dates1) else ['', '', ''])
+        row.extend([dates2[i], parPercent_2[i], parAmount_2[i]] if i < len(dates2) else ['', '', ''])
+        writer.writerow(row)
+
+    output.seek(0)
+    response = make_response(output.getvalue())
+    response.headers["Content-Disposition"] = f"attachment; filename=par_trend_{period1}_vs_{period2}.csv"
+    response.headers["Content-type"] = "text/csv"
+    return response
+
+def get_arrears_data(period_key, category=None, tenure=None):
+    today = datetime.today()
+
+    if period_key == 'this_quarter':
+        start = today - timedelta(weeks=12)
+        offset = 0
+    elif period_key == 'last_quarter':
+        start = today - timedelta(weeks=24)
+        offset = 20
+    elif period_key == 'same_quarter_last_year':
+        start = today - timedelta(weeks=56)
+        offset = -15
+    else:
+        start = today - timedelta(weeks=12)
+        offset = 10
+
+    weeks = [f'WK{i+1}' for i in range(12)]  # Create week labels
+    dates = [(start + timedelta(weeks=i)).strftime('%Y-%m-%d') for i in range(12)]
+    count = [int(40 + offset + i * 1.5 + (10 if category else 0)) for i in range(12)]
+    amount = [round(8000 + offset * 50 + i * 600 + (100 * int(tenure) if tenure else 0), 2) for i in range(12)]
+
+    return dates, weeks, count, amount
+
+
+@app.route('/arrears-trend', methods=['GET'])
+def arrears_trend():
+    p1 = request.args.get('period1', '12w')
+    p2 = request.args.get('period2', 'last_quarter')
+    cat = request.args.get('category')
+    ten = request.args.get('tenure')
+
+    dates1, weeks1, count1, amount1 = get_arrears_data(p1, cat, ten)
+    dates2, weeks2, count2, amount2 = get_arrears_data(p2, cat, ten)
+
+    return render_template(
+        'portfolio/arrears_trend.html',
+        period1=p1,
+        period2=p2,
+        category=cat,
+        tenure=ten,
+        week_labels=weeks1,
+        count1=count1,
+        amount1=amount1,
+        count2=count2,
+        amount2=amount2,
+        zipped1=zip(dates1, count1, amount1),
+        zipped2=zip(dates2, count2, amount2)
+    )
+
+
+@app.route('/arrears-trend/download')
+def download_arrears_csv():
+    period1 = request.args.get('period1', 'this_quarter')
+    period2 = request.args.get('period2', 'last_quarter')
+    category = request.args.get('category')
+    tenure = request.args.get('tenure')
+
+    dates1, count1, amount1 = get_arrears_data(period1, category, tenure)
+    dates2, count2, amount2 = get_arrears_data(period2, category, tenure)
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow([
+        'Date (Period 1)', 'Count (P1)', 'Amount (P1)',
+        'Date (Period 2)', 'Count (P2)', 'Amount (P2)'
+    ])
+
+    max_len = max(len(dates1), len(dates2))
+    for i in range(max_len):
+        row = [
+            dates1[i] if i < len(dates1) else '',
+            count1[i] if i < len(count1) else '',
+            amount1[i] if i < len(amount1) else '',
+            dates2[i] if i < len(dates2) else '',
+            count2[i] if i < len(count2) else '',
+            amount2[i] if i < len(amount2) else ''
+        ]
+        writer.writerow(row)
+
+    output.seek(0)
+    response = make_response(output.getvalue())
+    response.headers["Content-Disposition"] = f"attachment; filename=arrears_trend_{period1}_vs_{period2}.csv"
+    response.headers["Content-type"] = "text/csv"
+    return response
+
+from collections import defaultdict
+from datetime import datetime, timedelta
+from flask import request, render_template, redirect, url_for, flash
+from flask_login import current_user, login_required
+
+CATEGORY_MAP = {
+    1: 'civil_servant',
+    2: 'private_sector',
+    3: 'sme'
+}
+
+@app.route('/arrears-waterfall', methods=['GET', 'POST'])
+@role_required('credit_officer', 'admin')
+def arrears_waterfall():
+    status = request.args.get('status', 'unresolved')
+    tenure = request.args.get('tenure')
+    category = request.args.get('category')
+    
+    # POST: update reason/action for arrears
+    if request.method == 'POST':
+        for key, value in request.form.items():
+            if key.startswith('reason_') or key.startswith('action_'):
+                field, arrear_id = key.split('_')
+                arrear = Arrear.query.get(int(arrear_id))
+                if arrear:
+                    if field == 'reason':
+                        arrear.arrear_reason = value.strip()
+                    elif field == 'action':
+                        arrear.action_plan = value.strip()
+        db.session.commit()
+        flash("Arrears updated.", "success")
+        return redirect(url_for('arrears_waterfall', **request.args))
+
+    arrears_query = Arrear.query.join(LoanApplication)
+    
+    if status == 'resolved':
+        arrears_query = arrears_query.filter(Arrear.status == 'resolved')
+    else:
+        arrears_query = arrears_query.filter(Arrear.status != 'resolved')
+
+    # Filter by tenure
+    if tenure:
+        arrears_query = arrears_query.filter(Arrear.tenure == int(tenure))
+
+    # Filter by category
+    if category:
+        arrears_query = arrears_query.filter(LoanApplication.category == category)
+
+    arrears = arrears_query.order_by(Arrear.due_date.desc()).all()
+
+    # Prepare summary data for waterfall chart by arrear_reason
+    summary = defaultdict(lambda: {'count': 0, 'amount': 0.0})
+    for a in arrears:
+        reason = a.arrear_reason or 'Unspecified'
+        summary[reason]['count'] += 1
+        summary[reason]['amount'] += a.total_arrears or 0.0
+
+    # Sort by count descending
+    sorted_summary = sorted(summary.items(), key=lambda x: x[1]['count'], reverse=True)
+    
+    labels = [item[0] for item in sorted_summary]
+    counts = [item[1]['count'] for item in sorted_summary]
+    amounts = [round(item[1]['amount'], 2) for item in sorted_summary]
+
+    summary_data = {
+        'labels': labels,
+        'counts': counts,
+        'amounts': amounts
+    }
+
+    # Get distinct values for filters
+    tenures = sorted({a.tenure for a in Arrear.query.with_entities(Arrear.tenure).distinct() if a.tenure})
+    categories = list({app.category for app in LoanApplication.query.with_entities(LoanApplication.category).distinct()})
+
+    return render_template('portfolio/arrears_waterfall.html',
+                           arrears=arrears,
+                           status=status,
+                           tenure=tenure,
+                           category=category,
+                           tenures=tenures,
+                           categories=categories,
+                           summary_data=summary_data)
+
+
 def validate_journal_entries(loan: LoanApplication):
     try:
         principal_entries = sum(e.amount for e in loan.journal_entries 
@@ -5466,7 +7146,1583 @@ def validate_journal_entries(loan: LoanApplication):
         app.logger.error(f"Validation error: {str(e)}")
         raise AccountingError("General accounting validation failure") from e
 
+
+def generate_placement_schedule(placement):
+    from datetime import datetime
+    from dateutil.relativedelta import relativedelta
+
+    start_date = placement.start_date
+    tenure = placement.tenure_months or 0
+    frequency = placement.payment_frequency_months or 1  # fallback default
+    rate_annual = (placement.interest_rate or 0) / 100
+    principal = placement.amount or 0.0
+
+    # Validate inputs
+    if frequency <= 0 or tenure <= 0 or principal <= 0:
+        return []
+
+    num_periods = tenure // frequency
+    if num_periods <= 0:
+        return []
+
+    periodic_rate = rate_annual * (frequency / 12)
+    schedule = []
+
+    # Compound Interest (Amortized)
+    if placement.interest_type == 'Compound':
+        if periodic_rate > 0:
+            emi = principal * (periodic_rate * (1 + periodic_rate) ** num_periods) / ((1 + periodic_rate) ** num_periods - 1)
+        else:
+            emi = principal / num_periods
+
+        emi = round(emi, 2)
+        balance = principal
+
+        for i in range(num_periods):
+            due_date = start_date + relativedelta(months=frequency * (i + 1))
+            interest_due = round(balance * periodic_rate, 2)
+            principal_due = round(emi - interest_due, 2)
+            balance = round(balance - principal_due, 2)
+
+            if i == num_periods - 1:
+                principal_due += balance
+                interest_due = round(emi - principal_due, 2)
+                balance = 0.0
+
+            schedule.append(PlacementSchedule(
+                placement_id=placement.id,
+                due_date=due_date,
+                interest_due=interest_due,
+                principal_due=principal_due,
+                total_due=round(interest_due + principal_due, 2),
+                is_paid=False
+            ))
+
+    # Simple Interest
+    elif placement.interest_type == 'Simple':
+        total_interest = principal * rate_annual * (tenure / 12)
+        interest_per_period = round(total_interest / num_periods, 2)
+
+        for i in range(num_periods):
+            due_date = start_date + relativedelta(months=frequency * (i + 1))
+            schedule.append(PlacementSchedule(
+                placement_id=placement.id,
+                due_date=due_date,
+                interest_due=interest_per_period,
+                principal_due=0.0,
+                total_due=interest_per_period,
+                is_paid=False
+            ))
+
+    return schedule
+
+@app.route('/placement/new', methods=['GET', 'POST'])
+def new_placement():
+    form = PlacementForm()
+    form.client_id.choices = [(c.id, c.full_name) for c in Client.query.all()]
+
+    if form.validate_on_submit():
+        placement_number = generate_placement_number(form.tenure_months.data)
+
+        # Set a safe default for payment frequency
+        payment_freq = form.payment_frequency_months.data or 1
+
+        placement = Placement(
+            client_id=form.client_id.data,
+            amount=form.amount.data,
+            interest_rate=form.interest_rate.data,
+            interest_type=form.interest_type.data,
+            tenure_months=form.tenure_months.data,
+            start_date=form.start_date.data,
+            payment_frequency_months=payment_freq,
+            commission_percentage=form.commission_percentage.data,
+            arrangement_fee=form.arrangement_fee.data,
+            collateral=form.collateral.data,
+            due_date=form.start_date.data + relativedelta(months=form.tenure_months.data),
+            current_balance=form.amount.data,
+            placement_number=placement_number,
+            interest_due=0.0,
+            principal_due=0.0,
+            total_due=0.0,
+            is_paid=False,
+            status="Active",
+            last_interest_calculation=form.start_date.data
+        )
+        db.session.add(placement)
+        db.session.commit()
+
+        # Generate repayment schedule
+        schedule = generate_placement_schedule(placement)
+        if schedule:
+            db.session.bulk_save_objects(schedule)
+
+        # Create initial deposit transaction
+        transaction = PlacementTransaction(
+            placement_id=placement.id,
+            transaction_type='Deposit',
+            amount=form.amount.data,
+            description='Initial deposit'
+        )
+        db.session.add(transaction)
+        db.session.commit()
+
+        flash("Placement created successfully", "success")
+        return redirect(url_for('placement_details', placement_id=placement.id))
+
+    return render_template('placement/new.html', form=form)
+
+
+
+@app.route('/placement/<int:placement_id>')
+def placement_details(placement_id):
+    placement = Placement.query.get_or_404(placement_id)
+    transactions = PlacementTransaction.query.filter_by(placement_id=placement_id)\
+        .order_by(PlacementTransaction.transaction_date.desc()).all()
+    accrued_interest = placement.accrued_interest()
+    
+    return render_template('placement/details.html', 
+                          placement=placement,
+                          transactions=transactions,
+                          accrued_interest=accrued_interest)
+
+@app.route('/placement/<int:placement_id>/deposit', methods=['GET', 'POST'])
+def add_deposit(placement_id):
+    placement = Placement.query.get_or_404(placement_id)
+    form = DepositForm()
+    
+    if form.validate_on_submit():
+        try:
+            placement.add_deposit(form.amount.data, form.transaction_date.data)
+            db.session.commit()
+            flash("Deposit added successfully", "success")
+            return redirect(url_for('placement_details', placement_id=placement.id))
+        except Exception as e:
+            flash(str(e), "danger")
+    
+    return render_template('placement/deposit.html', form=form, placement=placement)
+
+@app.route('/placement/<int:placement_id>/withdraw', methods=['GET', 'POST'])
+def withdraw_funds(placement_id):
+    placement = Placement.query.get_or_404(placement_id)
+    form = WithdrawalForm()
+    
+    if form.validate_on_submit():
+        try:
+            placement.withdraw_funds(form.amount.data, form.transaction_date.data)
+            db.session.commit()
+            flash("Withdrawal processed successfully", "success")
+            return redirect(url_for('placement_details', placement_id=placement.id))
+        except Exception as e:
+            flash(str(e), "danger")
+    
+    return render_template('placement/withdraw.html', form=form, placement=placement)
+
+@app.route('/placement/<int:placement_id>/change_rate', methods=['GET', 'POST'])
+def change_interest_rate(placement_id):
+    placement = Placement.query.get_or_404(placement_id)
+    form = RateChangeForm()
+    
+    if form.validate_on_submit():
+        placement.change_interest_rate(form.new_rate.data, form.effective_date.data)
+        db.session.commit()
+        flash("Interest rate changed successfully", "success")
+        return redirect(url_for('placement_details', placement_id=placement_id))
+    
+    return render_template('placement/change_rate.html', form=form, placement=placement)
+
+@app.route('/placement/<int:placement_id>/capitalize', methods=['GET', 'POST'])
+def capitalize_interest(placement_id):
+    placement = Placement.query.get_or_404(placement_id)
+    form = CapitalizeForm()
+    
+    if form.validate_on_submit():
+        interest = placement.capitalize_interest(form.transaction_date.data)
+        if interest > 0:
+            db.session.commit()
+            flash(f"${interest:,.2f} interest capitalized", "success")
+        else:
+            flash("No interest to capitalize", "info")
+        return redirect(url_for('placement_details', placement_id=placement_id))
+    
+    return render_template('placement/capitalize.html', form=form, placement=placement)
+
+@app.route('/placement/<int:placement_id>/liquidate', methods=['GET', 'POST'])
+def liquidate_placement(placement_id):
+    placement = Placement.query.get_or_404(placement_id)
+    form = LiquidateForm()
+    
+    if form.validate_on_submit():
+        final_balance = placement.liquidate(form.transaction_date.data)
+        db.session.commit()
+        flash(f"Placement liquidated. Final balance: ${final_balance:,.2f}", "success")
+        return redirect(url_for('placement_details', placement_id=placement_id))
+    
+    return render_template('placement/liquidate.html', form=form, placement=placement)
+
+@app.route('/placements')
+def view_placements():
+    from datetime import date
+
+    today = date.today()
+    month_start = today.replace(day=1)
+    if today.month == 12:
+        month_end = today.replace(year=today.year + 1, month=1, day=1)
+    else:
+        month_end = today.replace(month=today.month + 1, day=1)
+
+    placements_query = Placement.query
+
+    interest_start = request.args.get('interest_start')
+    interest_end = request.args.get('interest_end')
+    maturity_start = request.args.get('maturity_start')
+    maturity_end = request.args.get('maturity_end')
+
+    if interest_start:
+        placements_query = placements_query.filter(Placement.next_interest_date >= interest_start)
+    if interest_end:
+        placements_query = placements_query.filter(Placement.next_interest_date <= interest_end)
+    if maturity_start:
+        placements_query = placements_query.filter(Placement.start_date >= maturity_start)
+    if maturity_end:
+        placements_query = placements_query.filter(Placement.maturity_date <= maturity_end)
+
+    placements = placements_query.all()
+
+    # Get scheduled interest per placement this month
+    scheduled_map = {
+        row.placement_id: row.interest_due
+        for row in db.session.query(
+            PlacementSchedule.placement_id,
+            db.func.sum(PlacementSchedule.interest_due).label('interest_due')
+        ).filter(
+            PlacementSchedule.due_date >= month_start,
+            PlacementSchedule.due_date < month_end
+        ).group_by(PlacementSchedule.placement_id).all()
+    }
+
+    total_amount = 0
+    weighted_cost_sum = 0
+    total_interest = 0
+    total_scheduled_interest = 0
+    total_balance = 0
+
+    for p in placements:
+        p.scheduled_interest = scheduled_map.get(p.id, 0.0)
+        p.total_cost = (p.interest_rate or 0) + (p.commission_percentage or 0) + (p.arrangement_fee or 0)
+
+        total_interest += p.accrued_interest() or 0
+        total_scheduled_interest += p.scheduled_interest
+        total_balance += p.current_balance or 0
+        total_amount += p.amount or 0
+        weighted_cost_sum += (p.amount or 0) * p.total_cost
+
+    weighted_cost = (weighted_cost_sum / total_amount) if total_amount else 0.0
+
+    return render_template(
+        'placement/list.html',
+        placements=placements,
+        total_interest=total_interest,
+        total_scheduled_interest=total_scheduled_interest,
+        total_balance=total_balance,
+        weighted_cost=weighted_cost
+    )
+
+
+@app.route('/placements/export')
+def export_placements_excel():
+    import pandas as pd
+    from io import BytesIO
+    from flask import send_file
+
+    placements = Placement.query.all()
+
+    data = [{
+        'Client': p.client.full_name if p.client else 'N/A',
+        'Start Date': p.start_date,
+        'Maturity Date': p.maturity_date,
+        'Interest Rate': p.interest_rate,
+        'Commission %': p.commission_percentage,
+        'Arrangement Fee %': p.arrangement_fee,
+        'Total Cost %': (p.interest_rate or 0) + (p.commission_percentage or 0) + (p.arrangement_fee or 0),
+        'Balance': p.current_balance,
+        'Status': p.status,
+    } for p in placements]
+
+    df = pd.DataFrame(data)
+    output = BytesIO()
+    df.to_excel(output, index=False)
+    output.seek(0)
+
+    return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                     download_name='placements.xlsx', as_attachment=True)
+
+
+from datetime import date
+from collections import defaultdict
+from datetime import date
+
+def get_scheduled_interest_by_placement():
+    today = date.today()
+    month_start = today.replace(day=1)
+    if today.month == 12:
+        month_end = today.replace(year=today.year + 1, month=1, day=1)
+    else:
+        month_end = today.replace(month=today.month + 1, day=1)
+
+    results = db.session.query(
+        PlacementSchedule.placement_id,
+        db.func.sum(PlacementSchedule.interest_due)
+    ).filter(
+        PlacementSchedule.due_date >= month_start,
+        PlacementSchedule.due_date < month_end
+    ).group_by(PlacementSchedule.placement_id).all()
+
+    return {pid: total for pid, total in results}
+
+
+def get_monthly_scheduled_interest():
+    today = date.today()
+    month_start = today.replace(day=1)
+    if today.month == 12:
+        month_end = today.replace(year=today.year + 1, month=1, day=1)
+    else:
+        month_end = today.replace(month=today.month + 1, day=1)
+
+    return db.session.query(
+        db.func.sum(PlacementSchedule.interest_due)
+    ).filter(
+        PlacementSchedule.due_date >= month_start,
+        PlacementSchedule.due_date < month_end
+    ).scalar() or 0.0
+
+@app.route('/placements-interest')
+def placements_interest():
+    total_interest = get_monthly_scheduled_interest()
+    placements = Placement.query.all()
+
+    # Optionally, attach scheduled interest per placement if needed:
+    # This requires a query per placement or a batch query to be efficient,
+    # but if you want just the total scheduled interest overall, this is enough.
+
+    return render_template('placement/list.html', placements=placements, total_interest=total_interest)
+
+
+# Add Jinja currency filter
+@app.template_filter('format_currency')
+def format_currency_filter(value):
+    try:
+        return "${:,.2f}".format(value or 0)
+    except Exception:
+        return "$0.00"
+
+
+from sqlalchemy import func
+
+def generate_placement_number(tenure_months):
+    now = datetime.utcnow()
+    month = now.strftime('%m')
+    year = now.strftime('%y')
+
+    # Get the last sequence number
+    last_placement = Placement.query.order_by(Placement.id.desc()).first()
+    last_seq = 0
+    if last_placement and last_placement.placement_number:
+        try:
+            last_seq = int(last_placement.placement_number[-4:])
+        except:
+            pass
+    next_seq = last_seq + 1
+    return f"{int(tenure_months):02d}{month}{year}{next_seq:04d}"
+
+
+@app.route('/placement/<int:placement_id>/statement')
+def placement_statement(placement_id):
+    placement = Placement.query.get_or_404(placement_id)
+    transactions = PlacementTransaction.query.filter_by(placement_id=placement_id)\
+        .order_by(PlacementTransaction.transaction_date.asc()).all()
+
+    return render_template('placement/statement.html',
+                           placement=placement,
+                           transactions=transactions)
+
+from dateutil.relativedelta import relativedelta
+
+
+def calculate_interest_due(placement, period_index, total_periods):
+    """You can customize interest calculation per frequency."""
+    # Simple example: evenly divide total interest
+    total_interest = placement.amount * (placement.interest_rate / 100) * (placement.tenure_months / 12)
+    return round(total_interest / total_periods, 2)
+
+@app.route('/placement/<int:placement_id>/schedule')
+def view_placement_schedule(placement_id):
+    placement = Placement.query.get_or_404(placement_id)
+    schedule = PlacementSchedule.query.filter_by(placement_id=placement_id).order_by(PlacementSchedule.due_date).all()
+    return render_template('placement/schedule.html', placement=placement, schedule=schedule)
+
+@app.route('/add-client', methods=['GET', 'POST'])
+def add_client():
+    form = ClientForm()
+    if form.validate_on_submit():
+        existing = Client.query.filter_by(national_id=form.national_id.data).first()
+        if existing:
+            flash('Client already exists', 'warning')
+        else:
+            new_client = Client(
+                full_name=form.full_name.data,
+                national_id=form.national_id.data,
+                phone=form.phone.data,
+                email=form.email.data
+            )
+            db.session.add(new_client)
+            db.session.commit()
+            flash('Client added successfully', 'success')
+            return redirect(url_for('add_client'))
+
+    return render_template('add_client.html', form=form)
+
+
+def change_tenure(self, new_tenure, effective_date):
+    from dateutil.relativedelta import relativedelta
+
+    # Capitalize interest up to effective_date
+    self.capitalize_interest(effective_date)
+
+    # Update tenure and due_date
+    self.tenure_months = new_tenure
+    self.due_date = self.start_date + relativedelta(months=new_tenure)
+    self.last_interest_calculation = effective_date
+
+    # Delete old schedules
+    PlacementSchedule.query.filter_by(placement_id=self.id).delete()
+
+    # Generate new schedule
+    new_schedule = generate_placement_schedule(self)
+    if new_schedule:
+        db.session.bulk_save_objects(new_schedule)
+
+    db.session.commit()
+
+def update_frequency(self, new_frequency, effective_date):
+    from dateutil.relativedelta import relativedelta
+
+    # Capitalize interest up to effective_date
+    self.capitalize_interest(effective_date)
+
+    # Update frequency
+    freq_map = {
+        'monthly': 1,
+        'quarterly': 3,
+        'annually': 12
+    }
+    self.payment_frequency_months = freq_map.get(new_frequency, 1)
+    self.payment_frequency = new_frequency.capitalize()
+    self.last_interest_calculation = effective_date
+
+    # Delete old schedules
+    PlacementSchedule.query.filter_by(placement_id=self.id).delete()
+
+    # Generate new schedule
+    new_schedule = generate_placement_schedule(self)
+    if new_schedule:
+        db.session.bulk_save_objects(new_schedule)
+
+    db.session.commit()
+
+
+
+@app.route("/placement/<int:placement_id>/update", methods=["GET", "POST"])
+def update_placement(placement_id):
+    placement = Placement.query.get_or_404(placement_id)
+    form = PlacementUpdateForm()
+
+    if form.validate_on_submit():
+        changes_made = False
+        effective_date = form.effective_date.data
+        description = form.description.data or "Placement update"
+
+        # Handle deposit or withdrawal
+        if form.amount.data:
+            amount = float(form.amount.data)
+            if amount > 0:
+                placement.amount += amount
+                placement.current_balance += amount
+                tx = PlacementTransaction(
+                    placement_id=placement.id,
+                    transaction_type='Deposit',
+                    amount=amount,
+                    description=description,
+                    transaction_date=effective_date
+                )
+                db.session.add(tx)
+            elif amount < 0:
+                withdrawal_amount = abs(amount)
+                if withdrawal_amount > placement.current_balance:
+                    flash("Insufficient balance for withdrawal", "danger")
+                    return redirect(request.url)
+                placement.amount -= withdrawal_amount
+                placement.current_balance -= withdrawal_amount
+                tx = PlacementTransaction(
+                    placement_id=placement.id,
+                    transaction_type='Withdrawal',
+                    amount=withdrawal_amount,
+                    description=description,
+                    transaction_date=effective_date
+                )
+                db.session.add(tx)
+            changes_made = True
+
+        # Handle interest rate change
+        if form.new_interest_rate.data is not None:
+            placement.interest_rate = float(form.new_interest_rate.data)
+            tx = PlacementTransaction(
+                placement_id=placement.id,
+                transaction_type='Interest Rate Change',
+                amount=0.0,
+                description=f"Rate changed to {form.new_interest_rate.data}%",
+                transaction_date=effective_date
+            )
+            db.session.add(tx)
+            changes_made = True
+
+        # Handle tenure change
+        if form.new_tenure_months.data is not None:
+            placement.tenure_months = form.new_tenure_months.data
+            tx = PlacementTransaction(
+                placement_id=placement.id,
+                transaction_type='Tenure Change',
+                amount=0.0,
+                description=f"Tenure changed to {form.new_tenure_months.data} months",
+                transaction_date=effective_date
+            )
+            db.session.add(tx)
+            changes_made = True
+
+        # Handle frequency change
+        if form.new_payment_frequency.data is not None:
+            placement.payment_frequency_months = form.new_payment_frequency.data
+            tx = PlacementTransaction(
+                placement_id=placement.id,
+                transaction_type='Frequency Change',
+                amount=0.0,
+                description=f"Frequency changed to {form.new_payment_frequency.data} months",
+                transaction_date=effective_date
+            )
+            db.session.add(tx)
+            changes_made = True
+
+        if changes_made:
+            # Recalculate due date
+            placement.due_date = placement.start_date + relativedelta(months=placement.tenure_months)
+
+            # Delete old schedule and regenerate
+            PlacementSchedule.query.filter_by(placement_id=placement.id).delete()
+            new_schedule = generate_placement_schedule(placement)
+            db.session.bulk_save_objects(new_schedule)
+
+            db.session.commit()
+            flash("Placement updated and schedule regenerated.", "success")
+            return redirect(url_for('placement_details', placement_id=placement.id))
+        else:
+            flash("No changes submitted.", "warning")
+
+    # Pre-fill form with current values
+    if request.method == 'GET':
+        form.new_interest_rate.data = placement.interest_rate
+        form.new_tenure_months.data = placement.tenure_months
+        form.new_payment_frequency.data = placement.payment_frequency_months
+        form.effective_date.data = date.today()
+
+    return render_template("placement/update.html", form=form, placement=placement)
+
+
+from flask import render_template, request, redirect, url_for, flash, jsonify
+from datetime import datetime, timedelta, date
+from sqlalchemy import func, distinct, cast, Date
+from app import app, db, mail
+from flask_mail import Message
+from apscheduler.schedulers.background import BackgroundScheduler
+import calendar
+
+@app.route('/dashboard/sales')
+def sales_dashboard():
+    region = request.args.get('region')
+    district = request.args.get('district')
+    team_leader = request.args.get('team_leader')
+
+    query = Agent.query.filter(Agent.active.is_(True), Agent.role != 'Team Leader')
+
+    filters = {'region': region, 'district': district, 'team_leader': team_leader}
+    for field, value in filters.items():
+        if value:
+            query = query.filter(getattr(Agent, field) == value)
+
+    agents = query.all()
+
+    regions = [r[0] for r in db.session.query(Agent.region).distinct()]
+    districts = [d[0] for d in db.session.query(Agent.district).distinct()]
+    team_leads = [t[0] for t in db.session.query(Agent.team_leader).distinct() if t[0]]
+
+    stats = []
+    for agent in agents:
+        applications = LoanApplication.query.filter(
+            LoanApplication.agent_id == agent.id
+        ).count()
+
+        loan_amounts = db.session.query(func.sum(LoanApplication.loan_amount)) \
+            .filter(LoanApplication.agent_id == agent.id).scalar() or 0
+
+        active_days = db.session.query(
+            func.count(distinct(cast(LoanApplication.created_at, Date)))
+        ).filter(LoanApplication.agent_id == agent.id).scalar()
+
+        applications_per_day = round(applications / active_days, 2) if active_days else 0
+
+        stats.append({
+            'name': agent.name,
+            'region': agent.region,
+            'district': agent.district,
+            'applications': applications,
+            'total_loan_amount': loan_amounts,
+            'applications_per_day': applications_per_day,
+            'active_days': active_days,
+            'budget': agent.monthly_budget,
+            'budget_achievement': round((loan_amounts / agent.monthly_budget) * 100, 1) if agent.monthly_budget else None
+        })
+
+
+    notif = get_sales_notification()
+
+    return render_template(
+        "dashboard/sales_dashboard.html",
+        stats=stats,
+        regions=regions,
+        districts=districts,
+        team_leads=team_leads,
+        active_tab="agent",
+        notif=notif
+    )
+
+@app.route('/notifications/sales-summary')
+def sales_summary_notification():
+    today = datetime.today().date()
+    start_of_month = today.replace(day=1)
+
+    def working_days(start, end):
+        return sum(1 for d in (start + timedelta(n) for n in range((end - start).days + 1)) if d.weekday() < 5)
+
+    working_days_passed = working_days(start_of_month, today)
+    total_working_days = working_days(start_of_month, today.replace(day=calendar.monthrange(today.year, today.month)[1]))
+
+    todays_sales = db.session.query(func.sum(LoanApplication.loan_amount)) \
+        .filter(func.date(LoanApplication.created_at) == today).scalar() or 0
+
+    mtd_sales = db.session.query(func.sum(LoanApplication.loan_amount)) \
+        .filter(LoanApplication.created_at >= start_of_month).scalar() or 0
+
+    total_budget = db.session.query(func.sum(Agent.monthly_budget)).scalar() or 0
+
+    budget_achievement = (mtd_sales / total_budget * 100) if total_budget else 0
+    working_days_ratio = (working_days_passed / total_working_days * 100) if total_working_days else 0
+
+    return jsonify({
+        "today_sales": round(todays_sales, 2),
+        "mtd_sales": round(mtd_sales, 2),
+        "total_budget": round(total_budget, 2),
+        "achievement_percent": round(budget_achievement, 2),
+        "working_days_percent": round(working_days_ratio, 2),
+        "on_track": budget_achievement >= working_days_ratio
+    })
+
+@app.route('/dashboard/team-leader')
+def team_leader_dashboard():
+    from sqlalchemy.orm import aliased
+
+    TeamLeader = aliased(Agent)
+
+    stats = (
+        db.session.query(
+            TeamLeader,
+            func.count(LoanApplication.id).label('applications'),
+            func.sum(LoanApplication.loan_amount).label('total_loan_amount'),
+            func.sum(Agent.monthly_budget).label('team_budget')
+        )
+        .join(Agent, LoanApplication.agent_id == Agent.id)
+        .join(TeamLeader, Agent.team_leader_id == TeamLeader.id)
+        .group_by(TeamLeader)
+        .all()
+    )
+
+    # Build list for template
+    team_stats = []
+    for row in stats:
+        team_leader = row[0]  # TeamLeader is the first element of the row tuple
+        achievement = round((row.total_loan_amount / row.team_budget) * 100, 2) if row.team_budget else 0
+
+        team_stats.append({
+            "team_leader": team_leader,  # Full object, access .name, .email, etc.
+            "applications": row.applications,
+            "total_loan_amount": row.total_loan_amount,
+            "team_budget": row.team_budget,
+            "achievement": achievement
+        })
+
+    return render_template("dashboard/team_leader_dashboard.html", stats=team_stats, active_tab="team")
+
+@app.route('/agents/team/add', methods=['GET', 'POST'])
+def add_team_with_agents():
+    if request.method == 'POST':
+        try:
+            # Leader: existing or new
+            existing_leader_id = request.form.get('existing_leader_id')
+            if existing_leader_id:
+                leader = Agent.query.get(int(existing_leader_id))
+                print(f"Using existing team leader: {leader.name} (ID: {leader.id})")
+            else:
+                leader = Agent(
+                    name=request.form['leader_name'],
+                    contact=request.form.get('leader_phone'),
+                    email=request.form.get('leader_email'),
+                    role='Team Leader'
+                )
+                db.session.add(leader)
+                db.session.flush()  # assigns leader.id
+                print(f"Created new team leader: {leader.name} (ID: {leader.id})")
+
+            # Fetch submitted agent data
+            names = request.form.getlist('agent_name[]')
+            phones = request.form.getlist('agent_phone[]')
+            emails = request.form.getlist('agent_email[]')
+            districts = request.form.getlist('agent_district[]')
+            regions = request.form.getlist('agent_region[]')
+            budgets = request.form.getlist('agent_budget[]')
+
+            print("Agents submitted:", names)
+
+            added_agents = 0
+            for name, phone, email, district, region, budget_str in zip(
+                names, phones, emails, districts, regions, budgets
+            ):
+                if not name.strip():
+                    print("Skipped agent with empty name.")
+                    continue
+
+                try:
+                    budget = float(budget_str) if budget_str else 0.0
+                except ValueError:
+                    budget = 0.0
+
+                agent = Agent(
+                    name=name.strip(),
+                    contact=phone.strip(),
+                    email=email.strip(),
+                    district=district.strip(),
+                    region=region.strip(),
+                    monthly_budget=budget,
+                    role='Agent',
+                    team_leader_id=leader.id
+                )
+                db.session.add(agent)
+                added_agents += 1
+                print(f"Added agent: {agent.name}, team leader: {leader.name}")
+
+            if added_agents == 0:
+                raise Exception("No valid agents submitted.")
+
+            db.session.commit()
+            flash(f"Team created with {added_agents} agent(s)!", "success")
+            return redirect(url_for('view_agents'))
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Error creating team: {str(e)}", "danger")
+            print("Exception:", e)
+
+    # GET
+    team_leaders = Agent.query.filter_by(role='Team Leader').order_by(Agent.name).all()
+    return render_template('agents/add_team_with_agents.html', team_leaders=team_leaders)
+    
+
+
+
+def get_sales_notification():
+    today = date.today()
+    start_of_month = today.replace(day=1)
+
+    total_days = calendar.monthrange(today.year, today.month)[1]
+    working_days = [
+        start_of_month + timedelta(days=i)
+        for i in range(total_days)
+        if (start_of_month + timedelta(days=i)).weekday() < 5
+    ]
+
+    days_passed = [d for d in working_days if d <= today]
+
+    today_sales = db.session.query(func.sum(LoanApplication.loan_amount)) \
+        .filter(func.date(LoanApplication.created_at) == today).scalar() or 0
+
+    mtd_sales = db.session.query(func.sum(LoanApplication.loan_amount)) \
+        .filter(LoanApplication.created_at >= start_of_month).scalar() or 0
+
+    total_budget = db.session.query(func.sum(Agent.monthly_budget)).scalar() or 0
+
+    sales_pct = (mtd_sales / total_budget * 100) if total_budget else 0
+    time_pct = (len(days_passed) / len(working_days) * 100) if working_days else 0
+
+    return {
+        "today_sales": round(today_sales, 2),
+        "mtd_sales": round(mtd_sales, 2),
+        "total_budget": round(total_budget, 2),
+        "sales_pct": round(sales_pct, 1),
+        "time_pct": round(time_pct, 1),
+        "working_days": len(working_days),
+        "days_passed": len(days_passed),
+        "report_date": today.strftime("%B %d, %Y")
+    }
+
+def get_historical_comparisons(today):
+    """Safe historical comparisons with all required fields"""
+    try:
+        start_of_month = today.replace(day=1)
+        
+        # Last month period
+        if today.month == 1:
+            last_month = today.replace(year=today.year-1, month=12)
+        else:
+            last_month = today.replace(month=today.month-1)
+        
+        start_of_last_month = last_month.replace(day=1)
+        
+        # Last year period
+        last_year = today.replace(year=today.year-1)
+        start_of_last_year = last_year.replace(day=1)
+        
+        # Calculate days
+        _, total_days = calendar.monthrange(today.year, today.month)
+        current_days = today.day
+        
+        return {
+            'start_of_month': start_of_month,
+            'start_of_last_month': start_of_last_month,
+            'start_of_last_year': start_of_last_year,
+            'total_days': total_days,
+            'current_days': current_days,
+            'last_month_days': min(today.day, calendar.monthrange(last_month.year, last_month.month)[1]),
+            'last_year_days': min(today.day, calendar.monthrange(last_year.year, last_year.month)[1])
+        }
+    except Exception as e:
+        current_app.logger.error(f"Error in date calculations: {str(e)}")
+        return {
+            'start_of_month': today.replace(day=1),
+            'total_days': 30,
+            'current_days': today.day,
+            # Add safe defaults here if needed
+        }
+
+def get_today_sales(today):
+    """Get today's sales total"""
+    return db.session.query(
+        func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
+    ).filter(
+        func.date(LoanApplication.created_at) == today
+    ).scalar()
+
+def get_mtd_sales(start_of_month):
+    """Get month-to-date sales total"""
+    return db.session.query(
+        func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
+    ).filter(
+        LoanApplication.created_at >= start_of_month
+    ).scalar()
+
+def get_total_budget():
+    return db.session.query(
+        func.coalesce(func.sum(Agent.monthly_budget), 0.0)
+    ).scalar()
+
+def calculate_sales_percentage(sales, budget):
+    """Calculate sales achievement percentage"""
+    return (sales / budget * 100) if budget > 0 else 0.0
+
+def calculate_time_percentage(comparisons):
+    """Calculate time progression percentage"""
+    return (comparisons['current_days'] / comparisons['total_days'] * 100) if comparisons['total_days'] > 0 else 0.0
+
+def get_sales_data():
+    """Get comprehensive sales data with team leader performance and historical comparisons"""
+    today = date.today()
+    try:
+        # 1. Get date comparisons
+        comparisons = get_historical_comparisons(today)
+        
+        # 2. Get overall sales metrics
+        today_sales = get_today_sales(today)
+        mtd_sales = get_mtd_sales(comparisons['start_of_month'])
+        total_budget = get_total_budget()
+        sales_pct = calculate_sales_percentage(mtd_sales, total_budget)
+        time_pct = calculate_time_percentage(comparisons)
+        
+        # 3. Get historical sales metrics
+        last_month_sales = get_mtd_sales(comparisons['start_of_last_month'], comparisons['last_month_days'])
+        last_year_sales = get_mtd_sales(comparisons['start_of_last_year'], comparisons['last_year_days'])
+        last_month_sales_pct = calculate_sales_percentage(last_month_sales, total_budget)
+        last_year_sales_pct = calculate_sales_percentage(last_year_sales, total_budget)
+        
+        # 4. Get team leader performance
+        team_leaders = get_team_leader_performance(comparisons)
+        
+        return {
+            "today_sales": float(today_sales),
+            "mtd_sales": float(mtd_sales),
+            "total_budget": float(total_budget),
+            "sales_pct": round(sales_pct, 1),
+            "time_pct": round(time_pct, 1),
+            "last_month_sales": float(last_month_sales),
+            "last_year_sales": float(last_year_sales),
+            "last_month_sales_pct": round(last_month_sales_pct, 1),
+            "last_year_sales_pct": round(last_year_sales_pct, 1),
+            "working_days": int(comparisons['total_days']),
+            "days_passed": int(comparisons['current_days']),
+            "report_date": today.strftime("%B %d, %Y"),
+            "team_leaders": team_leaders,
+            "is_valid": True
+        }
+            
+    except Exception as e:
+        app.logger.error(f"Sales data error: {str(e)}", exc_info=True)
+        return get_fallback_sales_data(today)
+
+def get_mtd_sales(start_date, max_days=None):
+    """Get month-to-date sales total for a given period"""
+    query = db.session.query(
+        func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
+    ).filter(LoanApplication.created_at >= start_date)
+    
+    if max_days:
+        end_date = start_date + timedelta(days=max_days)
+        query = query.filter(LoanApplication.created_at < end_date)
+    
+    return query.scalar()
+
+def get_team_leader_performance(comparisons):
+    """Get performance metrics for each team leader with historical comparisons"""
+    team_leaders = Agent.query.filter(Agent.role == "Team Leader").all()
+    leader_performance = []
+    
+    for leader in team_leaders:
+        team_agent_ids = [leader.id] + [agent.id for agent in leader.team_members]
+        
+        # Current MTD metrics
+        team_sales = db.session.query(
+            func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
+        ).filter(
+            LoanApplication.created_at >= comparisons['start_of_month'],
+            LoanApplication.agent_id.in_(team_agent_ids)
+        ).scalar()
+        team_applications = db.session.query(
+            func.count(LoanApplication.id)
+        ).filter(
+            LoanApplication.created_at >= comparisons['start_of_month'],
+            LoanApplication.agent_id.in_(team_agent_ids)
+        ).scalar()
+        team_budget = db.session.query(
+            func.coalesce(func.sum(Agent.monthly_budget), 0.0)
+        ).filter(Agent.id.in_(team_agent_ids)).scalar()
+        achievement = (team_sales / team_budget * 100) if team_budget > 0 else 0.0
+        
+        # Last month MTD metrics
+        last_month_sales = db.session.query(
+            func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
+        ).filter(
+            LoanApplication.created_at >= comparisons['start_of_last_month'],
+            LoanApplication.created_at < comparisons['start_of_last_month'] + timedelta(days=comparisons['last_month_days']),
+            LoanApplication.agent_id.in_(team_agent_ids)
+        ).scalar()
+        last_month_achievement = (last_month_sales / team_budget * 100) if team_budget > 0 else 0.0
+        
+        # Last year MTD metrics
+        last_year_sales = db.session.query(
+            func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
+        ).filter(
+            LoanApplication.created_at >= comparisons['start_of_last_year'],
+            LoanApplication.created_at < comparisons['start_of_last_year'] + timedelta(days=comparisons['last_year_days']),
+            LoanApplication.agent_id.in_(team_agent_ids)
+        ).scalar()
+        last_year_achievement = (last_year_sales / team_budget * 100) if team_budget > 0 else 0.0
+        
+        # Determine performance status
+        if achievement >= 100:
+            status = "exceeded"
+        elif achievement >= 75:
+            status = "on-track"
+        else:
+            status = "needs-improvement"
+        
+        leader_performance.append({
+            'id': leader.id,
+            'name': leader.name,
+            'applications': int(team_applications or 0),
+            'sales': float(team_sales or 0),
+            'team_budget': float(team_budget or 0),
+            'achievement': round(achievement, 1),
+            'last_month_achievement': round(last_month_achievement, 1),
+            'last_year_achievement': round(last_year_achievement, 1),
+            'status': status
+        })
+    
+    leader_performance.sort(key=lambda x: x['achievement'], reverse=True)
+    return leader_performance
+
+def get_fallback_sales_data(today):
+    """Get fallback data when sales data retrieval fails"""
+    comparisons = get_historical_comparisons(today)
+    return {
+        "today_sales": 0.0,
+        "mtd_sales": 0.0,
+        "total_budget": 0.0,
+        "sales_pct": 0.0,
+        "time_pct": 0.0,
+        "last_month_sales": 0.0,
+        "last_year_sales": 0.0,
+        "last_month_sales_pct": 0.0,
+        "last_year_sales_pct": 0.0,
+        "working_days": comparisons.get('total_days', 30),
+        "days_passed": comparisons.get('current_days', min(today.day, 30)),
+        "report_date": today.strftime("%B %d, %Y"),
+        "team_leaders": [],
+        "is_valid": False
+    }
+        
+def generate_performance_table(data, title, columns):
+    """Generate HTML table for performance data"""
+    rows = ''.join(
+        f"<tr><td>{item[columns[0]]}</td>"
+        f"<td>{item[columns[1]]:,.2f}</td>"
+        f"<td>{item[columns[2]]}</td>"
+        f"<td>{item[columns[3]]:,.1f}%</td></tr>"
+        for item in data
+    )
+    
+    return f"""
+    <h3>{title}</h3>
+    <table class="performance-table">
+        <tr>
+            <th>{columns[0].title()}</th>
+            <th>{columns[1].replace('_', ' ').title()}</th>
+            <th>{columns[2].replace('_', ' ').title()}</th>
+            <th>{columns[3].replace('_', ' ').title()}</th>
+        </tr>
+        {rows}
+    </table>
+    """
+
+
+                
+def test_db():
+    try:
+        from app import db
+        db.session.execute('SELECT 1')  # Simple test query
+        return "Database connection works!"
+    except Exception as e:
+        return f"Database error: {str(e)}", 500
+
+@app.route('/test-email-simple')
+def test_email_simple():
+    result = send_sales_notification_email()
+    return f"Test email triggered! Result: {result}"
+
+@app.route('/check-tables')
+def check_tables():
+    try:
+        tables = db.session.execute(text("SELECT name FROM sqlite_master WHERE type='table'")).fetchall()
+        return f"Existing tables: {[t[0] for t in tables]}"
+    except Exception as e:
+        return f"Error checking tables: {str(e)}", 500
+
+@app.route('/create-sales-table')
+def create_sales_table():
+    try:
+        db.session.execute(text("""
+            CREATE TABLE IF NOT EXISTS sales (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                amount DECIMAL(10,2) NOT NULL,
+                sale_date DATE NOT NULL,
+                region VARCHAR(50),
+                category VARCHAR(50)
+            """))
+        db.session.commit()
+        return "Sales table created successfully!"
+    except Exception as e:
+        return f"Error creating table: {str(e)}", 500
+
+
+@app.route('/test-db-simple')
+def test_db_simple():
+    try:
+        # Correct database query with text() wrapper
+        result = db.session.execute(text('SELECT 1')).scalar()
+        return f"Database connection works! Result: {result}"
+    except Exception as e:
+        return f"Database error: {str(e)}", 500
+    
+def send_minute_notification():
+    with app.app_context():
+        try:
+            # Create test notification
+            notification = Notification(
+                message=f"Test notification at {datetime.utcnow()}",
+                type='info',
+                recipient_id=None  # Global notification
+            )
+            db.session.add(notification)
+            db.session.commit()
+            app.logger.info("Sent minute notification")
+        except Exception as e:
+            app.logger.error(f"Notification error: {str(e)}")
+
+def get_growth_indicator(growth):
+    """Return growth indicator with appropriate icon"""
+    if growth > 0:
+        return f"<span style='color:#28a745'>▲ {growth:,.1f}%</span>"
+    elif growth < 0:
+        return f"<span style='color:#dc3545'>▼ {growth:,.1f}%</span>"
+    return f"<span>{growth:,.1f}%</span>"
+
+def get_growth_class(growth):
+    """Return CSS class for growth value"""
+    if growth > 0:
+        return "growth-positive"
+    elif growth < 0:
+        return "growth-negative"
+    return ""
+
+# Initialize scheduler
+
+# Test route for manual triggering
+@app.route('/test-report')
+def test_report():
+    result = send_sales_notification_email()
+    return "Test report sent!" if result else "Failed to send test report"
+
+@app.route('/test-sales-data')
+def test_sales_data():
+    try:
+        data = get_sales_data()
+        return jsonify({
+            'status': 'success',
+            'data': {
+                'today_sales': data['today_sales'],
+                'mtd_sales': data['mtd_sales']
+            }
+        })
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/test-email-system')
+def test_email_system():
+    result = send_sales_notification_email()
+    return jsonify({'status': 'success' if result else 'error'})
+
+
+
+@app.route('/dashboard/analytics')
+def sales_charts():
+    return render_template("dashboard/sales_charts.html", active_tab="analytics")
+
+from flask import jsonify
+
+@app.route('/api/loans-by-region')
+def api_loans_by_region():
+    region = request.args.get('region')
+    district = request.args.get('district')
+    team_leader = request.args.get('team_lead')
+
+    query = db.session.query(
+        Agent.region,
+        func.sum(LoanApplication.loan_amount).label('total_loan')
+    ).join(LoanApplication, LoanApplication.agent_id == Agent.id)
+
+    if region:
+        query = query.filter(Agent.region == region)
+    if district:
+        query = query.filter(Agent.district == district)
+    if team_leader:
+        query = query.filter(Agent.team_leader == team_leader)
+
+    query = query.group_by(Agent.region)
+    data = query.all()
+
+    return jsonify({
+        "labels": [r.region for r in data],
+        "values": [float(r.total_loan or 0) for r in data]
+    })
+
+
+
+@app.route('/api/loans-by-district')
+def api_loans_by_district():
+    from sqlalchemy import func
+
+    data = (
+        db.session.query(
+            Agent.district,
+            func.count(LoanApplication.id).label('applications')
+        )
+        .join(LoanApplication, LoanApplication.agent_id == Agent.id)
+        .group_by(Agent.district)
+        .all()
+    )
+
+    labels = [row.district for row in data]
+    values = [row.applications for row in data]
+
+    return jsonify({"labels": labels, "values": values})
+
+
+@app.route('/api/average-ticket-size')
+def api_average_ticket_size():
+    from sqlalchemy import func
+
+    data = (
+        db.session.query(
+            Agent.region,
+            func.avg(LoanApplication.loan_amount).label('avg_ticket')
+        )
+        .join(LoanApplication, LoanApplication.agent_id == Agent.id)
+        .group_by(Agent.region)
+        .all()
+    )
+
+    labels = [row.region for row in data]
+    values = [round(float(row.avg_ticket or 0), 2) for row in data]
+
+    return jsonify({"labels": labels, "values": values})
+
+
+
+@app.route('/debug/storage')
+def debug_storage():
+    return {
+        'UPLOAD_FOLDER': app.config.get('UPLOAD_FOLDER', ''),
+        'CWD': os.getcwd(),
+        'INSTANCE_PATH': app.instance_path,
+        'ABSOLUTE_UPLOAD_PATH': os.path.abspath(app.config.get('UPLOAD_FOLDER', ''))
+    }
+
+@app.route('/repair/documents', methods=['POST'])
+@role_required('admin')
+def repair_documents():
+    """Fix document paths in database and move files to correct location"""
+    try:
+        updated_count = 0
+        errors = []
+        base_path = os.path.join(app.instance_path, 'documents')
+        
+        # Ensure the new location exists
+        os.makedirs(base_path, exist_ok=True)
+        
+        # Get all documents
+        documents = Document.query.all()
+        
+        for doc in documents:
+            try:
+                # Skip if path is already correct
+                if doc.path and 'instance/documents' in doc.path.replace('\\', '/'):
+                    continue
+                    
+                # Handle missing paths
+                if not doc.path:
+                    # Try to find by filename in the new location
+                    possible_path = os.path.join(base_path, doc.filename)
+                    if os.path.exists(possible_path):
+                        doc.path = os.path.relpath(possible_path, start=app.root_path)
+                        updated_count += 1
+                    continue
+                
+                # Get current absolute path
+                if os.path.isabs(doc.path):
+                    current_path = doc.path
+                else:
+                    current_path = os.path.join(app.root_path, doc.path)
+                
+                # Skip if file doesn't exist
+                if not os.path.exists(current_path):
+                    errors.append(f"Document {doc.id}: File not found at {current_path}")
+                    continue
+                    
+                # New path in instance folder
+                new_filename = f"{doc.customer_id}_{doc.id}_{doc.filename}"
+                new_path = os.path.join(base_path, new_filename)
+                
+                # Move file
+                shutil.move(current_path, new_path)
+                
+                # Update database
+                doc.path = os.path.relpath(new_path, start=app.root_path)
+                doc.filename = new_filename  # Update filename to include IDs
+                updated_count += 1
+                
+            except Exception as e:
+                errors.append(f"Document {doc.id}: {str(e)}")
+        
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'updated_count': updated_count,
+            'total_documents': len(documents),
+            'base_path': base_path,
+            'new_location': os.path.relpath(base_path, start=app.root_path),
+            'errors': errors
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+
+@app.route('/repair/documents/page')
+@role_required('admin')
+def repair_documents_page():
+    return render_template('repair_documents.html',
+        instance_path=app.instance_path,
+        root_path=app.root_path,
+        upload_folder=app.config.get('UPLOAD_FOLDER', ''),
+        absolute_path=os.path.join(app.instance_path, 'documents')
+    )
+
+@app.route('/repair/paths')
+@role_required('admin')
+def repair_paths():
+    updated = convert_legacy_paths()
+    return jsonify({
+        'status': 'success',
+        'updated': updated,
+        'upload_folder': app.config['UPLOAD_FOLDER'],
+        'instance_path': app.instance_path
+    })
+
+@app.route('/debug/documents/page')
+@role_required('admin')
+def debug_documents_page():
+    """Advanced document debugger page"""
+    return render_template('debug_documents.html')  
+
+@app.route('/verify/documents')
+@role_required('admin')
+def verify_documents():
+    """Verify all document paths"""
+    docs = Document.query.all()
+    results = []
+    
+    for doc in docs:
+        # Get absolute path
+        if doc.path:
+            if os.path.isabs(doc.path):
+                abs_path = doc.path
+            else:
+                abs_path = os.path.join(app.root_path, doc.path)
+            exists = os.path.exists(abs_path)
+        else:
+            abs_path = None
+            exists = False
+        
+        results.append({
+            'id': doc.id,
+            'filename': doc.filename,
+            'stored_path': doc.path,
+            'absolute_path': abs_path,
+            'exists': exists,
+            'customer_id': doc.customer_id,
+            'loan_id': doc.loan_id
+        })
+    
+    return jsonify({
+        'instance_path': app.instance_path,
+        'root_path': app.root_path,
+        'upload_folder': app.config.get('UPLOAD_FOLDER', ''),
+        'documents': results
+    })
+
+@app.route('/debug/documents')
+@role_required('admin')
+def debug_documents_api():
+    """API endpoint for document debugging"""
+    customer_id = request.args.get('customer_id')
+    loan_id = request.args.get('loan_id')
+    
+    results = {
+        'customer': None,
+        'loan': None,
+        'documents': [],
+        'instance_path': app.instance_path,
+        'root_path': app.root_path,
+        'upload_folder': app.config.get('UPLOAD_FOLDER', '')
+    }
+    
+    # Get customer documents
+    if customer_id:
+        try:
+            customer = Customer.query.get(customer_id)
+            if customer:
+                results['customer'] = {
+                    'id': customer.id,
+                    'name': f"{customer.first_name} {customer.last_name}",
+                    'file_number': customer.file_number
+                }
+                
+                # Get all documents for customer
+                for doc in customer.customer_documents:
+                    abs_path = doc.absolute_path
+                    results['documents'].append({
+                        'id': doc.id,
+                        'filename': doc.filename,
+                        'filetype': doc.filetype,
+                        'stored_path': doc.path,
+                        'absolute_path': abs_path,
+                        'exists': os.path.exists(abs_path) if abs_path else False
+                    })
+        except Exception as e:
+            results['error'] = str(e)
+    
+    # Get loan documents
+    if loan_id:
+        try:
+            loan = LoanApplication.query.get(loan_id)
+            if loan:
+                results['loan'] = {
+                    'id': loan.id,
+                    'loan_number': loan.loan_number,
+                    'status': loan.application_status,
+                    'customer_id': loan.customer_id
+                }
+                
+                # Get all documents for loan
+                for doc in loan.documents:
+                    abs_path = doc.absolute_path
+                    results['documents'].append({
+                        'id': doc.id,
+                        'filename': doc.filename,
+                        'filetype': doc.filetype,
+                        'stored_path': doc.path,
+                        'absolute_path': abs_path,
+                        'exists': os.path.exists(abs_path) if abs_path else False
+                    })
+        except Exception as e:
+            results['error'] = str(e)
+    
+    return jsonify(results)
+
+@app.cli.command('repair-docs')
+def repair_docs_command():
+    """Command line document repair tool"""
+    from app import repair_documents
+    with app.test_request_context():
+        response = repair_documents()
+        data = response.get_json()
+        print(f"Repair Results:")
+        print(f"Updated: {data.get('updated_count', 0)} documents")
+        print(f"Total: {data.get('total_documents', 0)} documents")
+        print(f"Base Path: {data.get('base_path', '')}")
+        
+        if errors := data.get('errors'):
+            print("\nErrors:")
+            for error in errors:
+                print(f" - {error}")
+
+@app.cli.command('migrate-docs')
+def migrate_documents():
+    """Migrate documents to proper location"""
+    import shutil
+    
+    docs = Document.query.all()
+    new_base = os.path.join(app.instance_path, 'documents')
+    os.makedirs(new_base, exist_ok=True)
+    
+    migrated = 0
+    for doc in docs:
+        if not doc.path:
+            continue
+            
+        try:
+            # Get current absolute path
+            if os.path.isabs(doc.path):
+                current_path = doc.path
+            else:
+                current_path = os.path.join(app.root_path, doc.path)
+            
+            if not os.path.exists(current_path):
+                continue
+                
+            # New path in instance folder
+            new_path = os.path.join(new_base, os.path.basename(doc.path))
+            
+            # Skip if already in correct location
+            if os.path.normpath(current_path) == os.path.normpath(new_path):
+                continue
+                
+            # Move file
+            shutil.move(current_path, new_path)
+            
+            # Update database with relative path
+            doc.path = os.path.relpath(new_path, start=app.root_path)
+            migrated += 1
+            
+        except Exception as e:
+            app.logger.error(f"Error migrating document {doc.id}: {str(e)}")
+    
+    db.session.commit()
+    print(f"Migrated {migrated} documents to {new_base}")
+
+@app.route('/debug/documents')
+@role_required('admin')
+def debug_documents():
+    """Advanced document debugging page"""
+    return render_template('debug_documents.html')
+
 from app import app, db
+
+import smtplib
+
+@app.route('/check-scheduler')
+def check_scheduler():
+    try:
+        jobs = scheduler.get_jobs()
+        return jsonify({
+            "scheduler_running": scheduler.running,
+            "active_jobs": [str(job) for job in jobs]
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/test-smtp')
+def test_smtp():
+    try:
+        msg = Message(
+            subject="TEST Email",
+            recipients=["alfred@kwachafinancialservices.com"],  # ← Change to your email
+            body="This is a test email from your Flask app"
+        )
+        mail.send(msg)
+        return "Email sent! Check your inbox (and spam folder)"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+def test_smtp_connection():
+    try:
+        with smtplib.SMTP_SSL('mail.kwachafinancialservices.com', 465) as server:
+            server.login(
+                'alfred@kwachafinancialservices.com',
+                '~hHjb;m{urRh'
+            )
+            print("✅ SMTP login successful!")
+        return True
+    except Exception as e:
+        print(f"❌ SMTP connection failed: {str(e)}")
+        return False
+
+
+    
 
 def initialize_roles_permissions():
     with app.app_context():
@@ -5485,12 +8741,267 @@ def deploy():
         # Apply any pending migrations
         upgrade()
 
+@app.route('/<path:path>')
+def catch_all(path):
+    return f"404: The URL /{path} was not found.", 404
+
+def configure_scheduler():
+    """Configure scheduler based on environment"""
+    if app.config.get('TESTING'):
+        return  # No scheduler in tests
+
+    # Production - daily at 5PM
+    if os.environ.get('FLASK_ENV') == 'production':
+        scheduler.add_job(
+            id='daily_sales_report',
+            func=send_sales_notification_email,
+            trigger='cron',
+            hour=17,
+            minute=0,
+            replace_existing=True
+        )
+    # Development - every minute with initial 10s delay
+    else:
+        scheduler.add_job(
+            id='dev_sales_notifications',
+            func=send_sales_notification_email,
+            trigger='interval',
+            minutes=1,
+            next_run_time=datetime.now() + timedelta(seconds=10),
+            replace_existing=True
+        )
+
+def start_scheduler():
+    """Start the scheduler with proper checks"""
+    if not scheduler.running:
+        configure_scheduler()
+        scheduler.start()
+        env = os.environ.get('FLASK_ENV', 'development')
+        print(f"⏰ Scheduler started in {env} mode - Jobs: {[j.id for j in scheduler.get_jobs()]}")
+
+
+def send_sales_notification_email(recipients=None, custom_message=None):
+    """Enhanced email function with MWK formatting + notification tracking"""
+    try:
+        # 1. Get and format sales data
+        sales_data = get_sales_data()
+        
+        # MWK Formatting (preserved from original)
+        sales_data.update({
+            'today_sales_mwk': f"MWK {sales_data['today_sales']:,.2f}",
+            'mtd_sales_mwk': f"MWK {sales_data['mtd_sales']:,.2f}",
+            'total_budget_mwk': f"MWK {sales_data['total_budget']:,.2f}",
+            'custom_message': custom_message
+        })
+
+        # 2. Determine recipients (new logic)
+        if not recipients:
+            recipient_list = ["alfred@kwachafinancialservices.com", "sales@yourcompany.mw"]
+        elif isinstance(recipients, str):
+            recipient_list = [email.strip() for email in recipients.split(',')]
+        elif isinstance(recipients, list):
+            recipient_list = [email.strip() for email in recipients]
+        else:
+            raise ValueError("Invalid recipients format")
+
+        # Keep a comma-separated string for database/logging
+        email_recipients = ", ".join(recipient_list)
+
+        # 3. Create notification record (new)
+        notification = Notification(
+            email_recipients=email_recipients,
+            email_subject=f"Sales Report {sales_data['report_date']}",
+            email_content=custom_message or "Automated sales report",
+            message="Sales report dispatched",
+            type="report"
+        )
+        db.session.add(notification)
+
+        # 4. Send email (combined logic)
+        template_name = 'email/sales_report.html'
+        try:
+            # Try HTML email first
+            msg = Message(
+                subject=notification.email_subject,
+                recipients=recipient_list,
+                html=render_template(template_name, notif=sales_data)
+            )
+            mail.send(msg)
+            
+            # If successful, update notification
+            notification.email_sent = True
+            notification.sent_at = datetime.utcnow()
+            db.session.commit()
+            
+            current_app.logger.info(f"HTML email sent to {recipient_list}")
+            return True
+
+        except TemplateNotFound:
+            # Fallback to text email (original logic with team leaders)
+            team_leaders_section = ""
+            if 'leaders' in sales_data and sales_data['leaders']:
+                team_leaders_text = "\n".join([
+                    f"- {leader['name']}: Sales - MK {leader['sales']:,.2f}, Achievement - {leader['achievement']}%"
+                    for leader in sales_data['leaders']
+                ])
+                team_leaders_section = f"Team Leader Performance:\n{team_leaders_text}\n"
+            
+            body = f"""Sales Report ({sales_data['report_date']})
+
+Today's Sales: {sales_data['today_sales_mwk']}
+MTD Sales: {sales_data['mtd_sales_mwk']}
+Budget Achievement: {sales_data['sales_pct']}% 
+
+{team_leaders_section}
+
+{custom_message or ''}
+"""
+            msg = Message(
+                subject=notification.email_subject,
+                recipients=recipient_list,
+                body=body
+            )
+            mail.send(msg)
+            notification.email_sent = True
+            notification.sent_at = datetime.utcnow()
+            db.session.commit()
+            return True
+
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Email failed: {str(e)}")
+        return False    
+
+@app.route('/configure-report', methods=['GET', 'POST'])
+@login_required
+def configure_report():
+    form = RecipientForm()
+
+    if request.method == 'GET':
+        last_notification = Notification.query.filter(
+            Notification.email_recipients.isnot(None)
+        ).order_by(Notification.timestamp.desc()).first()
+
+        if last_notification:
+            form.emails.data = last_notification.email_recipients
+            form.subject.data = last_notification.email_subject
+
+    if form.validate_on_submit():
+        recipients = [email.strip() for email in form.emails.data.split(',')]
+        success = send_sales_notification_email(
+            recipients=recipients,
+            custom_message=form.message.data,
+            subject=form.subject.data
+        )
+
+        if success:
+            flash('Report sent successfully!', 'success')
+        else:
+            flash('Failed to send report', 'danger')
+
+        return redirect(url_for('configure_report'))
+
+    return render_template('configure_report.html', form=form)
+
+
+@app.route('/test-template')
+def test_template():
+    test_data = {
+        'report_date': datetime.now().strftime("%B %d, %Y"),
+        'today_sales': 1500000.50,
+        'mtd_sales': 25000000.75,
+        'total_budget': 30000000.00,
+        'sales_pct': 83.3,
+        'time_pct': 50.0,
+        'working_days': 30,
+        'days_passed': 15,
+        'is_valid': True
+    }
+    return render_template('email/sales_report.html', **test_data)
+
+def format_mwk(amount):
+    """Format amount as Malawian Kwacha"""
+    return f"MWK {amount:,.2f}"
+
+# Usage example:
+# sales_data['formatted_total'] = format_mwk(sales_data['total_budget'])
+
+@app.route('/test-email-now')
+def test_email_now():
+    if send_sales_notification_email():
+        return "Email sent successfully - check console and inbox!", 200
+    return "Failed to send email", 500
+
+def initialize_application():
+    """Main application initialization"""
+    with app.app_context():
+        try:
+            # Database setup
+            deploy()  # Your migration/deployment logic
+            initialize_roles_permissions()
+            
+            # Print routes
+            print("\n=== Registered Routes ===")
+            for rule in app.url_map.iter_rules():
+                methods = ','.join(rule.methods - {'HEAD', 'OPTIONS'})
+                print(f"{rule.endpoint:30} | {methods:10} | {rule.rule}")
+            print("=========================\n")
+            
+            # Start scheduler in main process only
+            if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+                start_scheduler()
+                
+            return True
+        except Exception as e:
+            print(f"❌ Initialization failed: {e}", file=sys.stderr)
+            return False
+
+
+
 if __name__ == '__main__':
     try:
-        deploy()
+        # Initialize the application
+        if initialize_application():
+            # Start the scheduler safely
+            if not scheduler.running:
+                scheduler.start()
+                
+                # Add scheduled jobs here
+                scheduler.add_job(
+                    id='par_calculation',
+                    func=calculate_par,
+                    trigger='cron',
+                    hour=23,
+                    minute=0,
+                    timezone='Africa/Blantyre',
+                    replace_existing=True
+                )
+                
+                # Add the new sales report job
+                scheduler.add_job(
+                    id='sales_report',
+                    func=send_sales_notification_email,
+                    trigger='cron',
+                    hour=17,  # 5 PM
+                    minute=0,
+                    timezone='Africa/Blantyre',
+                    max_instances=1,
+                    replace_existing=True
+                )
+                
+                # Add other jobs similarly
+            
+            # Run the Flask application
+            app.run(
+                host=os.environ.get('FLASK_HOST', '0.0.0.0'),
+                port=int(os.environ.get('FLASK_PORT', 5000)),
+                debug=(os.environ.get('FLASK_ENV') == 'development'),
+                use_reloader=False  # Critical for scheduler stability
+            )
     except Exception as e:
-        print(f"Migration failed: {e}", file=sys.stderr)
+        print(f"❌ Fatal application error: {e}")
         sys.exit(1)
-
-    initialize_roles_permissions()
-    app.run(debug=True)
+    finally:
+        # Shutdown scheduler when application exits
+        if scheduler.running:
+            scheduler.shutdown()

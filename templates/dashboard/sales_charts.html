@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary">Sales Analytics</h2>
+  {% include "dashboard/_tabs.html" with context %}
+
+  <div class="row">
+    <div class="col-md-6">
+      <canvas id="regionChart"></canvas>
+    </div>
+    <div class="col-md-6">
+      <canvas id="districtChart"></canvas>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h5>Average Ticket Size per Region</h5>
+      <canvas id="ticketChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function renderChart(endpoint, canvasId, label, type = 'bar') {
+  fetch(endpoint)
+    .then(res => res.json())
+    .then(data => {
+      new Chart(document.getElementById(canvasId), {
+        type: type,
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: label,
+            data: data.values,
+            backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6610f2']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true }
+          }
+        }
+      });
+    });
+}
+
+renderChart('/api/loans-by-region', 'regionChart', 'Loan Total (MK)');
+renderChart('/api/loans-by-district', 'districtChart', 'Applications', 'pie');
+renderChart('/api/average-ticket-size', 'ticketChart', 'Avg Ticket Size');
+</script>
+{% endblock %}

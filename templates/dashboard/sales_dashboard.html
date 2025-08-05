@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Sales Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  .progress-bar-dynamic {
+    width: calc(var(--progress-width) * 1%);
+    transition: width 0.6s ease-in-out;
+  }
+</style>
+
+<main class="container mt-4" role="main">
+  <header class="mb-4">
+    <h2 class="text-primary">Sales Performance – {{ month }}</h2>
+  </header>
+
+  {% include "dashboard/_tabs.html" with context %}
+
+  <div class="mb-3">
+    <a href="{{ url_for('add_team_with_agents') }}" class="btn btn-success" aria-label="Add new team and agents">
+      + Add Team & Agents
+    </a>
+  </div>
+
+  <!-- Sales Summary Notification -->
+  <section id="salesAlert" class="alert d-none" role="alert" aria-live="polite"></section>
+
+  <!-- Agent Performance Table -->
+  <section aria-labelledby="agent-performance-heading">
+    <h3 id="agent-performance-heading" class="sr-only">Agent Performance Table</h3>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped" aria-describedby="agent-performance-heading">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Agent Name</th>
+            <th scope="col">Region</th>
+            <th scope="col">District</th>
+            <th scope="col">Applications</th>
+            <th scope="col">Applications / Day</th>
+            <th scope="col">Active Days</th>
+            <th scope="col">Total Loan Amount (MK)</th>
+            <th scope="col">Monthly Budget (MK)</th>
+            <th scope="col">Achievement (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for agent in stats %}
+          <tr>
+            <td>{{ agent.name }}</td>
+            <td>{{ agent.region }}</td>
+            <td>{{ agent.district }}</td>
+            <td>{{ agent.applications }}</td>
+            <td>{{ "%.2f"|format(agent.applications_per_day or 0) }}</td>
+            <td>{{ agent.active_days }}</td>
+            <td>{{ "{:,.2f}".format(agent.total_loan_amount or 0) }}</td>
+            <td>{{ "{:,.2f}".format(agent.budget or 0) }}</td>
+            <td>
+              {% if agent.budget_achievement is not none %}
+              <div class="progress" style="height: 20px;" role="progressbar"
+                   aria-valuenow="{{ agent.budget_achievement }}"
+                   aria-valuemin="0" aria-valuemax="100"
+                   aria-label="{{ agent.budget_achievement }}% of monthly budget achieved">
+                {% set achievement = agent.budget_achievement %}
+                {% if achievement < 50 %}
+                <div class="progress-bar bg-danger progress-bar-dynamic"
+                     style="--progress-width: {{ achievement }};">
+                  {{ achievement }}%
+                </div>
+                {% elif achievement < 90 %}
+                <div class="progress-bar bg-warning text-dark progress-bar-dynamic"
+                     style="--progress-width: {{ achievement }};">
+                  {{ achievement }}%
+                </div>
+                {% else %}
+                <div class="progress-bar bg-success progress-bar-dynamic"
+                     style="--progress-width: {{ achievement }};">
+                  {{ achievement }}%
+                </div>
+                {% endif %}
+              </div>
+              {% else %}
+              <span class="text-muted">N/A</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- Alert Script -->
+<script>
+  fetch('/notifications/sales-summary')
+    .then(res => res.json())
+    .then(data => {
+      const alertBox = document.getElementById('salesAlert');
+      const { today_sales, mtd_sales, total_budget, achievement_percent, working_days_percent, on_track } = data;
+
+      alertBox.classList.remove('d-none', 'alert-success', 'alert-warning');
+      alertBox.classList.add(on_track ? 'alert-success' : 'alert-warning');
+
+      alertBox.innerHTML = `
+        <strong>Daily Sales Summary:</strong><br>
+        Today: MK ${today_sales.toLocaleString()}<br>
+        MTD: MK ${mtd_sales.toLocaleString()} / MK ${total_budget.toLocaleString()}<br>
+        Achievement: ${achievement_percent}% vs ${working_days_percent.toFixed(1)}% of working days
+      `;
+    })
+    .catch(err => {
+      console.error("⚠️ Sales summary fetch failed:", err);
+    });
+</script>
+{% endblock %}

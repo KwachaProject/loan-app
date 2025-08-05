@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Placement Details{% endblock %}
+
+{% block content %}
+<div class="container" style="font-size: 0.85rem;">
+    <!-- Header with Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="text-primary mb-0" style="font-size: 0.95rem;">Placement: {{ placement.placement_number }}</h5>
+        <div class="btn-group btn-group-sm flex-wrap">
+            <a href="{{ url_for('add_deposit', placement_id=placement.id) }}" class="btn btn-outline-success">
+                <i class="bi bi-plus-circle"></i> Deposit
+            </a>
+            <a href="{{ url_for('withdraw_funds', placement_id=placement.id) }}" class="btn btn-outline-warning">
+                <i class="bi bi-arrow-down-circle"></i> Withdraw
+            </a>
+            <a href="{{ url_for('change_interest_rate', placement_id=placement.id) }}" class="btn btn-outline-info">
+                <i class="bi bi-graph-up-arrow"></i> Change Rate
+            </a>
+            <form action="{{ url_for('capitalize_interest', placement_id=placement.id) }}" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="bi bi-piggy-bank"></i> Capitalize
+                </button>
+            </form>
+            <a href="{{ url_for('liquidate_placement', placement_id=placement.id) }}" class="btn btn-outline-danger">
+                <i class="bi bi-x-circle"></i> Liquidate
+            </a>
+            <a href="{{ url_for('update_placement', placement_id=placement.id) }}" class="btn btn-outline-dark">
+                <i class="bi bi-pencil-square"></i> Update
+            </a>
+        </div>
+    </div>
+
+    <!-- Placement Summary -->
+    <div class="card mb-3">
+        <div class="card-body py-2">
+            <h6 class="card-title text-secondary mb-2">{{ placement.client.full_name }}</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Start Date:</strong> {{ placement.start_date.strftime('%Y-%m-%d') }}</p>
+                    <p class="mb-1"><strong>Status:</strong> {{ placement.status }}</p>
+                    <p class="mb-1"><strong>Placement No.:</strong> {{ placement.placement_number }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Current Balance:</strong> {{ placement.current_balance | format_currency }}</p>
+                    <p class="mb-1">
+                        <strong>Accrued Interest:</strong> {{ accrued_interest | format_currency }}
+                        <a href="{{ url_for('view_placement_schedule', placement_id=placement.id) }}" class="ms-2 text-decoration-none small">
+                            (View Schedule)
+                        </a>
+                    </p>
+                    <p class="mb-1"><strong>Current Rate:</strong> {{ placement.interest_rate }}%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions Section -->
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div class="card">
+                <div class="card-header py-2 bg-primary text-white">
+                    Transactions
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for txn in transactions %}
+                            <tr>
+                                <td>{{ txn.transaction_date.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ txn.transaction_type }}</td>
+                                <td>{{ txn.amount | format_currency }}</td>
+                                <td>{{ txn.description or '-' }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No transactions found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
