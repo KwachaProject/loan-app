@@ -2694,3 +2694,9 @@ jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endblock'. You p
 [2025-08-06 08:18:40,820] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-06 08:18:40,822] INFO in app: System encoding: utf-8
 [2025-08-06 08:18:40,824] INFO in app: ==================================================
+[2025-08-06 08:32:15,092] INFO in app: ==================================================
+[2025-08-06 08:32:15,099] INFO in app: Application logging initialized successfully
+[2025-08-06 08:32:15,104] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 08:32:15,106] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 08:32:15,108] INFO in app: System encoding: utf-8
+[2025-08-06 08:32:15,112] INFO in app: ==================================================
