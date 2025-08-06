@@ -2700,3 +2700,87 @@ jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endblock'. You p
 [2025-08-06 08:32:15,106] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-06 08:32:15,108] INFO in app: System encoding: utf-8
 [2025-08-06 08:32:15,112] INFO in app: ==================================================
+[2025-08-06 09:17:27,566] INFO in app: [DISBURSEMENT] Loan #112000001 | Top-up of: None | Cash to Client: 1000000.0
+[2025-08-06 09:17:27,573] INFO in app: [DISBURSEMENT] Loan #136000002 | Top-up of: None | Cash to Client: 1500000.0
+[2025-08-06 09:17:27,575] INFO in app: [DISBURSEMENT] Loan #124000003 | Top-up of: None | Cash to Client: 1200000.0
+[2025-08-06 09:17:27,578] INFO in app: [DISBURSEMENT] Loan #118000004 | Top-up of: 1 | Cash to Client: 738713.64
+[2025-08-06 09:17:27,583] INFO in app: [DISBURSEMENT] Loan #136000005 | Top-up of: 4 | Cash to Client: 1276296.29
+[2025-08-06 09:17:27,588] INFO in app: [DISBURSEMENT] Loan #136000006 | Top-up of: 2 | Cash to Client: 777034.17
+[2025-08-06 09:17:27,593] INFO in app: [DISBURSEMENT] Loan #124000007 | Top-up of: 6 | Cash to Client: 3557378.79
+[2025-08-06 09:17:27,596] INFO in app: [DISBURSEMENT] Loan #124000008 | Top-up of: 3 | Cash to Client: 2360732.08
+[2025-08-06 09:17:27,600] INFO in app: [DISBURSEMENT] Loan #103000009 | Top-up of: None | Cash to Client: 1200000.0
+[2025-08-06 09:17:27,604] INFO in app: [DISBURSEMENT] Loan #124000010 | Top-up of: 9 | Cash to Client: 2508800.38
+[2025-08-06 09:17:27,605] INFO in app: [DISBURSEMENT] Loan #103000011 | Top-up of: 8 | Cash to Client: 3543488.33
+[2025-08-06 09:17:27,608] INFO in app: [DISBURSEMENT] Loan #124000012 | Top-up of: 7 | Cash to Client: 4090282.96
+[2025-08-06 09:17:27,611] INFO in app: [DISBURSEMENT] Loan #136000013 | Top-up of: 5 | Cash to Client: 4077608.54
+[2025-08-06 09:17:27,614] INFO in app: [DISBURSEMENT] Loan #148000014 | Top-up of: 12 | Cash to Client: 4547173.57
+[2025-08-06 09:17:27,617] INFO in app: [DISBURSEMENT] Loan #124000015 | Top-up of: None | Cash to Client: 1000000.0
+[2025-08-06 09:17:27,621] INFO in app: [DISBURSEMENT] Loan #124000016 | Top-up of: None | Cash to Client: 2000000.0
+[2025-08-06 09:17:27,635] INFO in app: [DISBURSEMENT] Loan #136000017 | Top-up of: None | Cash to Client: 2000000.0
+[2025-08-06 09:17:27,638] INFO in app: [DISBURSEMENT] Loan #112000018 | Top-up of: None | Cash to Client: 100000.0
+[2025-08-06 13:57:54,180] INFO in app: [DISBURSEMENT] Loan #112000001 | Top-up of: None | Cash to Client: 1000000.0
+[2025-08-06 13:57:54,192] INFO in app: [DISBURSEMENT] Loan #136000002 | Top-up of: None | Cash to Client: 1500000.0
+[2025-08-06 13:57:54,193] INFO in app: [DISBURSEMENT] Loan #124000003 | Top-up of: None | Cash to Client: 1200000.0
+[2025-08-06 13:57:54,195] INFO in app: [DISBURSEMENT] Loan #118000004 | Top-up of: 1 | Cash to Client: 738713.64
+[2025-08-06 13:57:54,197] INFO in app: [DISBURSEMENT] Loan #136000005 | Top-up of: 4 | Cash to Client: 1276296.29
+[2025-08-06 13:57:54,199] INFO in app: [DISBURSEMENT] Loan #136000006 | Top-up of: 2 | Cash to Client: 777034.17
+[2025-08-06 13:57:54,201] INFO in app: [DISBURSEMENT] Loan #124000007 | Top-up of: 6 | Cash to Client: 3557378.79
+[2025-08-06 13:57:54,203] INFO in app: [DISBURSEMENT] Loan #124000008 | Top-up of: 3 | Cash to Client: 2360732.08
+[2025-08-06 13:57:54,205] INFO in app: [DISBURSEMENT] Loan #103000009 | Top-up of: None | Cash to Client: 1200000.0
+[2025-08-06 13:57:54,208] INFO in app: [DISBURSEMENT] Loan #124000010 | Top-up of: 9 | Cash to Client: 2508800.38
+[2025-08-06 13:57:54,210] INFO in app: [DISBURSEMENT] Loan #103000011 | Top-up of: 8 | Cash to Client: 3543488.33
+[2025-08-06 13:57:54,212] INFO in app: [DISBURSEMENT] Loan #124000012 | Top-up of: 7 | Cash to Client: 4090282.96
+[2025-08-06 13:57:54,214] INFO in app: [DISBURSEMENT] Loan #136000013 | Top-up of: 5 | Cash to Client: 4077608.54
+[2025-08-06 13:57:54,216] INFO in app: [DISBURSEMENT] Loan #148000014 | Top-up of: 12 | Cash to Client: 4547173.57
+[2025-08-06 13:57:54,218] INFO in app: [DISBURSEMENT] Loan #124000015 | Top-up of: None | Cash to Client: 1000000.0
+[2025-08-06 13:57:54,220] INFO in app: [DISBURSEMENT] Loan #124000016 | Top-up of: None | Cash to Client: 2000000.0
+[2025-08-06 13:57:54,222] INFO in app: [DISBURSEMENT] Loan #136000017 | Top-up of: None | Cash to Client: 2000000.0
+[2025-08-06 13:57:54,224] INFO in app: [DISBURSEMENT] Loan #112000018 | Top-up of: None | Cash to Client: 100000.0
+[2025-08-06 15:43:29,549] ERROR in app: Exception on /agents/team/add [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 8069, in add_team_with_agents
+    return render_template('agents/add_team_with_agents.html', team_leaders=team_leaders)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\agents\add_team_with_agents.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 177, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\agents\add_team_with_agents.html", line 86, in block 'content'
+    <a href="{{ url_for('view_agents') }}" class="btn btn-secondary">Cancel</a>
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'view_agents'. Did you mean 'view_placements' instead?
+[2025-08-06 15:47:38,214] INFO in app: ==================================================
+[2025-08-06 15:47:38,226] INFO in app: Application logging initialized successfully
+[2025-08-06 15:47:38,232] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 15:47:38,235] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 15:47:38,239] INFO in app: System encoding: utf-8
+[2025-08-06 15:47:38,243] INFO in app: ==================================================
