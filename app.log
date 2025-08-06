@@ -6647,3 +6647,170 @@ jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endblock'. You p
 2025-08-06 06:30:31,314 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
 2025-08-06 06:30:31,314 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-06 06:56:46,179] INFO in app: ==================================================
+[2025-08-06 06:56:46,188] INFO in app: Application logging initialized successfully
+[2025-08-06 06:56:46,190] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 06:56:46,192] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 06:56:46,195] INFO in app: System encoding: utf-8
+[2025-08-06 06:56:46,202] INFO in app: ==================================================
+2025-08-06 06:56:46,543 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 06:56:46,544 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 06:56:46,545 - INFO - Scheduler started
+2025-08-06 06:56:46,577 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 06:56:46,577 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-06 06:59:14,716] INFO in app: ==================================================
+[2025-08-06 06:59:14,725] INFO in app: Application logging initialized successfully
+[2025-08-06 06:59:14,731] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 06:59:14,733] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 06:59:14,738] INFO in app: System encoding: utf-8
+[2025-08-06 06:59:14,741] INFO in app: ==================================================
+2025-08-06 06:59:15,115 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 06:59:15,117 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 06:59:15,117 - INFO - Scheduler started
+2025-08-06 06:59:15,166 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 06:59:15,166 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-06 06:59:37,053 - INFO - 127.0.0.1 - - [06/Aug/2025 06:59:37] "GET /debug/routes HTTP/1.1" 200 -
+[2025-08-06 07:03:51,053] INFO in app: ==================================================
+[2025-08-06 07:03:51,061] INFO in app: Application logging initialized successfully
+[2025-08-06 07:03:51,064] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 07:03:51,067] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 07:03:51,073] INFO in app: System encoding: utf-8
+[2025-08-06 07:03:51,075] INFO in app: ==================================================
+2025-08-06 07:03:51,377 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 07:03:51,380 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 07:03:51,380 - INFO - Scheduler started
+2025-08-06 07:03:51,417 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 07:03:51,417 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-06 07:14:44,808] INFO in app: ==================================================
+[2025-08-06 07:14:44,815] INFO in app: Application logging initialized successfully
+[2025-08-06 07:14:44,818] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 07:14:44,819] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 07:14:44,821] INFO in app: System encoding: utf-8
+[2025-08-06 07:14:44,825] INFO in app: ==================================================
+2025-08-06 07:14:45,073 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 07:14:45,075 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 07:14:45,075 - INFO - Scheduler started
+2025-08-06 07:14:45,108 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 07:14:45,109 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-06 07:15:29,411 - INFO - 127.0.0.1 - - [06/Aug/2025 07:15:29] "GET /debug/routes HTTP/1.1" 200 -
+2025-08-06 07:15:44,567 - INFO - 127.0.0.1 - - [06/Aug/2025 07:15:44] "GET /debug/routes HTTP/1.1" 200 -
+2025-08-06 07:15:44,610 - INFO - 127.0.0.1 - - [06/Aug/2025 07:15:44] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-06 07:15:45,953 - INFO - 127.0.0.1 - - [06/Aug/2025 07:15:45] "GET /debug/routes HTTP/1.1" 200 -
+2025-08-06 07:15:46,003 - INFO - 127.0.0.1 - - [06/Aug/2025 07:15:46] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-06 07:17:40,223] INFO in app: ==================================================
+[2025-08-06 07:17:40,231] INFO in app: Application logging initialized successfully
+[2025-08-06 07:17:40,238] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 07:17:40,243] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 07:17:40,245] INFO in app: System encoding: utf-8
+[2025-08-06 07:17:40,248] INFO in app: ==================================================
+2025-08-06 07:17:40,547 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 07:17:40,548 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 07:17:40,548 - INFO - Scheduler started
+2025-08-06 07:17:40,593 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 07:17:40,593 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-06 07:18:04,434 - INFO - 127.0.0.1 - - [06/Aug/2025 07:18:04] "GET / HTTP/1.1" 200 -
+2025-08-06 07:18:09,942 - INFO - 127.0.0.1 - - [06/Aug/2025 07:18:09] "GET / HTTP/1.1" 200 -
+2025-08-06 07:18:10,514 - INFO - 127.0.0.1 - - [06/Aug/2025 07:18:10] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-06 07:18:14,788 - INFO - 127.0.0.1 - - [06/Aug/2025 07:18:14] "GET /debug/routes HTTP/1.1" 200 -
+[2025-08-06 07:20:23,536] INFO in app: ==================================================
+[2025-08-06 07:20:23,544] INFO in app: Application logging initialized successfully
+[2025-08-06 07:20:23,546] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 07:20:23,550] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 07:20:23,552] INFO in app: System encoding: utf-8
+[2025-08-06 07:20:23,554] INFO in app: ==================================================
+2025-08-06 07:20:23,856 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 07:20:23,858 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 07:20:23,859 - INFO - Scheduler started
+2025-08-06 07:20:23,904 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 07:20:23,904 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-06 07:20:38,550 - INFO - 127.0.0.1 - - [06/Aug/2025 07:20:38] "GET /debug/routes HTTP/1.1" 200 -
+2025-08-06 07:20:38,606 - INFO - 127.0.0.1 - - [06/Aug/2025 07:20:38] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-06 07:20:43,280 - INFO - 127.0.0.1 - - [06/Aug/2025 07:20:43] "GET /debug/routes HTTP/1.1" 200 -
+2025-08-06 07:20:43,612 - INFO - 127.0.0.1 - - [06/Aug/2025 07:20:43] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-06 07:25:20,801] INFO in app: ==================================================
+[2025-08-06 07:25:20,808] INFO in app: Application logging initialized successfully
+[2025-08-06 07:25:20,810] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 07:25:20,812] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 07:25:20,813] INFO in app: System encoding: utf-8
+[2025-08-06 07:25:20,816] INFO in app: ==================================================
+2025-08-06 07:25:21,068 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 07:25:21,070 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 07:25:21,070 - INFO - Scheduler started
+2025-08-06 07:25:21,108 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 07:25:21,108 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-06 07:25:28,759 - INFO - 127.0.0.1 - - [06/Aug/2025 07:25:28] "GET /debug/routes HTTP/1.1" 200 -
+2025-08-06 07:25:28,815 - INFO - 127.0.0.1 - - [06/Aug/2025 07:25:28] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-06 07:34:01,674] INFO in app: ==================================================
+[2025-08-06 07:34:01,683] INFO in app: Application logging initialized successfully
+[2025-08-06 07:34:01,686] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 07:34:01,691] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 07:34:01,698] INFO in app: System encoding: utf-8
+[2025-08-06 07:34:01,708] INFO in app: ==================================================
+2025-08-06 07:34:02,125 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 07:34:02,129 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 07:34:02,129 - INFO - Scheduler started
+2025-08-06 07:34:02,262 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 07:34:02,263 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-06 07:34:19,536 - INFO - 127.0.0.1 - - [06/Aug/2025 07:34:19] "GET / HTTP/1.1" 200 -
+2025-08-06 07:34:20,124 - INFO - 127.0.0.1 - - [06/Aug/2025 07:34:20] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-06 07:34:22,778 - INFO - 127.0.0.1 - - [06/Aug/2025 07:34:22] "GET /loanbook HTTP/1.1" 200 -
+2025-08-06 07:34:24,807 - INFO - 127.0.0.1 - - [06/Aug/2025 07:34:24] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-08-06 07:34:31,106 - INFO - 127.0.0.1 - - [06/Aug/2025 07:34:31] "GET /admin/approval_dashboard HTTP/1.1" 200 -
+2025-08-06 07:34:48,729 - INFO - 127.0.0.1 - - [06/Aug/2025 07:34:48] "GET /debug/routes HTTP/1.1" 200 -
+[2025-08-06 07:38:09,943] INFO in app: ==================================================
+[2025-08-06 07:38:09,951] INFO in app: Application logging initialized successfully
+[2025-08-06 07:38:09,955] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 07:38:09,957] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 07:38:09,961] INFO in app: System encoding: utf-8
+[2025-08-06 07:38:09,962] INFO in app: ==================================================
+2025-08-06 07:38:10,291 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 07:38:10,293 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 07:38:10,293 - INFO - Scheduler started
+2025-08-06 07:38:10,340 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 07:38:10,340 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-06 07:38:21,472 - INFO - 127.0.0.1 - - [06/Aug/2025 07:38:21] "GET /debug/routes HTTP/1.1" 200 -
+2025-08-06 07:38:21,532 - INFO - 127.0.0.1 - - [06/Aug/2025 07:38:21] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-06 07:41:31,970] INFO in app: ==================================================
+[2025-08-06 07:41:31,978] INFO in app: Application logging initialized successfully
+[2025-08-06 07:41:31,980] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 07:41:31,982] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 07:41:31,988] INFO in app: System encoding: utf-8
+[2025-08-06 07:41:31,990] INFO in app: ==================================================
+2025-08-06 07:41:32,281 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 07:41:32,286 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 07:41:32,286 - INFO - Scheduler started
+2025-08-06 07:41:32,329 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 07:41:32,329 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-06 07:41:38,977 - INFO - 127.0.0.1 - - [06/Aug/2025 07:41:38] "GET /debug/routes HTTP/1.1" 200 -
+2025-08-06 07:41:39,045 - INFO - 127.0.0.1 - - [06/Aug/2025 07:41:39] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-06 07:41:41,150 - INFO - 127.0.0.1 - - [06/Aug/2025 07:41:41] "GET /debug/routes HTTP/1.1" 200 -
+2025-08-06 07:41:41,482 - INFO - 127.0.0.1 - - [06/Aug/2025 07:41:41] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-06 07:42:49,095 - INFO - 127.0.0.1 - - [06/Aug/2025 07:42:49] "GET /customer/202507000001/account?section=additional HTTP/1.1" 200 -
+2025-08-06 07:42:51,944 - INFO - 127.0.0.1 - - [06/Aug/2025 07:42:51] "GET /loanbook HTTP/1.1" 200 -
+2025-08-06 07:42:53,314 - INFO - 127.0.0.1 - - [06/Aug/2025 07:42:53] "GET /customer/202507000001/account HTTP/1.1" 200 -
+2025-08-06 07:43:19,305 - INFO - 127.0.0.1 - - [06/Aug/2025 07:43:19] "GET /loanbook HTTP/1.1" 200 -
+2025-08-06 07:43:23,201 - INFO - 127.0.0.1 - - [06/Aug/2025 07:43:23] "[32mGET /admin/customer/202507000001 HTTP/1.1[0m" 308 -
+2025-08-06 07:43:23,518 - INFO - 127.0.0.1 - - [06/Aug/2025 07:43:23] "[33mGET /admin/customer/202507000001/ HTTP/1.1[0m" 404 -
+2025-08-06 07:44:01,065 - INFO - 127.0.0.1 - - [06/Aug/2025 07:44:01] "GET /customer/202507000001/account HTTP/1.1" 200 -
+[2025-08-06 07:48:43,526] INFO in app: ==================================================
+[2025-08-06 07:48:43,532] INFO in app: Application logging initialized successfully
+[2025-08-06 07:48:43,534] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 07:48:43,536] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 07:48:43,540] INFO in app: System encoding: utf-8
+[2025-08-06 07:48:43,544] INFO in app: ==================================================
+2025-08-06 07:48:43,792 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 07:48:43,794 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 07:48:43,794 - INFO - Scheduler started
+2025-08-06 07:48:43,826 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 07:48:43,827 - INFO - [33mPress CTRL+C to quit[0m

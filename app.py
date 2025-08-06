@@ -4060,6 +4060,23 @@ def customer_debug_loans(file_number):
         "loans": [{ "id": l.id, "number": l.loan_number, "amount": l.loan_amount } for l in loans]
     }
 
+@app.route("/admin/customer/<file_number>/")
+@login_required
+@role_required('admin')
+def admin_customer_redirect(file_number):
+    return redirect(url_for('customer_account', file_number=file_number))
+
+
+def redirect_to_customer(customer):
+    identifier = customer.file_number if customer.file_number else customer.id
+    return redirect(url_for('customer_details', identifier=identifier))
+
+@app.route("/debug/routes")
+def debug_routes():
+    routes = []
+    for rule in app.url_map.iter_rules():
+        routes.append(str(rule))
+    return "<br>".join(routes)
 
 @app.route('/create-admin')
 def create_admin():

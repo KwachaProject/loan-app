@@ -406,7 +406,9 @@
                                                     Approve
                                                 </button>
                                             </form>
-                                            <a href="{{ url_for('customer_details', file_number=customer.file_number) }}" class="btn btn-sm btn-primary">Review</a>
+                                           <a href="{{ url_for('customer_details', identifier=customer.file_number if customer.file_number else customer.id) }}">
+                                            View Customer Details
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}
