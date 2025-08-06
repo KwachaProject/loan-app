@@ -6840,3 +6840,210 @@ jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endblock'. You p
 2025-08-06 08:32:15,459 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
 2025-08-06 08:32:15,459 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-06 09:17:21,426 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:21] "GET / HTTP/1.1" 200 -
+2025-08-06 09:17:22,675 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:22] "GET /register HTTP/1.1" 200 -
+2025-08-06 09:17:23,794 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:23] "GET /approve_customers HTTP/1.1" 200 -
+2025-08-06 09:17:24,890 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:24] "GET /customers HTTP/1.1" 200 -
+2025-08-06 09:17:26,355 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:26] "GET /loans HTTP/1.1" 200 -
+[2025-08-06 09:17:27,566] INFO in app: [DISBURSEMENT] Loan #112000001 | Top-up of: None | Cash to Client: 1000000.0
+2025-08-06 09:17:27,566 - INFO - [DISBURSEMENT] Loan #112000001 | Top-up of: None | Cash to Client: 1000000.0
+[2025-08-06 09:17:27,573] INFO in app: [DISBURSEMENT] Loan #136000002 | Top-up of: None | Cash to Client: 1500000.0
+2025-08-06 09:17:27,573 - INFO - [DISBURSEMENT] Loan #136000002 | Top-up of: None | Cash to Client: 1500000.0
+[2025-08-06 09:17:27,575] INFO in app: [DISBURSEMENT] Loan #124000003 | Top-up of: None | Cash to Client: 1200000.0
+2025-08-06 09:17:27,575 - INFO - [DISBURSEMENT] Loan #124000003 | Top-up of: None | Cash to Client: 1200000.0
+[2025-08-06 09:17:27,578] INFO in app: [DISBURSEMENT] Loan #118000004 | Top-up of: 1 | Cash to Client: 738713.64
+2025-08-06 09:17:27,578 - INFO - [DISBURSEMENT] Loan #118000004 | Top-up of: 1 | Cash to Client: 738713.64
+[2025-08-06 09:17:27,583] INFO in app: [DISBURSEMENT] Loan #136000005 | Top-up of: 4 | Cash to Client: 1276296.29
+2025-08-06 09:17:27,583 - INFO - [DISBURSEMENT] Loan #136000005 | Top-up of: 4 | Cash to Client: 1276296.29
+[2025-08-06 09:17:27,588] INFO in app: [DISBURSEMENT] Loan #136000006 | Top-up of: 2 | Cash to Client: 777034.17
+2025-08-06 09:17:27,588 - INFO - [DISBURSEMENT] Loan #136000006 | Top-up of: 2 | Cash to Client: 777034.17
+[2025-08-06 09:17:27,593] INFO in app: [DISBURSEMENT] Loan #124000007 | Top-up of: 6 | Cash to Client: 3557378.79
+2025-08-06 09:17:27,593 - INFO - [DISBURSEMENT] Loan #124000007 | Top-up of: 6 | Cash to Client: 3557378.79
+[2025-08-06 09:17:27,596] INFO in app: [DISBURSEMENT] Loan #124000008 | Top-up of: 3 | Cash to Client: 2360732.08
+2025-08-06 09:17:27,596 - INFO - [DISBURSEMENT] Loan #124000008 | Top-up of: 3 | Cash to Client: 2360732.08
+[2025-08-06 09:17:27,600] INFO in app: [DISBURSEMENT] Loan #103000009 | Top-up of: None | Cash to Client: 1200000.0
+2025-08-06 09:17:27,600 - INFO - [DISBURSEMENT] Loan #103000009 | Top-up of: None | Cash to Client: 1200000.0
+[2025-08-06 09:17:27,604] INFO in app: [DISBURSEMENT] Loan #124000010 | Top-up of: 9 | Cash to Client: 2508800.38
+2025-08-06 09:17:27,604 - INFO - [DISBURSEMENT] Loan #124000010 | Top-up of: 9 | Cash to Client: 2508800.38
+[2025-08-06 09:17:27,605] INFO in app: [DISBURSEMENT] Loan #103000011 | Top-up of: 8 | Cash to Client: 3543488.33
+2025-08-06 09:17:27,605 - INFO - [DISBURSEMENT] Loan #103000011 | Top-up of: 8 | Cash to Client: 3543488.33
+[2025-08-06 09:17:27,608] INFO in app: [DISBURSEMENT] Loan #124000012 | Top-up of: 7 | Cash to Client: 4090282.96
+2025-08-06 09:17:27,608 - INFO - [DISBURSEMENT] Loan #124000012 | Top-up of: 7 | Cash to Client: 4090282.96
+[2025-08-06 09:17:27,611] INFO in app: [DISBURSEMENT] Loan #136000013 | Top-up of: 5 | Cash to Client: 4077608.54
+2025-08-06 09:17:27,611 - INFO - [DISBURSEMENT] Loan #136000013 | Top-up of: 5 | Cash to Client: 4077608.54
+[2025-08-06 09:17:27,614] INFO in app: [DISBURSEMENT] Loan #148000014 | Top-up of: 12 | Cash to Client: 4547173.57
+2025-08-06 09:17:27,614 - INFO - [DISBURSEMENT] Loan #148000014 | Top-up of: 12 | Cash to Client: 4547173.57
+[2025-08-06 09:17:27,617] INFO in app: [DISBURSEMENT] Loan #124000015 | Top-up of: None | Cash to Client: 1000000.0
+2025-08-06 09:17:27,617 - INFO - [DISBURSEMENT] Loan #124000015 | Top-up of: None | Cash to Client: 1000000.0
+[2025-08-06 09:17:27,621] INFO in app: [DISBURSEMENT] Loan #124000016 | Top-up of: None | Cash to Client: 2000000.0
+2025-08-06 09:17:27,621 - INFO - [DISBURSEMENT] Loan #124000016 | Top-up of: None | Cash to Client: 2000000.0
+[2025-08-06 09:17:27,635] INFO in app: [DISBURSEMENT] Loan #136000017 | Top-up of: None | Cash to Client: 2000000.0
+2025-08-06 09:17:27,635 - INFO - [DISBURSEMENT] Loan #136000017 | Top-up of: None | Cash to Client: 2000000.0
+[2025-08-06 09:17:27,638] INFO in app: [DISBURSEMENT] Loan #112000018 | Top-up of: None | Cash to Client: 100000.0
+2025-08-06 09:17:27,638 - INFO - [DISBURSEMENT] Loan #112000018 | Top-up of: None | Cash to Client: 100000.0
+2025-08-06 09:17:27,705 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:27] "GET /disbursements HTTP/1.1" 200 -
+2025-08-06 09:17:28,796 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:28] "GET /payments HTTP/1.1" 200 -
+2025-08-06 09:17:29,821 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:29] "GET /placements HTTP/1.1" 200 -
+2025-08-06 09:17:32,225 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:32] "GET /loanbook HTTP/1.1" 200 -
+2025-08-06 09:17:33,301 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:33] "GET /income_report HTTP/1.1" 200 -
+2025-08-06 09:17:34,465 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:34] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-08-06 09:17:36,994 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:36] "GET /admin/batch_import_loans HTTP/1.1" 200 -
+2025-08-06 09:17:38,321 - INFO - 127.0.0.1 - - [06/Aug/2025 09:17:38] "GET /admin/pricing HTTP/1.1" 200 -
+2025-08-06 09:18:24,512 - INFO - 127.0.0.1 - - [06/Aug/2025 09:18:24] "GET / HTTP/1.1" 200 -
+2025-08-06 09:18:26,952 - INFO - 127.0.0.1 - - [06/Aug/2025 09:18:26] "GET /register HTTP/1.1" 200 -
+2025-08-06 09:18:30,612 - INFO - 127.0.0.1 - - [06/Aug/2025 09:18:30] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-08-06 09:18:31,914 - INFO - 127.0.0.1 - - [06/Aug/2025 09:18:31] "GET /income_report HTTP/1.1" 200 -
+2025-08-06 09:18:33,366 - INFO - 127.0.0.1 - - [06/Aug/2025 09:18:33] "GET /loanbook HTTP/1.1" 200 -
+2025-08-06 09:18:36,243 - INFO - 127.0.0.1 - - [06/Aug/2025 09:18:36] "GET /placements HTTP/1.1" 200 -
+2025-08-06 09:19:25,261 - INFO - 127.0.0.1 - - [06/Aug/2025 09:19:25] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-08-06 09:19:35,050 - INFO - 127.0.0.1 - - [06/Aug/2025 09:19:35] "GET /admin/dashboard?section=cutoff_dates HTTP/1.1" 200 -
+2025-08-06 09:20:11,769 - INFO - 127.0.0.1 - - [06/Aug/2025 09:20:11] "GET /admin/dashboard/votes HTTP/1.1" 200 -
+2025-08-06 09:20:47,558 - INFO - 127.0.0.1 - - [06/Aug/2025 09:20:47] "GET /admin/pricing HTTP/1.1" 200 -
+2025-08-06 09:20:54,178 - INFO - 127.0.0.1 - - [06/Aug/2025 09:20:54] "GET /income_report HTTP/1.1" 200 -
+2025-08-06 09:21:12,879 - INFO - 127.0.0.1 - - [06/Aug/2025 09:21:12] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-08-06 09:21:17,032 - INFO - 127.0.0.1 - - [06/Aug/2025 09:21:17] "GET /admin/pricing HTTP/1.1" 200 -
+2025-08-06 09:21:19,423 - INFO - 127.0.0.1 - - [06/Aug/2025 09:21:19] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-08-06 09:22:11,134 - INFO - 127.0.0.1 - - [06/Aug/2025 09:22:11] "GET / HTTP/1.1" 200 -
+2025-08-06 09:22:13,317 - INFO - 127.0.0.1 - - [06/Aug/2025 09:22:13] "GET /register HTTP/1.1" 200 -
+2025-08-06 09:23:00,531 - INFO - 127.0.0.1 - - [06/Aug/2025 09:23:00] "GET / HTTP/1.1" 200 -
+2025-08-06 13:55:22,233 - INFO - 127.0.0.1 - - [06/Aug/2025 13:55:22] "GET / HTTP/1.1" 200 -
+2025-08-06 13:55:25,057 - INFO - 127.0.0.1 - - [06/Aug/2025 13:55:25] "GET /approve_customers HTTP/1.1" 200 -
+2025-08-06 13:55:26,930 - INFO - 127.0.0.1 - - [06/Aug/2025 13:55:26] "GET /customers HTTP/1.1" 200 -
+2025-08-06 13:57:46,582 - INFO - 127.0.0.1 - - [06/Aug/2025 13:57:46] "GET /loans HTTP/1.1" 200 -
+[2025-08-06 13:57:54,180] INFO in app: [DISBURSEMENT] Loan #112000001 | Top-up of: None | Cash to Client: 1000000.0
+2025-08-06 13:57:54,180 - INFO - [DISBURSEMENT] Loan #112000001 | Top-up of: None | Cash to Client: 1000000.0
+[2025-08-06 13:57:54,192] INFO in app: [DISBURSEMENT] Loan #136000002 | Top-up of: None | Cash to Client: 1500000.0
+2025-08-06 13:57:54,192 - INFO - [DISBURSEMENT] Loan #136000002 | Top-up of: None | Cash to Client: 1500000.0
+[2025-08-06 13:57:54,193] INFO in app: [DISBURSEMENT] Loan #124000003 | Top-up of: None | Cash to Client: 1200000.0
+2025-08-06 13:57:54,193 - INFO - [DISBURSEMENT] Loan #124000003 | Top-up of: None | Cash to Client: 1200000.0
+[2025-08-06 13:57:54,195] INFO in app: [DISBURSEMENT] Loan #118000004 | Top-up of: 1 | Cash to Client: 738713.64
+2025-08-06 13:57:54,195 - INFO - [DISBURSEMENT] Loan #118000004 | Top-up of: 1 | Cash to Client: 738713.64
+[2025-08-06 13:57:54,197] INFO in app: [DISBURSEMENT] Loan #136000005 | Top-up of: 4 | Cash to Client: 1276296.29
+2025-08-06 13:57:54,197 - INFO - [DISBURSEMENT] Loan #136000005 | Top-up of: 4 | Cash to Client: 1276296.29
+[2025-08-06 13:57:54,199] INFO in app: [DISBURSEMENT] Loan #136000006 | Top-up of: 2 | Cash to Client: 777034.17
+2025-08-06 13:57:54,199 - INFO - [DISBURSEMENT] Loan #136000006 | Top-up of: 2 | Cash to Client: 777034.17
+[2025-08-06 13:57:54,201] INFO in app: [DISBURSEMENT] Loan #124000007 | Top-up of: 6 | Cash to Client: 3557378.79
+2025-08-06 13:57:54,201 - INFO - [DISBURSEMENT] Loan #124000007 | Top-up of: 6 | Cash to Client: 3557378.79
+[2025-08-06 13:57:54,203] INFO in app: [DISBURSEMENT] Loan #124000008 | Top-up of: 3 | Cash to Client: 2360732.08
+2025-08-06 13:57:54,203 - INFO - [DISBURSEMENT] Loan #124000008 | Top-up of: 3 | Cash to Client: 2360732.08
+[2025-08-06 13:57:54,205] INFO in app: [DISBURSEMENT] Loan #103000009 | Top-up of: None | Cash to Client: 1200000.0
+2025-08-06 13:57:54,205 - INFO - [DISBURSEMENT] Loan #103000009 | Top-up of: None | Cash to Client: 1200000.0
+[2025-08-06 13:57:54,208] INFO in app: [DISBURSEMENT] Loan #124000010 | Top-up of: 9 | Cash to Client: 2508800.38
+2025-08-06 13:57:54,208 - INFO - [DISBURSEMENT] Loan #124000010 | Top-up of: 9 | Cash to Client: 2508800.38
+[2025-08-06 13:57:54,210] INFO in app: [DISBURSEMENT] Loan #103000011 | Top-up of: 8 | Cash to Client: 3543488.33
+2025-08-06 13:57:54,210 - INFO - [DISBURSEMENT] Loan #103000011 | Top-up of: 8 | Cash to Client: 3543488.33
+[2025-08-06 13:57:54,212] INFO in app: [DISBURSEMENT] Loan #124000012 | Top-up of: 7 | Cash to Client: 4090282.96
+2025-08-06 13:57:54,212 - INFO - [DISBURSEMENT] Loan #124000012 | Top-up of: 7 | Cash to Client: 4090282.96
+[2025-08-06 13:57:54,214] INFO in app: [DISBURSEMENT] Loan #136000013 | Top-up of: 5 | Cash to Client: 4077608.54
+2025-08-06 13:57:54,214 - INFO - [DISBURSEMENT] Loan #136000013 | Top-up of: 5 | Cash to Client: 4077608.54
+[2025-08-06 13:57:54,216] INFO in app: [DISBURSEMENT] Loan #148000014 | Top-up of: 12 | Cash to Client: 4547173.57
+2025-08-06 13:57:54,216 - INFO - [DISBURSEMENT] Loan #148000014 | Top-up of: 12 | Cash to Client: 4547173.57
+[2025-08-06 13:57:54,218] INFO in app: [DISBURSEMENT] Loan #124000015 | Top-up of: None | Cash to Client: 1000000.0
+2025-08-06 13:57:54,218 - INFO - [DISBURSEMENT] Loan #124000015 | Top-up of: None | Cash to Client: 1000000.0
+[2025-08-06 13:57:54,220] INFO in app: [DISBURSEMENT] Loan #124000016 | Top-up of: None | Cash to Client: 2000000.0
+2025-08-06 13:57:54,220 - INFO - [DISBURSEMENT] Loan #124000016 | Top-up of: None | Cash to Client: 2000000.0
+[2025-08-06 13:57:54,222] INFO in app: [DISBURSEMENT] Loan #136000017 | Top-up of: None | Cash to Client: 2000000.0
+2025-08-06 13:57:54,222 - INFO - [DISBURSEMENT] Loan #136000017 | Top-up of: None | Cash to Client: 2000000.0
+[2025-08-06 13:57:54,224] INFO in app: [DISBURSEMENT] Loan #112000018 | Top-up of: None | Cash to Client: 100000.0
+2025-08-06 13:57:54,224 - INFO - [DISBURSEMENT] Loan #112000018 | Top-up of: None | Cash to Client: 100000.0
+2025-08-06 13:57:54,229 - INFO - 127.0.0.1 - - [06/Aug/2025 13:57:54] "GET /disbursements HTTP/1.1" 200 -
+2025-08-06 13:57:58,151 - INFO - 127.0.0.1 - - [06/Aug/2025 13:57:58] "GET /income_report HTTP/1.1" 200 -
+2025-08-06 15:19:21,862 - INFO - 127.0.0.1 - - [06/Aug/2025 15:19:21] "GET /approve_customers HTTP/1.1" 200 -
+2025-08-06 15:43:25,802 - INFO - 127.0.0.1 - - [06/Aug/2025 15:43:25] "GET / HTTP/1.1" 200 -
+[2025-08-06 15:43:29,549] ERROR in app: Exception on /agents/team/add [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 8069, in add_team_with_agents
+    return render_template('agents/add_team_with_agents.html', team_leaders=team_leaders)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\agents\add_team_with_agents.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 177, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\agents\add_team_with_agents.html", line 86, in block 'content'
+    <a href="{{ url_for('view_agents') }}" class="btn btn-secondary">Cancel</a>
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'view_agents'. Did you mean 'view_placements' instead?
+2025-08-06 15:43:29,549 - ERROR - Exception on /agents/team/add [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 8069, in add_team_with_agents
+    return render_template('agents/add_team_with_agents.html', team_leaders=team_leaders)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\agents\add_team_with_agents.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 177, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\agents\add_team_with_agents.html", line 86, in block 'content'
+    <a href="{{ url_for('view_agents') }}" class="btn btn-secondary">Cancel</a>
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'view_agents'. Did you mean 'view_placements' instead?
+2025-08-06 15:43:29,609 - INFO - 127.0.0.1 - - [06/Aug/2025 15:43:29] "[35m[1mGET /agents/team/add HTTP/1.1[0m" 500 -
+[2025-08-06 15:47:38,214] INFO in app: ==================================================
+[2025-08-06 15:47:38,226] INFO in app: Application logging initialized successfully
+[2025-08-06 15:47:38,232] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-06 15:47:38,235] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-06 15:47:38,239] INFO in app: System encoding: utf-8
+[2025-08-06 15:47:38,243] INFO in app: ==================================================
+2025-08-06 15:47:38,638 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-06 15:47:38,641 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-06 15:47:38,641 - INFO - Scheduler started
+2025-08-06 15:47:38,703 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-06 15:47:38,703 - INFO - [33mPress CTRL+C to quit[0m

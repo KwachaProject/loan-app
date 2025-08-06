@@ -8069,6 +8069,17 @@ def add_team_with_agents():
     return render_template('agents/add_team_with_agents.html', team_leaders=team_leaders)
     
 
+@app.route('/agents')
+@login_required
+@role_required('admin')  # Optional: if you want to restrict access
+def view_agents():
+    agents = Agent.query \
+        .filter_by(role='Agent') \
+        .order_by(Agent.name.asc()) \
+        .all()
+
+    return render_template('agents/view_agents.html', agents=agents)
+
 
 
 def get_sales_notification():
