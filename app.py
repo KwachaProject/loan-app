@@ -4514,35 +4514,33 @@ def admin_approval_dashboard():
 @login_required
 def admin_approval(customer_id):
     customer = Customer.query.get_or_404(customer_id)
-    
-    # Only approve if not already approved
+
     if not customer.is_approved_for_creation:
         customer.is_approved_for_creation = True
         customer.status = 'approved'
-        
-        # Approve all pending loans for this customer
+
+        # Approve all pending loans (no document check)
         pending_loans = LoanApplication.query.filter_by(
-            customer_id=customer.id, 
+            customer_id=customer.id,
             application_status='pending'
         ).all()
-        
+
         for loan in pending_loans:
-            # Only approve loans with verified documents
-            if loan.documents_verified:
-                loan.application_status = 'approved'
-                loan.loan_state = 'active'
-            else:
-                # Keep as pending if documents missing
-                loan.application_status = 'pending_docs'
+            loan.application_status = 'approved'
+            loan.loan_state = 'active'
 
         try:
             db.session.commit()
-            flash(f"Customer {customer.first_name} {customer.last_name} approved successfully. Loans with complete documents were approved.", "success")
+            flash(
+                f"Customer {customer.first_name} {customer.last_name} and all pending loans approved.",
+                "success"
+            )
         except Exception as e:
             db.session.rollback()
-            flash(f"Error approving customer/loans: {str(e)}", "error")
-    
+            flash(f"Error during approval: {str(e)}", "error")
+
     return redirect(url_for('admin_approval_dashboard'))
+
 
 @app.route('/customer/<int:customer_id>')
 def view_customer(customer_id):
