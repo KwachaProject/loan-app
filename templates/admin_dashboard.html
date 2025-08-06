@@ -37,6 +37,11 @@
             <a class="nav-link {% if section == 'votes' %}active{% endif %}" href="{{ url_for('admin_votes') }}">Vote Management</a>
         </li>
         <li class="nav-item" role="presentation">
+            <a class="nav-link {% if section == 'approval' %}active{% endif %}" href="{{ url_for('admin_approval_dashboard') }}">
+                Approval
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
             <a class="nav-link {% if section == 'pricing' %}active{% endif %}" href="{{ url_for('admin_pricing') }}">Pricing</a>
         </li>
         <!-- NEW BATCH IMPORT TAB -->
@@ -367,6 +372,53 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+
+    {% elif section == 'approval' %}
+        <!-- APPROVAL SECTION -->
+        <h2 class="mb-4">Dashboard Approval</h2>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Pending Approvals</h4>
+            </div>
+            <div class="card-body">
+                {% if pending_customers %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>Email</th>
+                                    <th>Loans Pending</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for customer in pending_customers %}
+                                    <tr>
+                                        <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                                        <td>{{ customer.email }}</td>
+                                        <td>{{ customer.pending_loans_count }}</td>
+                                        <td>
+                                            <form action="{{ url_for('admin_approval', customer_id=customer.id) }}" method="post" style="display:inline;">
+                                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Approve customer and all loans?')">
+                                                    Approve
+                                                </button>
+                                            </form>
+                                            <a href="{{ url_for('customer_details', customer_id=customer.id) }}" class="btn btn-sm btn-primary">Review</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        No customers pending approval at this time.
+                    </div>
+                {% endif %}
+            </div>
         </div>
 
     {% elif section == 'pricing' %}
