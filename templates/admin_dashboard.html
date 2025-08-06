@@ -406,8 +406,8 @@
                                                     Approve
                                                 </button>
                                             </form>
-                                           <a href="{{ url_for('customer_details', identifier=customer.file_number if customer.file_number else customer.id) }}">
-                                            View Customer Details
+                                           <a href="{{ url_for('admin_customer_redirect', file_number=customer.file_number) }}">
+                                                View Customer Details
                                             </a>
                                         </td>
                                     </tr>
