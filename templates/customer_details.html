@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Customer Details: {{ customer.first_name }} {{ customer.last_name }}</h2>
+    <p><strong>File Number:</strong> {{ customer.file_number }}</p>
+    <p><strong>Status:</strong> {{ 'Approved' if customer.approved else 'Not Approved' }}</p>
+
+    <hr>
+    <h4>Loan Applications</h4>
+    {% if loans %}
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Loan ID</th>
+                    <th>Loan Number</th>
+                    <th>Amount</th>
+                    <th>State</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in loans %}
+                <tr>
+                    <td>{{ loan.id }}</td>
+                    <td>{{ loan.loan_number }}</td>
+                    <td>{{ loan.loan_amount }}</td>
+                    <td>{{ loan.state }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No loans found for this customer.</p>
+    {% endif %}
+</div>
+{% endblock %}
