@@ -6,6 +6,7 @@ from datetime import datetime
 from io import BytesIO
 from fpdf import FPDF
 import json
+from datetime import timedelta
 from contextlib import contextmanager
 from sqlalchemy.exc import ProgrammingError
 import inspect
@@ -6276,6 +6277,8 @@ def _compute_income_db(start_date, end_date):
         .group_by(LoanApplication.category)
         .all()
     )
+    print(f"One-time fees: {one_time}")
+
 
     # Scheduled income: interest and collection fees
     scheduled_income = (
@@ -6288,11 +6291,11 @@ def _compute_income_db(start_date, end_date):
         .filter(
             RepaymentSchedule.due_date >= start_date,
             RepaymentSchedule.due_date <= end_date,
-            LoanApplication.loan_state.in_(['active', 'topped_up'])
         )
         .group_by(LoanApplication.category)
         .all()
     )
+    print(f"Scheduled income (interest/fees): {scheduled_income}")
 
     # Settlement and top-up interest (recognized at event month)
     event_interest = (
@@ -6309,6 +6312,7 @@ def _compute_income_db(start_date, end_date):
         .group_by(LoanApplication.category)
         .all()
     )
+    print(f"Event-based interest: {event_interest}")
 
     return one_time, scheduled_income, event_interest
 
@@ -6345,7 +6349,6 @@ def detailed_income_breakdown():
         .filter(
             RepaymentSchedule.due_date >= start_date,
             RepaymentSchedule.due_date <= end_date,
-            LoanApplication.loan_state.in_(['active', 'topped_up'])
         )
         .group_by(
             LoanApplication.id,
