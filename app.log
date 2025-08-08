@@ -12,3 +12,23 @@
 2025-08-08 14:08:37,913 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
 2025-08-08 14:08:37,914 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-08 14:26:07,275] INFO in app: ==================================================
+[2025-08-08 14:26:07,284] INFO in app: Application logging initialized successfully
+[2025-08-08 14:26:07,285] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-08 14:26:07,289] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-08 14:26:07,293] INFO in app: System encoding: utf-8
+[2025-08-08 14:26:07,299] INFO in app: ==================================================
+2025-08-08 14:26:07,657 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-08 14:26:07,661 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-08 14:26:07,661 - INFO - Scheduler started
+2025-08-08 14:26:07,706 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-08 14:26:07,707 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-08 14:26:07,731 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-08 14:26:07,731 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-08 14:35:22,367] INFO in app: ==================================================
+[2025-08-08 14:35:22,377] INFO in app: Application logging initialized successfully
+[2025-08-08 14:35:22,382] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-08 14:35:22,391] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-08 14:35:22,394] INFO in app: System encoding: utf-8
+[2025-08-08 14:35:22,395] INFO in app: ==================================================

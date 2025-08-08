@@ -108,13 +108,8 @@ with app.app_context():
 ###############################################################################
 echo "📌 Managing Alembic DB version…"
 
-HEAD_REV=$(alembic heads | awk 'NR==1{print $1}' | xargs echo -n)
-if [ -z "$HEAD_REV" ]; then
-    echo "⚠️  No Alembic head found. Using default revision."
-    HEAD_REV="5ada732a06fc"  # Replace with your known last good revision
-fi
-
-alembic stamp "$HEAD_REV" || echo "⚠️  Alembic stamp failed"
+echo "🔄 Running Alembic migrations…"
+alembic upgrade head || echo "⚠️ Alembic migration failed"
 
 ###############################################################################
 # 3. RBAC Roles & Admin Initialization

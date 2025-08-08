@@ -6259,7 +6259,7 @@ def income_report():
 # === Income computation helper ===
 def _compute_income_db(start_date, end_date):
     start_dt = datetime.combine(start_date, datetime.min.time())
-    end_dt = datetime.combine(end_date + timedelta(days=1), datetime.min.time())
+    end_dt = datetime.combine(end_date, datetime.max.time())
 
     # One-time income: fees at loan creation
     one_time = (
