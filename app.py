@@ -9483,10 +9483,8 @@ def start_scheduler():
 scheduler.add_job(
     id='auto_post_due_schedules',
     func=auto_post_payments,
-    trigger='cron',
-    day=25,
-    hour=0,
-    minute=0,
+    trigger='interval',
+    minutes=5,
     timezone='Africa/Blantyre',
     replace_existing=True
 )
