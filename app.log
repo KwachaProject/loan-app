@@ -32,3 +32,84 @@
 [2025-08-08 14:35:22,391] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-08 14:35:22,394] INFO in app: System encoding: utf-8
 [2025-08-08 14:35:22,395] INFO in app: ==================================================
+2025-08-08 14:35:22,996 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-08 14:35:22,998 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-08 14:35:22,998 - INFO - Scheduler started
+2025-08-08 14:35:23,023 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-08 14:35:23,024 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-08 14:35:23,034 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-08 14:35:23,034 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-08 14:44:40,492 - INFO - 127.0.0.1 - - [08/Aug/2025 14:44:40] "GET /income_report HTTP/1.1" 200 -
+2025-08-08 14:44:40,781 - INFO - 127.0.0.1 - - [08/Aug/2025 14:44:40] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-08 14:45:09,085 - INFO - 127.0.0.1 - - [08/Aug/2025 14:45:09] "POST /income_report HTTP/1.1" 200 -
+2025-08-08 14:45:32,202 - INFO - 127.0.0.1 - - [08/Aug/2025 14:45:32] "GET /loanbook HTTP/1.1" 200 -
+2025-08-08 14:45:45,050 - INFO - 127.0.0.1 - - [08/Aug/2025 14:45:45] "GET /loan/148000014/statement HTTP/1.1" 200 -
+[2025-08-08 14:49:18,343] INFO in app: ==================================================
+[2025-08-08 14:49:18,356] INFO in app: Application logging initialized successfully
+[2025-08-08 14:49:18,364] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-08 14:49:18,380] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-08 14:49:18,383] INFO in app: System encoding: utf-8
+[2025-08-08 14:49:18,385] INFO in app: ==================================================
+2025-08-08 14:49:18,876 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-08 14:49:18,880 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-08 14:49:18,880 - INFO - Scheduler started
+2025-08-08 14:49:18,928 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-08 14:49:18,929 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-08 14:49:18,947 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-08 14:49:18,947 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-08 14:49:24,648 - INFO - 127.0.0.1 - - [08/Aug/2025 14:49:24] "GET /placements HTTP/1.1" 200 -
+2025-08-08 14:49:25,149 - INFO - 127.0.0.1 - - [08/Aug/2025 14:49:25] "GET /income_report HTTP/1.1" 200 -
+2025-08-08 14:49:43,955 - INFO - 127.0.0.1 - - [08/Aug/2025 14:49:43] "POST /income_report HTTP/1.1" 200 -
+2025-08-08 14:49:46,883 - INFO - 127.0.0.1 - - [08/Aug/2025 14:49:46] "GET /export_income_report_csv?start_date=2025-01-01&end_date=2025-08-31 HTTP/1.1" 200 -
+[2025-08-08 14:51:26,733] INFO in app: ==================================================
+[2025-08-08 14:51:26,750] INFO in app: Application logging initialized successfully
+[2025-08-08 14:51:26,754] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-08 14:51:26,755] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-08 14:51:26,770] INFO in app: System encoding: utf-8
+[2025-08-08 14:51:26,774] INFO in app: ==================================================
+2025-08-08 14:51:27,289 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-08 14:51:27,291 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-08 14:51:27,291 - INFO - Scheduler started
+2025-08-08 14:51:27,337 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-08 14:51:27,338 - INFO - Added job "send_sales_notification_email" to job store "default"
+[2025-08-08 14:53:46,899] INFO in app: ==================================================
+[2025-08-08 14:53:46,935] INFO in app: Application logging initialized successfully
+[2025-08-08 14:53:46,937] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-08 14:53:46,941] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-08 14:53:46,943] INFO in app: System encoding: utf-8
+[2025-08-08 14:53:46,955] INFO in app: ==================================================
+2025-08-08 14:53:47,421 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-08 14:53:47,423 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-08 14:53:47,423 - INFO - Scheduler started
+2025-08-08 14:53:47,472 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-08 14:53:47,473 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-08 14:53:47,486 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-08 14:53:47,487 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-08 15:15:48,567] INFO in app: ==================================================
+[2025-08-08 15:15:48,576] INFO in app: Application logging initialized successfully
+[2025-08-08 15:15:48,584] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-08 15:15:48,588] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-08 15:15:48,591] INFO in app: System encoding: utf-8
+[2025-08-08 15:15:48,593] INFO in app: ==================================================
+2025-08-08 15:15:49,217 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-08 15:15:49,219 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-08 15:15:49,220 - INFO - Scheduler started
+2025-08-08 15:15:49,263 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-08 15:15:49,263 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-08 15:15:49,279 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-08 15:15:49,279 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-08 15:16:03,319 - INFO - 127.0.0.1 - - [08/Aug/2025 15:16:03] "POST /income_report HTTP/1.1" 200 -
+2025-08-08 15:16:04,052 - INFO - 127.0.0.1 - - [08/Aug/2025 15:16:04] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-08 15:16:20,066 - INFO - 127.0.0.1 - - [08/Aug/2025 15:16:20] "POST /income_report HTTP/1.1" 200 -
+2025-08-08 15:16:22,829 - INFO - 127.0.0.1 - - [08/Aug/2025 15:16:22] "POST /income_report HTTP/1.1" 200 -
+2025-08-08 15:16:29,942 - INFO - 127.0.0.1 - - [08/Aug/2025 15:16:29] "GET /detailed_income_breakdown HTTP/1.1" 200 -
+[2025-08-08 15:17:22,340] INFO in app: ==================================================
+[2025-08-08 15:17:22,353] INFO in app: Application logging initialized successfully
+[2025-08-08 15:17:22,358] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-08 15:17:22,363] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-08 15:17:22,371] INFO in app: System encoding: utf-8
+[2025-08-08 15:17:22,377] INFO in app: ==================================================
