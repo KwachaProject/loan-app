@@ -5150,3 +5150,9 @@ ValueError: Error processing 'created_at': module 'datetime' has no attribute 's
 [2025-08-08 15:41:06,640] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-08 15:41:06,646] INFO in app: System encoding: utf-8
 [2025-08-08 15:41:06,656] INFO in app: ==================================================
+[2025-08-08 16:37:05,672] INFO in app: ==================================================
+[2025-08-08 16:37:05,789] INFO in app: Application logging initialized successfully
+[2025-08-08 16:37:05,823] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-08 16:37:05,841] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-08 16:37:05,907] INFO in app: System encoding: utf-8
+[2025-08-08 16:37:05,957] INFO in app: ==================================================
