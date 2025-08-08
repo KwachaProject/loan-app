@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 from io import BytesIO
 from fpdf import FPDF
+import json
 from contextlib import contextmanager
 from sqlalchemy.exc import ProgrammingError
 import inspect
@@ -15,8 +16,6 @@ from sqlalchemy.exc import ProgrammingError
 from jinja2 import TemplateNotFound
 from flask_apscheduler import APScheduler
 from sqlalchemy import or_
-from datetime import datetime
-from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import func
 from flask_apscheduler import APScheduler
 from flask_mail import Message
@@ -284,6 +283,7 @@ def datetimeformat_filter(value, format='%Y-%m-%d %H:%M'):
 
 app.jinja_env.filters['datetimeformat'] = datetimeformat_filter
 
+
 # Add this to your app.py where you have other template filters
 @app.template_filter('format_currency')
 def format_currency_filter(value):
@@ -304,17 +304,17 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
     )
 
+app = Flask(__name__)
+
 # Determine the environment: "production" or "development"
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 
-# Initialize APScheduler
-from flask_apscheduler import APScheduler
-scheduler = APScheduler()
-scheduler.init_app(app)  # Make sure 'app' is your Flask application instance
+# Initialize APSchedule
+
 # Create Flask app
-app = Flask(__name__)
+
 
 
 @app.template_filter('unique')
@@ -384,6 +384,10 @@ migrate.init_app(app, db)
 mail.init_app(app)
 
 login_manager = LoginManager(app)
+
+scheduler = APScheduler()
+  # Make sure 'app' is your Flask application instance
+
 # Import models after initializing the db instance
 from app import db
 
@@ -563,7 +567,6 @@ role_permissions = db.Table('role_permissions',
     db.Column('permission_id', db.Integer, db.ForeignKey('permissions.id'))
     )
 
-from datetime import datetime
 from app import db  # or wherever your SQLAlchemy instance is
 
 class Notification(db.Model):
@@ -910,7 +913,19 @@ class LoanApplication(db.Model):
     def __repr__(self):
         return f'<LoanApplication for Customer ID {self.customer_id} - Status: {self.status}>'
 
-    
+    @property
+    def has_unreconciled_deductions(self):
+        for sched in self.repayment_schedules:
+            payroll = PayrollDeduction.query.filter_by(
+                loan_id=self.id,
+                deduction_date=sched.due_date
+            ).first()
+            if not payroll or payroll.amount < sched.expected_amount:
+                return True
+        return False
+
+
+
     @property
     def computed_current_balance(self):
         from datetime import datetime
@@ -1093,18 +1108,18 @@ class LoanApplication(db.Model):
         return target_month.replace(day=min(due_day, last_day))
 
     def generate_repayment_schedule(self, disbursement_date=None):
-        """
-        Build/replace this loan's amortised schedule with optional backdating
-        """
         from dateutil.relativedelta import relativedelta
         
-        # Wipe existing rows
+        current_app.logger.info(f"Generating repayment schedule for loan {self.loan_number} with disbursement_date={disbursement_date}")
+
+        # Delete old schedules
         for sched in self.repayment_schedules:
             db.session.delete(sched)
+        db.session.flush()
 
-        # Get pricing config
         config = get_pricing_config(self.category, self.term_months, self)
         if not config:
+            current_app.logger.warning("No pricing config found, aborting schedule generation.")
             return
 
         loan_amt = self.loan_amount or 0
@@ -1117,12 +1132,12 @@ class LoanApplication(db.Model):
         coll_fee_flat = loan_amt * config.get('collection', 0)
         term = self.term_months or 0
         if term <= 0:
+            current_app.logger.warning("Term months is zero or negative, aborting schedule generation.")
             return
 
-        # Get first due date using custom disbursement date if provided
         first_due = self.get_first_due_date(disbursement_date)
+        current_app.logger.info(f"First due date: {first_due}")
 
-        # Calculate annuity payment
         if monthly_rate > 0:
             fac = (monthly_rate * (1 + monthly_rate) ** term) / ((1 + monthly_rate) ** term - 1)
             annuity_princ_int = capitalised * fac
@@ -1131,13 +1146,11 @@ class LoanApplication(db.Model):
 
         remaining = capitalised
 
-        # Create new schedule
         for i in range(term):
             due_date = first_due + relativedelta(months=i)
             interest = remaining * monthly_rate
             principal = annuity_princ_int - interest
 
-            # Handle last instalment
             if i == term - 1:
                 principal = remaining
                 interest = annuity_princ_int - principal
@@ -1145,6 +1158,8 @@ class LoanApplication(db.Model):
 
             remaining -= principal
             remaining = max(0, round(remaining, 2))
+
+            current_app.logger.info(f"Instalment {i+1}: Due {due_date}, Principal {principal:.2f}, Interest {interest:.2f}, Fees {coll_fee_flat:.2f}")
 
             schedule = RepaymentSchedule(
                 loan_id=self.id,
@@ -1157,6 +1172,9 @@ class LoanApplication(db.Model):
                 remaining_balance=remaining
             )
             db.session.add(schedule)
+
+        db.session.flush()
+
     
     # Do NOT commit here - handled by caller
 
@@ -1167,6 +1185,7 @@ class LoanApplication(db.Model):
     # … other methods in LoanApplication …
 
     def allocate_payment(self, payment):
+        # Early exit if loan is closed
         if self.loan_state in {"settled_client", "write_off", "insurance"}:
             app.logger.warning(f"[{self.loan_number}] Payment not allocated. Loan state is closed: {self.loan_state}")
             return
@@ -1174,21 +1193,30 @@ class LoanApplication(db.Model):
         remaining = payment.amount
         method = (payment.method or "normal").lower()
 
+        # Normalize method for top-up and settlement
         if "top_up" in method:
             method = "top_up"
         elif "settlement" in method:
             method = "settlement"
 
         if method == "top_up":
-            principal_alloc = min(self.top_up_balance - (self.top_up_interest or 0.0), remaining)
+            # Allocate to top-up balance: top_up_balance = current_balance + top_up_interest
+            top_up_balance = (self.top_up_balance or 0.0)  # already current_balance + top_up_interest
+
+            principal_alloc = min(self.current_balance, remaining)
             self.current_balance -= principal_alloc
             remaining -= principal_alloc
 
-            interest_alloc = min((self.top_up_interest or 0.0), remaining)
+            # Remaining payment goes to top-up interest part
+            top_up_interest_part = max(top_up_balance - self.current_balance, 0.0)
+            interest_alloc = min(top_up_interest_part, remaining)
             self.top_up_interest = max((self.top_up_interest or 0.0) - interest_alloc, 0.0)
             remaining -= interest_alloc
 
-            # Save allocation
+            # Update top_up_balance (it should be current_balance + top_up_interest)
+            self.top_up_balance = self.current_balance + (self.top_up_interest or 0.0)
+
+            # Save allocation record
             db.session.add(PaymentAllocation(
                 payment_id=payment.id,
                 principal=principal_alloc,
@@ -1198,16 +1226,17 @@ class LoanApplication(db.Model):
                 fees=0.0
             ))
 
-            app.logger.info(f"[{self.loan_number}] Top-up payment → principal: {principal_alloc}, top-up interest: {interest_alloc}")
+            app.logger.info(
+                f"[{self.loan_number}] Top-up payment → principal: {principal_alloc}, top-up interest: {interest_alloc}"
+            )
 
-            # Commit changes to LoanApplication and allocations
             db.session.commit()
 
-            # Close if fully paid
+            # Close loan if fully paid off
             if self.current_balance <= 0 and (self.top_up_interest or 0.0) <= 0:
                 self.status = "closed"
                 self.loan_state = "settled_client"
-                app.logger.info(f"[{self.loan_number}] Loan marked as closed after top-up.")
+                app.logger.info(f"[{self.loan_number}] Loan closed after top-up payment.")
 
                 for schedule in self.repayment_schedules:
                     if schedule.status not in {"paid", "cancelled"}:
@@ -1215,12 +1244,14 @@ class LoanApplication(db.Model):
 
                 db.session.commit()
 
+            # Record overpayment credit if any
             if remaining > 0:
                 self.record_loan_credit(payment, remaining)
 
-            return  # skip normal schedule allocation
+            return  # Skip normal allocation for top-up payments
 
-        if method == "settlement":
+        elif method == "settlement":
+            # Allocate to settlement interest first, then principal (current balance)
             interest_alloc = min(self.settlement_interest or 0.0, remaining)
             self.settlement_interest = max((self.settlement_interest or 0.0) - interest_alloc, 0.0)
             remaining -= interest_alloc
@@ -1237,16 +1268,50 @@ class LoanApplication(db.Model):
                 fees=0.0
             ))
 
-            app.logger.info(f"[{self.loan_number}] Settlement payment → settlement_interest: {interest_alloc}, principal: {principal_alloc}")
+            app.logger.info(
+                f"[{self.loan_number}] Settlement payment → settlement_interest: {interest_alloc}, principal: {principal_alloc}"
+            )
 
-            # Commit changes to LoanApplication and allocations
             db.session.commit()
 
             # Close loan if fully paid
             if self.current_balance <= 0 and (self.settlement_interest or 0.0) <= 0:
                 self.status = "closed"
                 self.loan_state = "settled_client"
-                app.logger.info(f"[{self.loan_number}] Loan marked as closed after settlement payment.")
+                app.logger.info(f"[{self.loan_number}] Loan closed after settlement payment.")
+                db.session.commit()
+
+            if remaining > 0:
+                self.record_loan_credit(payment, remaining)
+
+            return  # Skip normal allocation for settlement payments
+
+        elif method in {"write_off", "insurance"}:
+            # Only allocate towards current balance principal
+            principal_alloc = min(self.current_balance, remaining)
+            self.current_balance -= principal_alloc
+            remaining -= principal_alloc
+
+            db.session.add(PaymentAllocation(
+                payment_id=payment.id,
+                principal=principal_alloc,
+                interest=0.0,
+                top_up_interest=0.0,
+                settlement_interest=0.0,
+                fees=0.0
+            ))
+
+            app.logger.info(
+                f"[{self.loan_number}] {method} payment → principal: {principal_alloc}"
+            )
+
+            db.session.commit()
+
+            # Close loan if fully paid
+            if self.current_balance <= 0:
+                self.status = "closed"
+                self.loan_state = "settled_client"
+                app.logger.info(f"[{self.loan_number}] Loan closed after {method} payment.")
                 db.session.commit()
 
             if remaining > 0:
@@ -1254,62 +1319,63 @@ class LoanApplication(db.Model):
 
             return
 
-        # --- Normal payment allocation logic (fees → interest → principal) ---
+        else:
+            # --- Normal payment allocation: fees → interest → principal ---
+            schedules = sorted(self.repayment_schedules, key=lambda s: s.due_date)
+            schedule_updated = False
 
-        schedules = sorted(self.repayment_schedules, key=lambda s: s.due_date)
-        schedule_updated = False
+            for schedule in schedules:
+                if schedule.status in {"paid", "settled", "cancelled"}:
+                    continue
 
-        for schedule in schedules:
-            if schedule.status in {"paid", "settled", "cancelled"}:
-                continue
+                alloc_fees = min(schedule.fees_due, remaining)
+                schedule.paid_fees += alloc_fees
+                remaining -= alloc_fees
 
-            alloc_fees = min(schedule.fees_due, remaining)
-            schedule.paid_fees += alloc_fees
-            remaining -= alloc_fees
+                alloc_interest = min(schedule.interest_due, remaining)
+                schedule.paid_interest += alloc_interest
+                remaining -= alloc_interest
 
-            alloc_interest = min(schedule.interest_due, remaining)
-            schedule.paid_interest += alloc_interest
-            remaining -= alloc_interest
+                alloc_principal = min(schedule.principal_due, remaining)
+                schedule.paid_principal += alloc_principal
+                remaining -= alloc_principal
 
-            alloc_principal = min(schedule.principal_due, remaining)
-            schedule.paid_principal += alloc_principal
-            remaining -= alloc_principal
+                if alloc_fees > 0 or alloc_interest > 0 or alloc_principal > 0:
+                    db.session.add(PaymentAllocation(
+                        payment_id=payment.id,
+                        schedule_id=schedule.id,
+                        principal=alloc_principal,
+                        interest=alloc_interest,
+                        fees=alloc_fees
+                    ))
 
-            if alloc_fees > 0 or alloc_interest > 0 or alloc_principal > 0:
-                db.session.add(PaymentAllocation(
-                    payment_id=payment.id,
-                    schedule_id=schedule.id,
-                    principal=alloc_principal,
-                    interest=alloc_interest,
-                    fees=alloc_fees
-                ))
+                if schedule.paid_amount + 0.01 >= schedule.expected_amount:
+                    schedule.status = "paid"
 
-            if schedule.paid_amount >= schedule.expected_amount:
-                schedule.status = "paid"
+                schedule_updated = True
 
-            schedule_updated = True
+                app.logger.info(
+                    f"[{self.loan_number}] Schedule {schedule.id} updated → fees={schedule.paid_fees}, "
+                    f"interest={schedule.paid_interest}, principal={schedule.paid_principal}"
+                )
 
-            app.logger.info(
-                f"[{self.loan_number}] Schedule {schedule.id} updated → fees={schedule.paid_fees}, "
-                f"interest={schedule.paid_interest}, principal={schedule.paid_principal}"
-            )
+                if remaining <= 0:
+                    break
 
-            if remaining <= 0:
-                break
+            if schedule_updated:
+                self.recalculate_balance()
+                db.session.commit()
 
-        if schedule_updated:
-            self.recalculate_balance()
-            db.session.commit()
+            if remaining > 0:
+                self.record_loan_credit(payment, remaining)
+            elif any(
+                s.status != "paid" and (s.fees_due > 0 or s.interest_due > 0 or s.principal_due > 0)
+                for s in self.repayment_schedules
+            ):
+                self.record_arrears(payment)
 
-        if remaining > 0:
-            self.record_loan_credit(payment, remaining)
-        elif any(
-            s.status != "paid" and (s.fees_due > 0 or s.interest_due > 0 or s.principal_due > 0)
-            for s in self.repayment_schedules
-        ):
-            self.record_arrears(payment)
+            app.logger.info(f"[{self.loan_number}] Payment of {payment.amount} allocated. Remaining: {remaining}")
 
-        app.logger.info(f"[{self.loan_number}] Payment of {payment.amount} allocated. Remaining: {remaining}")
 
 
     def record_loan_credit(self, payment, amount: float):
@@ -1387,7 +1453,7 @@ class LoanApplication(db.Model):
             if arrear.status == 'unresolved' and arrear.total_arrears <= 0:
                 arrear.status = 'resolved'
                 arrear.resolution_date = datetime.utcnow()
-                
+
 from app import db, app
 
 
@@ -1429,7 +1495,6 @@ class RepaymentSchedule(db.Model):
         expected_principal = db.Column(db.Float)
         expected_interest = db.Column(db.Float)
         expected_fees = db.Column(db.Float)
-        status = db.Column(db.String(20))
         paid_principal = db.Column(db.Float, default=0.0)
         paid_interest = db.Column(db.Float, default=0.0)
         paid_fees = db.Column(db.Float, default=0.0)
@@ -2072,6 +2137,40 @@ class Placement(db.Model):
             # Delete old unpaid schedules first
             PlacementSchedule.query.filter_by(placement_id=self.id, is_paid=False).delete()
             db.session.bulk_save_objects(new_schedule)
+
+
+class PayrollDeduction(db.Model):
+    __tablename__ = 'payroll_deductions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    loan_id = db.Column(db.Integer, db.ForeignKey('loan_applications.id'), nullable=False)
+    deduction_date = db.Column(db.Date, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    source = db.Column(db.String(100))  # e.g., HR system
+    reference = db.Column(db.String(100))  # e.g., payroll file ref
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    loan = db.relationship('LoanApplication', backref='payroll_deductions')
+
+    def __repr__(self):
+        return f"<PayrollDeduction Loan: {self.loan_id}, Date: {self.deduction_date}, Amount: {self.amount}>"
+
+
+class CashReceipt(db.Model):
+    __tablename__ = 'cash_receipts'
+
+    id = db.Column(db.Integer, primary_key=True)
+    vote_id = db.Column(db.Integer, db.ForeignKey('votes.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    received_date = db.Column(db.Date, nullable=False)
+    source = db.Column(db.String(100))  # e.g., Bank name or HR
+    reference = db.Column(db.String(100))  # Transaction ref
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    vote = db.relationship('Vote', backref='cash_receipts')
+
+    def __repr__(self):
+        return f"<CashReceipt Vote: {self.vote_id}, Date: {self.received_date}, Amount: {self.amount}>"
 
 
 # New model for transaction history
@@ -3640,7 +3739,6 @@ def calculate_capitalized_amount(loan_amount: float, config: dict) -> float:
                 print(f"Capitalized amount error: {e}")
                 return loan_amount
 
-from datetime import datetime
 
 def calculate_balances(loan):
     config = get_pricing_config(loan.category, loan.term_months, loan)
@@ -3722,7 +3820,6 @@ def calculate_balances(loan):
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from sqlalchemy.orm import joinedload
-from datetime import datetime
 
 @app.route('/customer/enquiry', methods=['POST'])
 @login_required
@@ -6175,7 +6272,6 @@ def _compute_income_db(start_date, end_date):
         .filter(
             LoanApplication.created_at >= start_dt,
             LoanApplication.created_at < end_dt,
-            LoanApplication.application_status == 'approved'
         )
         .group_by(LoanApplication.category)
         .all()
@@ -6370,17 +6466,18 @@ def safe_date(value, field_name):
     """Safely convert to date with error handling"""
     if not value or value.strip() == '':
         raise ValueError(f"{field_name} is required and cannot be empty")
-    try:
-        return datetime.strptime(value.strip(), '%Y-%m-%d')
-    except ValueError:
-        # Try alternative formats
+
+    value = value.strip()
+    formats = ['%Y-%m-%d', '%m/%d/%Y', '%d-%m-%Y']
+
+    for fmt in formats:
         try:
-            return datetime.strptime(value.strip(), '%m/%d/%Y')
+            return datetime.strptime(value, fmt)
         except ValueError:
-            try:
-                return datetime.strptime(value.strip(), '%d-%m-%Y')
-            except ValueError:
-                raise ValueError(f"Invalid date format for {field_name}. Use YYYY-MM-DD")
+            continue
+
+    raise ValueError(f"Invalid date format for {field_name}. "
+                     f"Use one of: {', '.join(formats)}")
 
 def get_field(row, field_name, aliases=None, default=''):
     """
@@ -6614,16 +6711,14 @@ def batch_import_loans():
                     
                     # Regenerate repayment schedule if needed
                     if regenerate_schedule:
+                        # Remove old schedules
                         RepaymentSchedule.query.filter_by(loan_id=loan.id).delete()
+                        db.session.flush()
+
+                        # Only regenerate if loan has a positive amount
                         if loan.loan_amount > 0:
                             loan.generate_repayment_schedule(disbursement_date=loan.disbursement_date)
-                        
-                        # Only regenerate if not zeroized
-                        if loan.loan_amount > 0:
-                            # Use the current disbursement date for schedule generation
-                            start_date = loan.disbursement_date
-                            loan.generate_repayment_schedule(disbursement_date=start_date)
-                    
+                                        
                     # Update loan in database
                     db.session.add(loan)
                     updated_count += 1
@@ -8494,6 +8589,53 @@ def api_loans_by_region():
         "values": [float(r.total_loan or 0) for r in data]
     })
 
+def reconcile_loan_vs_payroll(loan_id):
+    loan = LoanApplication.query.get(loan_id)
+    mismatches = []
+
+    for sched in loan.repayment_schedules:
+        if sched.status == 'paid':
+            continue  # skip already paid
+
+        payroll = PayrollDeduction.query.filter_by(
+            loan_id=loan.id,
+            deduction_date=sched.due_date
+        ).first()
+
+        if not payroll or payroll.amount < sched.expected_amount:
+            mismatches.append({
+                "instalment": sched.instalment_no,
+                "due_date": sched.due_date,
+                "expected": sched.expected_amount,
+                "deducted": payroll.amount if payroll else 0
+            })
+
+    return mismatches
+
+def reconcile_vote_receipts(vote_id, month):
+    vote = Vote.query.get(vote_id)
+    start = month.replace(day=1)
+    end = (start + relativedelta(months=1)) - timedelta(days=1)
+
+    expected = db.session.query(func.sum(Payment.amount)).join(LoanApplication).filter(
+        LoanApplication.vote_id == vote.id,
+        Payment.created_at >= start,
+        Payment.created_at <= end,
+        Payment.status == 'successful'
+    ).scalar() or 0
+
+    received = db.session.query(func.sum(CashReceipt.amount)).filter(
+        CashReceipt.vote_id == vote.id,
+        CashReceipt.received_date >= start,
+        CashReceipt.received_date <= end
+    ).scalar() or 0
+
+    return {
+        "vote_code": vote.code,
+        "expected": expected,
+        "received": received,
+        "discrepancy": expected - received
+    }
 
 
 @app.route('/api/loans-by-district')
@@ -8858,8 +9000,9 @@ def test_smtp_connection():
         print(f"❌ SMTP connection failed: {str(e)}")
         return False
 
+from datetime import date
+from sqlalchemy import and_
 
-    
 
 def initialize_roles_permissions():
     with app.app_context():
@@ -8881,41 +9024,6 @@ def deploy():
 @app.route('/<path:path>')
 def catch_all(path):
     return f"404: The URL /{path} was not found.", 404
-
-def configure_scheduler():
-    """Configure scheduler based on environment"""
-    if app.config.get('TESTING'):
-        return  # No scheduler in tests
-
-    # Production - daily at 5PM
-    if os.environ.get('FLASK_ENV') == 'production':
-        scheduler.add_job(
-            id='daily_sales_report',
-            func=send_sales_notification_email,
-            trigger='cron',
-            hour=17,
-            minute=0,
-            replace_existing=True
-        )
-    # Development - every minute with initial 10s delay
-    else:
-        scheduler.add_job(
-            id='dev_sales_notifications',
-            func=send_sales_notification_email,
-            trigger='interval',
-            minutes=1,
-            next_run_time=datetime.now() + timedelta(seconds=10),
-            replace_existing=True
-        )
-
-def start_scheduler():
-    """Start the scheduler with proper checks"""
-    if not scheduler.running:
-        configure_scheduler()
-        scheduler.start()
-        env = os.environ.get('FLASK_ENV', 'development')
-        print(f"⏰ Scheduler started in {env} mode - Jobs: {[j.id for j in scheduler.get_jobs()]}")
-
 
 def send_sales_notification_email(recipients=None, custom_message=None):
     """Enhanced email function with MWK formatting + notification tracking"""
@@ -9056,6 +9164,89 @@ def test_template():
     }
     return render_template('email/sales_report.html', **test_data)
 
+@app.route('/reconcile/loan/<int:loan_id>')
+def reconcile_loan(loan_id):
+    return jsonify(reconcile_loan_vs_payroll(loan_id))
+
+
+@app.route('/reconcile/vote/<int:vote_id>/<string:month>')
+def reconcile_vote(vote_id, month):
+    from datetime import datetime
+    month_date = datetime.strptime(month, "%Y-%m")
+    return jsonify(reconcile_vote_receipts(vote_id, month_date))
+
+@app.route('/upload/payroll', methods=['GET', 'POST'])
+@role_required('admin')
+def upload_payroll():
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if not file or not file.filename.endswith('.csv'):
+            flash('Upload a valid CSV file.', 'danger')
+            return redirect(request.url)
+
+        csv_data = file.read().decode('utf-8').splitlines()
+        reader = csv.DictReader(csv_data)
+
+        imported, skipped = 0, 0
+
+        for row in reader:
+            try:
+                deduction = PayrollDeduction(
+                    loan_id=int(row['loan_id']),
+                    deduction_date=datetime.strptime(row['deduction_date'], '%Y-%m-%d').date(),
+                    amount=float(row['amount']),
+                    reference=row.get('reference', ''),
+                    source=row.get('source', '')
+                )
+                db.session.add(deduction)
+                imported += 1
+            except Exception as e:
+                app.logger.warning(f"Skipped row due to error: {e}")
+                skipped += 1
+
+        db.session.commit()
+        flash(f'{imported} deductions imported. {skipped} skipped.', 'success')
+        return redirect(url_for('upload_payroll'))
+
+    return render_template('uploads/payroll_upload.html')
+
+@app.route('/upload/cash_receipts', methods=['GET', 'POST'])
+@role_required('admin')
+def upload_cash_receipts():
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if not file or not file.filename.endswith('.csv'):
+            flash('Upload a valid CSV file.', 'danger')
+            return redirect(request.url)
+
+        csv_data = file.read().decode('utf-8').splitlines()
+        reader = csv.DictReader(csv_data)
+
+        imported, skipped = 0, 0
+
+        for row in reader:
+            try:
+                receipt = CashReceipt(
+                    vote_id=int(row['vote_id']),
+                    received_date=datetime.strptime(row['received_date'], '%Y-%m-%d').date(),
+                    amount=float(row['amount']),
+                    reference=row.get('reference', ''),
+                    source=row.get('source', '')
+                )
+                db.session.add(receipt)
+                imported += 1
+            except Exception as e:
+                app.logger.warning(f"Skipped row due to error: {e}")
+                skipped += 1
+
+        db.session.commit()
+        flash(f'{imported} receipts imported. {skipped} skipped.', 'success')
+        return redirect(url_for('upload_cash_receipts'))
+
+    return render_template('uploads/cash_receipt_upload.html')
+
+
+
 def format_mwk(amount):
     """Format amount as Malawian Kwacha"""
     return f"MWK {amount:,.2f}"
@@ -9085,6 +9276,156 @@ def check_db_schema():
 # Call during application startup   
 # Usage example:
 # sales_data['formatted_total'] = format_mwk(sales_data['total_budget'])
+def auto_post_payments():
+    print("🔥 auto_post_payments called")
+    """
+    Process automatic payments for due and backdated repayment schedules.
+    Runs within app context to ensure database access.
+    """
+    with app.app_context():
+        today = date.today()
+        logger = logging.getLogger('auto_post')
+
+        logger.info(json.dumps({
+            'event': 'auto_post_start',
+            'date': str(today),
+            'timestamp': str(datetime.now())
+        }))
+
+        try:
+            # Fetch schedules that are not paid, settled or cancelled and are due today or earlier
+            schedules = RepaymentSchedule.query.filter(
+                and_(
+                    RepaymentSchedule.status.notin_(['paid', 'settled', 'cancelled']),
+                    RepaymentSchedule.due_date <= today
+                )
+            ).order_by(RepaymentSchedule.due_date.asc()).all()
+
+            logger.info(json.dumps({
+                'event': 'schedules_fetched',
+                'count': len(schedules),
+                'schedule_ids': [s.id for s in schedules],
+                'due_dates': [str(s.due_date) for s in schedules]
+            }))
+
+        except Exception as e:
+            logger.error(json.dumps({
+                'event': 'fetch_schedules_error',
+                'error': str(e)
+            }))
+            return
+
+        posted_count = 0
+        backdated_count = 0
+        batch_size = 50
+
+        for i, sched in enumerate(schedules, 1):
+            try:
+                # Skip if due amount is zero or negative
+                if sched.due_amount <= 0:
+                    logger.info(json.dumps({
+                        'event': 'skip_schedule',
+                        'schedule_id': sched.id,
+                        'reason': 'zero_due_amount',
+                        'due_amount': sched.due_amount
+                    }))
+                    continue
+
+                loan = sched.loan
+                # Skip if no linked loan
+                if not loan:
+                    logger.info(json.dumps({
+                        'event': 'skip_schedule',
+                        'schedule_id': sched.id,
+                        'reason': 'no_linked_loan'
+                    }))
+                    continue
+
+                # Skip if loan state is not active
+                if (loan.loan_state or "").strip().lower() != 'active':
+                    logger.info(json.dumps({
+                        'event': 'skip_loan',
+                        'loan_number': loan.loan_number,
+                        'reason': 'not_active',
+                        'state': loan.loan_state
+                    }))
+                    continue
+
+                # Skip if payment already exists for this schedule and date
+                existing_payment = Payment.query.filter_by(reference=f"AUTO-{sched.id}-{today}").first()
+                if existing_payment:
+                    logger.info(json.dumps({
+                        'event': 'skip_schedule',
+                        'schedule_id': sched.id,
+                        'reason': 'payment_exists'
+                    }))
+                    continue
+
+                # Create payment record
+                payment = Payment(
+                    loan_id=loan.id,
+                    amount=sched.due_amount,
+                    method='auto_posted',
+                    status='successful',
+                    reference=f"AUTO-{sched.id}-{today}"
+                )
+                db.session.add(payment)
+
+                # Allocate payment to loan
+                loan.allocate_payment(payment)
+
+                posted_count += 1
+
+                # Log backdated payments
+                if sched.due_date < today:
+                    backdated_count += 1
+                    days_overdue = (today - sched.due_date).days
+                    logger.info(json.dumps({
+                        'event': 'backdated_payment',
+                        'schedule_id': sched.id,
+                        'days_overdue': days_overdue,
+                        'amount': sched.due_amount
+                    }))
+
+                logger.info(json.dumps({
+                    'event': 'payment_posted',
+                    'loan_number': loan.loan_number,
+                    'schedule_id': sched.id,
+                    'instalment_no': sched.instalment_no,
+                    'amount': sched.due_amount
+                }))
+
+                # Commit every batch_size records
+                if i % batch_size == 0:
+                    db.session.commit()
+                    logger.info(json.dumps({
+                        'event': 'batch_commit',
+                        'count': i
+                    }))
+
+            except Exception as e:
+                logger.error(json.dumps({
+                    'event': 'schedule_processing_error',
+                    'schedule_id': sched.id,
+                    'error': str(e)
+                }))
+                db.session.rollback()
+
+        # Final commit after processing all schedules
+        try:
+            db.session.commit()
+            logger.info(json.dumps({
+                'event': 'auto_post_complete',
+                'posted_count': posted_count,
+                'backdated_count': backdated_count
+            }))
+        except Exception as e:
+            logger.error(json.dumps({
+                'event': 'commit_error',
+                'error': str(e)
+            }))
+            db.session.rollback()
+
 
 @app.route('/test-email-now')
 def test_email_now():
@@ -9092,68 +9433,115 @@ def test_email_now():
         return "Email sent successfully - check console and inbox!", 200
     return "Failed to send email", 500
 
-def initialize_application():
-    """Main application initialization"""
+def my_job():
     with app.app_context():
-        try:
-            # Database setup
-            deploy()  # Your migration/deployment logic
-            initialize_roles_permissions()
-            
-            # Print routes
-            print("\n=== Registered Routes ===")
-            for rule in app.url_map.iter_rules():
-                methods = ','.join(rule.methods - {'HEAD', 'OPTIONS'})
-                print(f"{rule.endpoint:30} | {methods:10} | {rule.rule}")
-            print("=========================\n")
-            
-            # Start scheduler in main process only
-            if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-                start_scheduler()
-                
-            return True
-        except Exception as e:
-            print(f"❌ Initialization failed: {e}", file=sys.stderr)
-            return False
+        print(f"[{datetime.now()}] Job executed")
+        current_app.logger.info("Job executed")
 
 
+def configure_scheduler():
+    """Configure scheduler based on environment"""
+    if app.config.get('TESTING'):
+        return  # No scheduler jobs in tests
+
+    env = os.environ.get('FLASK_ENV', 'development')
+
+    if env == 'production':
+        # Production - daily at 5PM
+        scheduler.add_job(
+            id='daily_sales_report',
+            func=send_sales_notification_email,
+            trigger='cron',
+            hour=17,
+            minute=0,
+            replace_existing=True
+        )
+    else:
+        # Development - every minute with initial 10s delay
+        scheduler.add_job(
+            id='dev_sales_notifications',
+            func=send_sales_notification_email,
+            trigger='interval',
+            minutes=1,
+            next_run_time=datetime.now() + timedelta(seconds=10),
+            replace_existing=True
+        )
+
+
+def start_scheduler():
+    """Start the scheduler with proper checks"""
+    if not scheduler.running:
+        configure_scheduler()
+        scheduler.start()
+        env = os.environ.get('FLASK_ENV', 'development')
+        print(f"⏰ Scheduler started in {env} mode - Jobs: {[job.id for job in scheduler.get_jobs()]}")
+
+
+scheduler.add_job(
+    id='auto_post_due_schedules',
+    func=auto_post_payments,
+    trigger='cron',
+    day=25,
+    hour=0,
+    minute=0,
+    timezone='Africa/Blantyre',
+    replace_existing=True
+)
+
+scheduler.add_job(
+        id='sales_report',
+        func=send_sales_notification_email,
+        trigger='cron',
+        hour=17,
+        minute=0,
+        timezone='Africa/Blantyre',
+        max_instances=1,
+        replace_existing=True
+    )
+    
+
+def initialize_application():
+    with app.app_context():
+        # Your db setup, roles, etc.
+        deploy()
+        initialize_roles_permissions()
+
+        # Print routes for debug
+        for rule in app.url_map.iter_rules():
+            print(f"{rule.endpoint} | {','.join(rule.methods - {'HEAD', 'OPTIONS'})} | {rule.rule}")
+
+        return True
+
+def register_jobs():
+    scheduler.add_job(
+        id='par_calculation',
+        func=calculate_par,
+        trigger='cron',
+        hour=23,
+        minute=0,
+        timezone='Africa/Blantyre',
+        replace_existing=True
+    )
+    
+    
 
 if __name__ == '__main__':
-    try:
-        if initialize_application():
-            if not scheduler.running:
-                scheduler.start()
-
-                scheduler.add_job(
-                    id='par_calculation',
-                    func=calculate_par,
-                    trigger='cron',
-                    hour=23,
-                    minute=0,
-                    timezone='Africa/Blantyre',
-                    replace_existing=True
-                )
-
-                scheduler.add_job(
-                    id='sales_report',
-                    func=send_sales_notification_email,
-                    trigger='cron',
-                    hour=17,
-                    minute=0,
-                    timezone='Africa/Blantyre',
-                    max_instances=1,
-                    replace_existing=True
-                )
-
-            app.run(
-                host=os.environ.get('FLASK_HOST', '0.0.0.0'),
-                port=int(os.environ.get('FLASK_PORT', 5000)),
-                debug=os.environ.get('FLASK_ENV') == 'development',
-                use_reloader=False
-            )
-    except Exception as e:
-        print(f"❌ Fatal application error: {e}")
-        sys.exit(1)
-    finally:
-        if scheduler.running:
-            scheduler.shutdown()
+    scheduler.init_app(app)
+    
+    # Register environment-specific jobs
+    configure_scheduler()  
+    
+    # Add any other always-needed jobs
+    register_jobs()
+    print(f"Jobs registered before start: {[job.id for job in scheduler.get_jobs()]}")
+    scheduler.start()
+    
+    print(f"Scheduler started with jobs: {[job.id for job in scheduler.get_jobs()]}")
+    
+    if initialize_application():
+        app.run(
+            host=os.environ.get('FLASK_HOST', '0.0.0.0'),
+            port=int(os.environ.get('FLASK_PORT', 5000)),
+            debug=os.environ.get('FLASK_ENV') == 'development',
+            use_reloader=False
+        )
