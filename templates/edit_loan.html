@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Loan #{{ loan.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Edit Loan #{{ loan.id }}</h2>
+
+  <form method="POST" action="{{ url_for('edit_loan', loan_id=loan.id) }}">
+    <div class="mb-3">
+      <label for="loan_amount" class="form-label">Loan Amount (MWK)</label>
+      <input type="number" step="0.01" class="form-control" id="loan_amount" name="loan_amount" value="{{ loan.loan_amount }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="term_months" class="form-label">Term (months)</label>
+      <input type="number" class="form-control" id="term_months" name="term_months" value="{{ loan.term_months }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="monthly_instalment" class="form-label">Monthly Instalment (MWK)</label>
+      <input type="number" step="0.01" class="form-control" id="monthly_instalment" name="monthly_instalment" value="{{ loan.monthly_instalment }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <input type="text" class="form-control" id="category" name="category" value="{{ loan.category }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="application_status" class="form-label">Application Status</label>
+      <select class="form-select" id="application_status" name="application_status" required>
+        <option value="pending" {% if loan.application_status == 'pending' %}selected{% endif %}>Pending</option>
+        <option value="approved" {% if loan.application_status == 'approved' %}selected{% endif %}>Approved</option>
+        <option value="rejected" {% if loan.application_status == 'rejected' %}selected{% endif %}>Rejected</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="loan_state" class="form-label">Loan State</label>
+      <select class="form-select" id="loan_state" name="loan_state">
+        <option value="" {% if not loan.loan_state %}selected{% endif %}>-- None --</option>
+        <option value="active" {% if loan.loan_state == 'active' %}selected{% endif %}>Active</option>
+        <option value="closed" {% if loan.loan_state == 'closed' %}selected{% endif %}>Closed</option>
+        <option value="written_off" {% if loan.loan_state == 'written_off' %}selected{% endif %}>Written Off</option>
+        <option value="topped_up" {% if loan.loan_state == 'topped_up' %}selected{% endif %}>Topped Up</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="vote_id" class="form-label">Vote</label>
+      <select class="form-select" id="vote_id" name="vote_id">
+        <option value="" {% if not loan.vote_id %}selected{% endif %}>-- None --</option>
+        {% for vote in votes %}
+          <option value="{{ vote.id }}" {% if loan.vote_id == vote.id %}selected{% endif %}>
+            {{ vote.code }} - {{ vote.description }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="agent_id" class="form-label">Agent</label>
+      <select class="form-select" id="agent_id" name="agent_id">
+        <option value="" {% if not loan.agent_id %}selected{% endif %}>-- None --</option>
+        {% for agent in agents %}
+          <option value="{{ agent.id }}" {% if loan.agent_id == agent.id %}selected{% endif %}>
+            {{ agent.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{{ url_for('view_loans') }}" class="btn btn-secondary ms-2">Cancel</a>
+  </form>
+</div>
+{% endblock %}
