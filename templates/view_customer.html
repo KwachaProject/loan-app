@@ -1,37 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Details</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    {% extends 'base.html' %}
+{% extends 'base.html' %}
+{% block title %}Edit Customer{% endblock %}
 
-    {% block title %}Customer Details{% endblock %}
-    
-    {% block content %}
-    <div class="container mt-5">
-        <h2 class="mb-4">Customer Details</h2>
-        <table class="table table-striped table-bordered">
-            <tr><th>National ID</th><td>{{ customer.national_id }}</td></tr>
-            <tr><th>First Name</th><td>{{ customer.first_name }}</td></tr>
-            <tr><th>Last Name</th><td>{{ customer.last_name }}</td></tr>
-            <tr><th>Email</th><td>{{ customer.email }}</td></tr>
-            <tr><th>Contact</th><td>{{ customer.contact }}</td></tr>
-            <tr><th>Address</th><td>{{ customer.address }}</td></tr>
-            <tr><th>Employer</th><td>{{ customer.employer }}</td></tr>
-            <tr><th>Bank Account</th><td>{{ customer.bank_account }}</td></tr>
-            <tr><th>Gender</th><td>{{ customer.gender }}</td></tr>
-            <tr><th>District</th><td>{{ customer.district }}</td></tr>
-            <tr><th>Region</th><td>{{ customer.region }}</td></tr>
-        </table>
-    
-        <a href="{{ url_for('edit_customer', customer_id=customer.id) }}" class="btn btn-warning">Edit</a>
-        <a href="{{ url_for('customers') }}" class="btn btn-secondary ml-2">Back to Customers List</a>
-    </div>
-    {% endblock %}
-    
-</body>
-</html>
+{% block content %}
+<div class="container mt-5">
+    <h2>Edit Customer</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label>National ID</label>
+            <input type="text" name="national_id" class="form-control" value="{{ customer.national_id }}">
+        </div>
+        <div class="form-group">
+            <label>First Name</label>
+            <input type="text" name="first_name" class="form-control" value="{{ customer.first_name }}">
+        </div>
+        <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" name="last_name" class="form-control" value="{{ customer.last_name }}">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" value="{{ customer.email }}">
+        </div>
+        <div class="form-group">
+            <label>Contact</label>
+            <input type="text" name="contact" class="form-control" value="{{ customer.contact }}">
+        </div>
+        <div class="form-group">
+            <label>Address</label>
+            <textarea name="address" class="form-control">{{ customer.address }}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Employer</label>
+            <input type="text" name="employer" class="form-control" value="{{ customer.employer }}">
+        </div>
+        <div class="form-group">
+            <label>Bank Account</label>
+            <input type="text" name="bank_account" class="form-control" value="{{ customer.bank_account }}">
+        </div>
+        <div class="form-group">
+            <label>Gender</label>
+            <select name="gender" class="form-control">
+                <option value="Male" {% if customer.gender == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if customer.gender == 'Female' %}selected{% endif %}>Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>District</label>
+            <input type="text" name="district" class="form-control" value="{{ customer.district }}">
+        </div>
+        <div class="form-group">
+            <label>Region</label>
+            <input type="text" name="region" class="form-control" value="{{ customer.region }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{{ url_for('view_customer', customer_id=customer.id) }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

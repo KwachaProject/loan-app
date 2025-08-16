@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash, sen
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
-from datetime import datetime
+from datetime import datetime, timedelta, time
 from io import BytesIO
 from fpdf import FPDF
+from calendar import monthrange
 import json
 from datetime import timedelta
 from contextlib import contextmanager
@@ -71,7 +72,6 @@ from wtforms.validators import DataRequired, Email
 from wtforms import StringField, FloatField, IntegerField, SelectField, DateField, SubmitField
 import os
 import re
-import time
 from werkzeug.utils import secure_filename
 from sqlalchemy.orm import joinedload
 from flask import Flask
@@ -1471,6 +1471,13 @@ class Vote(db.Model):
         return f'<Vote {self.code}: {self.description}>'
 
 
+class AuditLog(db.Model):
+    __tablename__ = 'audit_logs'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    action = db.Column(db.String(100), nullable=False)
+    details = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Disbursement(db.Model):
     __tablename__ = 'disbursements'
@@ -2139,40 +2146,64 @@ class Placement(db.Model):
             PlacementSchedule.query.filter_by(placement_id=self.id, is_paid=False).delete()
             db.session.bulk_save_objects(new_schedule)
 
+class ReconciliationReport(db.Model):
+    __tablename__ = 'reconciliation_reports'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, default=date.today)
+    level = db.Column(db.String(20), nullable=False)  # 'payroll', 'cash'
+    total_expected = db.Column(db.Float, default=0.0)
+    total_received = db.Column(db.Float, default=0.0)
+    discrepancy_count = db.Column(db.Integer, default=0)
+    details = db.Column(db.Text)  # JSON string of discrepancies
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<ReconciliationReport {self.date} ({self.level}): {self.discrepancy_count} discrepancies>'
+
 
 class PayrollDeduction(db.Model):
     __tablename__ = 'payroll_deductions'
+    __table_args__ = (
+        db.Index('idx_payroll_loan_id', 'loan_id'),
+        db.Index('idx_payroll_schedule_id', 'schedule_id'),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
     loan_id = db.Column(db.Integer, db.ForeignKey('loan_applications.id'), nullable=False)
+    schedule_id = db.Column(db.Integer, db.ForeignKey('repayment_schedules.id'), nullable=True)
+    vote_id = db.Column(db.Integer, db.ForeignKey('votes.id'), nullable=True)
+    amount = db.Column(db.Float, default=0.0)
     deduction_date = db.Column(db.Date, nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    source = db.Column(db.String(100))  # e.g., HR system
-    reference = db.Column(db.String(100))  # e.g., payroll file ref
+    batch_id = db.Column(db.String(50), nullable=True)  # Links to batch upload
+    status = db.Column(db.String(20), default='processed')  # 'processed', 'failed'
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    
     loan = db.relationship('LoanApplication', backref='payroll_deductions')
+    schedule = db.relationship('RepaymentSchedule', backref='payroll_deductions')
+    vote = db.relationship('Vote', backref='payroll_deductions')
 
     def __repr__(self):
-        return f"<PayrollDeduction Loan: {self.loan_id}, Date: {self.deduction_date}, Amount: {self.amount}>"
-
-
+        return f'<PayrollDeduction Loan {self.loan_id}: {self.amount:.2f} on {self.deduction_date}>'
+    
 class CashReceipt(db.Model):
     __tablename__ = 'cash_receipts'
+    __table_args__ = (
+        db.Index('idx_cash_vote_id', 'vote_id'),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
-    vote_id = db.Column(db.Integer, db.ForeignKey('votes.id'), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    received_date = db.Column(db.Date, nullable=False)
-    source = db.Column(db.String(100))  # e.g., Bank name or HR
-    reference = db.Column(db.String(100))  # Transaction ref
+    vote_id = db.Column(db.Integer, db.ForeignKey('votes.id'), nullable=True)
+    amount = db.Column(db.Float, default=0.0)
+    receipt_date = db.Column(db.Date, nullable=False)
+    batch_id = db.Column(db.String(50), nullable=True)  # Links to batch upload
+    status = db.Column(db.String(20), default='processed')  # 'processed', 'failed'
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    
     vote = db.relationship('Vote', backref='cash_receipts')
 
     def __repr__(self):
-        return f"<CashReceipt Vote: {self.vote_id}, Date: {self.received_date}, Amount: {self.amount}>"
-
+        return f'<CashReceipt Vote {self.vote_id}: {self.amount:.2f} on {self.receipt_date}>'
 
 # New model for transaction history
 class PlacementTransaction(db.Model):
@@ -4364,7 +4395,7 @@ def process_customer_registration(data, files=None):
     if not config:
         raise Exception("Invalid loan term selected.")
 
-    # Validate date of birth
+    # Validate DOB
     dob = datetime.strptime(data['dob'], "%Y-%m-%d").date()
     today = date.today()
     age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
@@ -4375,7 +4406,6 @@ def process_customer_registration(data, files=None):
 
     # Validate employment start date
     date_joined = data.get("date_joined")
-    years_in_service = None
     if date_joined:
         date_joined = datetime.strptime(date_joined, "%Y-%m-%d").date()
         years_in_service = today.year - date_joined.year - ((today.month, today.day) < (date_joined.month, date_joined.day))
@@ -4394,69 +4424,72 @@ def process_customer_registration(data, files=None):
     annuity = (r * (1 + r) ** term_months) / ((1 + r) ** term_months - 1)
     monthly_payment = (capitalized_amount * annuity) + collection_fees
 
-    # Check for duplicates
-    if Customer.query.filter_by(email=data['email']).first():
-        raise Exception("Email already exists.")
-    if Customer.query.filter_by(national_id=data['national_id']).first():
-        raise Exception("National ID already exists.")
+    # Check if customer already exists
+    existing_customer = Customer.query.filter(
+        (Customer.email == data['email']) |
+        (Customer.national_id == data['national_id'])
+    ).first()
 
-    # Generate customer file number
-    now = datetime.utcnow()
-    file_number = f"{now.year}{now.month:02d}{db.session.query(Customer).count() + 1:06d}"
+    if existing_customer:
+        customer = existing_customer
+    else:
+        # Generate customer file number
+        now = datetime.utcnow()
+        file_number = f"{now.year}{now.month:02d}{db.session.query(Customer).count() + 1:06d}"
 
-    agent_id = int(data['agent_id']) if data.get('agent_id') else None
+        agent_id = int(data['agent_id']) if data.get('agent_id') else None
 
-    # Create customer record
-    customer = Customer(
-        national_id=data['national_id'],
-        first_name=data['first_name'],
-        last_name=data['last_name'],
-        gender=data.get('gender'),
-        dob=dob,
-        date_joined=date_joined,
-        title=data.get('title'),
-        email=data['email'],
-        contact=data.get('contact'),
-        address=data.get('address'),
-        employer=data['employer'],
-        job_title=data.get('job_title'),
-        salary=float(data.get('salary') or 0),
-        bank_name=data.get('bank_name'),
-        bank_account=data['bank_account'],
-        salary_deposited=data.get('salary_deposited'),
-        district=data.get('district'),
-        region=data.get('region'),
-        amount_requested=loan_amount,
-        next_of_kin_relationship=data.get("next_of_kin_relationship"),
-        next_of_kin_contact=data.get("next_of_kin_contact"),
-        next_of_kin_name=data.get('next_of_kin_name'),
-        file_number=file_number,
-        status=data.get('status', 'pending'),
-        is_approved_for_creation=False,
-        agent_id=agent_id,
-        maker_id=current_user.id
-    )
-    db.session.add(customer)
-    db.session.flush()
+        # Create customer record
+        customer = Customer(
+            national_id=data['national_id'],
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            gender=data.get('gender'),
+            dob=dob,
+            date_joined=date_joined,
+            title=data.get('title'),
+            email=data['email'],
+            contact=data.get('contact'),
+            address=data.get('address'),
+            employer=data['employer'],
+            job_title=data.get('job_title'),
+            salary=float(data.get('salary') or 0),
+            bank_name=data.get('bank_name'),
+            bank_account=data['bank_account'],
+            salary_deposited=data.get('salary_deposited'),
+            district=data.get('district'),
+            region=data.get('region'),
+            amount_requested=loan_amount,
+            next_of_kin_relationship=data.get("next_of_kin_relationship"),
+            next_of_kin_contact=data.get("next_of_kin_contact"),
+            next_of_kin_name=data.get('next_of_kin_name'),
+            file_number=file_number,
+            status=data.get('status', 'pending'),
+            is_approved_for_creation=False,
+            agent_id=agent_id,
+            maker_id=current_user.id
+        )
+        db.session.add(customer)
+        db.session.flush()
 
-    # Attach documents
-    document_fields = {
-        'national_id_front': 'id_front',
-        'form': 'form',
-        'customer_photo': 'photo',
-        'payslip': 'payslip',
-        'bank_statement': 'bank_statement',
-        'letter_of_undertaking': 'undertaking_letter'
-    }
-    for field, dtype in document_fields.items():
-        if files and (file := files.get(field)) and file.filename:
-            filename, path = save_document(file, customer.id, dtype)
-            db.session.add(Document(
-                customer_id=customer.id,
-                filename=filename,
-                filetype=dtype,
-                path=path
-            ))
+        # Attach documents for new customers
+        document_fields = {
+            'national_id_front': 'id_front',
+            'form': 'form',
+            'customer_photo': 'photo',
+            'payslip': 'payslip',
+            'bank_statement': 'bank_statement',
+            'letter_of_undertaking': 'undertaking_letter'
+        }
+        for field, dtype in document_fields.items():
+            if files and (file := files.get(field)) and file.filename:
+                filename, path = save_document(file, customer.id, dtype)
+                db.session.add(Document(
+                    customer_id=customer.id,
+                    filename=filename,
+                    filetype=dtype,
+                    path=path
+                ))
 
     # Loan number generation
     loan_number = f"{category_info['prefix']}{str(term_months).zfill(2)}{db.session.query(LoanApplication).count() + 1:06d}"
@@ -4466,6 +4499,7 @@ def process_customer_registration(data, files=None):
     top_up_balance = calculate_balances(previous).get('top_up_balance', 0) if previous else 0
     cash_to_client = max(loan_amount - top_up_balance, 0)
 
+    # Create loan record
     loan = LoanApplication(
         customer_id=customer.id,
         loan_amount=loan_amount,
@@ -4476,7 +4510,7 @@ def process_customer_registration(data, files=None):
         category=category_info['label'],
         loan_category=category_code,
         loan_number=loan_number,
-        file_number=file_number,
+        file_number=customer.file_number if existing_customer else file_number,
         application_status='pending',
         loan_state='application',
         performance_status='pending',
@@ -4503,6 +4537,8 @@ def process_customer_registration(data, files=None):
     ))
 
     db.session.commit()
+
+
 
 
 
@@ -4607,6 +4643,38 @@ def admin_approval_dashboard():
         pending_customers=pending_customers
     )
 
+@app.route('/loans/<int:loan_id>/edit', methods=['GET', 'POST'])
+def edit_loan(loan_id):
+    loan = LoanApplication.query.get_or_404(loan_id)
+    agents = Agent.query.filter_by(active=True).order_by(Agent.name).all()
+    votes = Vote.query.filter_by(is_active=True).order_by(Vote.code).all()
+
+    if request.method == 'POST':
+        try:
+            loan.loan_amount = float(request.form.get('loan_amount', loan.loan_amount))
+            loan.term_months = int(request.form.get('term_months', loan.term_months))
+            loan.monthly_instalment = float(request.form.get('monthly_instalment', loan.monthly_instalment))
+        except (ValueError, TypeError):
+            flash('Invalid numeric input.', 'danger')
+            return redirect(request.url)
+
+        loan.category = request.form.get('category', loan.category)
+        loan.application_status = request.form.get('application_status', loan.application_status)
+        loan.loan_state = request.form.get('loan_state', loan.loan_state)
+
+        vote_id = request.form.get('vote_id')
+        loan.vote_id = int(vote_id) if vote_id and vote_id.isdigit() else None
+
+        agent_id = request.form.get('agent_id')
+        loan.agent_id = int(agent_id) if agent_id and agent_id.isdigit() else None
+
+        db.session.commit()
+        flash('Loan updated successfully.', 'success')
+        return redirect(url_for('view_loans'))
+
+    return render_template('edit_loan.html', loan=loan, agents=agents, votes=votes)
+
+
 # Route to handle approval
 @app.route('/admin/admin_approval/<int:customer_id>', methods=['POST'])
 @login_required
@@ -4646,23 +4714,33 @@ def view_customer(customer_id):
     return render_template('view_customer.html', customer=customer)
 
 @app.route('/customer/<int:customer_id>/edit', methods=['GET', 'POST'])
-@role_required("admin")
+@role_required("sales_ops", "admin")
 def edit_customer(customer_id):
     customer = Customer.query.get_or_404(customer_id)
+
     if request.method == 'POST':
-        customer.first_name = request.form['first_name']
-        customer.last_name = request.form['last_name']
-        customer.email = request.form['email']
-        customer.contact = request.form['contact']
-        customer.address = request.form['address']
-        customer.employer = request.form['employer']
-        customer.bank_account = request.form['bank_account']
-        customer.gender = request.form['gender']
-        customer.district = request.form['district']
-        customer.region = request.form['region']
-        db.session.commit()
-        flash('Customer details updated successfully!', 'success')
-        return redirect(url_for('view_customer', customer_id=customer.id))
+        try:
+            customer.first_name = request.form['first_name']
+            customer.last_name = request.form['last_name']
+            customer.email = request.form['email']
+            customer.contact = request.form.get('contact')
+            customer.address = request.form.get('address')
+            customer.employer = request.form.get('employer')
+            customer.job_title = request.form.get('job_title')
+            customer.salary = float(request.form.get('salary') or 0)
+            customer.bank_name = request.form.get('bank_name')
+            customer.bank_account = request.form.get('bank_account')
+            customer.region = request.form.get('region')
+            customer.district = request.form.get('district')
+            # Add more fields as needed
+
+            db.session.commit()
+            flash("✅ Customer updated successfully.", "success")
+            return redirect(url_for('view_customer'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f"❌ Error updating customer: {str(e)}", "danger")
+
     return render_template('edit_customer.html', customer=customer)
 
 @app.route('/loans')
@@ -7968,52 +8046,81 @@ from flask_mail import Message
 from apscheduler.schedulers.background import BackgroundScheduler
 import calendar
 
+from sqlalchemy import func, cast, Date, distinct, and_
+
+from datetime import date, datetime
+
+def get_agent_loan_stats(start: date, end: date, region=None, district=None, team_leader=None):
+    start_dt = datetime.combine(start, datetime.min.time())
+    end_dt = datetime.combine(end, datetime.max.time())
+
+    query = (
+        db.session.query(
+            Agent.id.label("agent_id"),
+            Agent.name.label("agent_name"),
+            Agent.region,
+            Agent.district,
+            Agent.monthly_budget,
+            Agent.team_leader_id,
+            func.count(LoanApplication.id).label("applications"),
+            func.coalesce(func.sum(LoanApplication.loan_amount), 0).label("total_loan_amount"),
+            func.count(distinct(cast(LoanApplication.created_at, Date))).label("active_days")
+        )
+        .join(LoanApplication, LoanApplication.agent_id == Agent.id)
+        .filter(Agent.active.is_(True), Agent.role != 'Team Leader')
+        .filter(LoanApplication.created_at >= start_dt, LoanApplication.created_at <= end_dt)
+    )
+
+    if region:
+        query = query.filter(Agent.region == region)
+    if district:
+        query = query.filter(Agent.district == district)
+    if team_leader:
+        query = query.filter(Agent.team_leader_id == int(team_leader))
+
+    query = query.group_by(Agent.id).order_by(Agent.name)
+    return query.all()
+
 @app.route('/dashboard/sales')
 def sales_dashboard():
     region = request.args.get('region')
     district = request.args.get('district')
     team_leader = request.args.get('team_leader')
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
 
-    query = Agent.query.filter(Agent.active.is_(True), Agent.role != 'Team Leader')
+    today = date.today()
+    start = datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else today.replace(day=1)
+    end = datetime.strptime(end_date, "%Y-%m-%d").date() if end_date else today
 
-    filters = {'region': region, 'district': district, 'team_leader': team_leader}
-    for field, value in filters.items():
-        if value:
-            query = query.filter(getattr(Agent, field) == value)
+    agent_stats = get_agent_loan_stats(start, end, region, district, team_leader)
 
-    agents = query.all()
-
-    regions = [r[0] for r in db.session.query(Agent.region).distinct()]
-    districts = [d[0] for d in db.session.query(Agent.district).distinct()]
-    team_leads = [t[0] for t in db.session.query(Agent.team_leader).distinct() if t[0]]
-
+    # Prepare stats for template
     stats = []
-    for agent in agents:
-        applications = LoanApplication.query.filter(
-            LoanApplication.agent_id == agent.id
-        ).count()
-
-        loan_amounts = db.session.query(func.sum(LoanApplication.loan_amount)) \
-            .filter(LoanApplication.agent_id == agent.id).scalar() or 0
-
-        active_days = db.session.query(
-            func.count(distinct(cast(LoanApplication.created_at, Date)))
-        ).filter(LoanApplication.agent_id == agent.id).scalar()
-
-        applications_per_day = round(applications / active_days, 2) if active_days else 0
-
+    for row in agent_stats:
+        applications_per_day = round(row.applications / row.active_days, 2) if row.active_days else 0
+        budget_achievement = round((row.total_loan_amount / row.monthly_budget) * 100, 1) if row.monthly_budget else None
         stats.append({
-            'name': agent.name,
-            'region': agent.region,
-            'district': agent.district,
-            'applications': applications,
-            'total_loan_amount': loan_amounts,
+            'name': row.agent_name,
+            'region': row.region,
+            'district': row.district,
+            'applications': row.applications,
             'applications_per_day': applications_per_day,
-            'active_days': active_days,
-            'budget': agent.monthly_budget,
-            'budget_achievement': round((loan_amounts / agent.monthly_budget) * 100, 1) if agent.monthly_budget else None
+            'active_days': row.active_days,
+            'total_loan_amount': row.total_loan_amount,
+            'budget': row.monthly_budget,
+            'budget_achievement': budget_achievement
         })
 
+    # Dropdown sources
+    regions = [r[0] for r in db.session.query(Agent.region)
+               .filter(Agent.role != 'Team Leader')
+               .distinct().order_by(Agent.region)]
+    districts = [d[0] for d in db.session.query(Agent.district)
+                 .filter(Agent.role != 'Team Leader')
+                 .distinct().order_by(Agent.district)]
+    team_leads = db.session.query(Agent.id, Agent.name) \
+        .filter(Agent.role == 'Team Leader').order_by(Agent.name).all()
 
     notif = get_sales_notification()
 
@@ -8027,25 +8134,172 @@ def sales_dashboard():
         notif=notif
     )
 
+
+from sqlalchemy.orm import aliased
+from sqlalchemy import func, and_, distinct
+from datetime import datetime, date, time
+
+@app.route('/dashboard/team-leader')
+def team_leader_dashboard():
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    today = date.today()
+    start = datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else today.replace(day=1)
+    end = datetime.strptime(end_date, "%Y-%m-%d").date() if end_date else today
+
+    # Convert to datetimes for accurate filtering
+    start_dt = datetime.combine(start, time.min)
+    end_dt = datetime.combine(end, time.max)
+
+    TeamLeader = aliased(Agent)
+
+    # Aggregate team budgets (sum of agent budgets only)
+    budgets = dict(
+        db.session.query(
+            Agent.team_leader_id,
+            func.coalesce(func.sum(Agent.monthly_budget), 0.0)
+        )
+        .filter(Agent.role != 'Team Leader')
+        .group_by(Agent.team_leader_id)
+        .all()
+    )
+
+    # Loans + agent counts by leader with date filter
+    loan_stats = (
+        db.session.query(
+            TeamLeader.id.label('leader_id'),
+            TeamLeader.name.label('leader_name'),
+            func.count(distinct(Agent.id)).label('num_agents'),
+            func.count(LoanApplication.id).label('applications'),
+            func.coalesce(func.sum(LoanApplication.loan_amount), 0.0).label('total_loan_amount')
+        )
+        .filter(TeamLeader.role == 'Team Leader')
+        .outerjoin(
+            Agent,
+            and_(
+                Agent.team_leader_id == TeamLeader.id,
+                Agent.role != 'Team Leader'
+            )
+        )
+        .outerjoin(
+            LoanApplication,
+            and_(
+                LoanApplication.agent_id == Agent.id,
+                LoanApplication.created_at >= start_dt,
+                LoanApplication.created_at <= end_dt
+            )
+        )
+        .group_by(TeamLeader.id, TeamLeader.name)
+        .order_by(TeamLeader.name)
+        .all()
+    )
+
+    team_stats = []
+    for row in loan_stats:
+        team_budget = float(budgets.get(row.leader_id, 0.0))
+        achievement = round((row.total_loan_amount / team_budget) * 100, 2) if team_budget else 0.0
+
+        team_stats.append({
+            "team_leader_id": row.leader_id,
+            "team_leader_name": row.leader_name,
+            "num_agents": row.num_agents,
+            "applications": row.applications,
+            "total_loan_amount": float(row.total_loan_amount),
+            "team_budget": team_budget,
+            "achievement": achievement
+        })
+
+    return render_template(
+        "dashboard/team_leader_dashboard.html",
+        stats=team_stats,
+        active_tab="team"
+    )
+
+from flask import jsonify
+from datetime import datetime, date, timedelta
+from calendar import monthrange
+from sqlalchemy import func
+
+
 @app.route('/notifications/sales-summary')
 def sales_summary_notification():
-    today = datetime.today().date()
+    today = date.today()
     start_of_month = today.replace(day=1)
+    start_of_today = datetime.combine(today, time.min)
+    end_of_today = datetime.combine(today, time.max)
 
+    start_of_month_dt = datetime.combine(start_of_month, datetime.min.time())
+    end_of_today_dt = datetime.combine(today, datetime.max.time())
+
+    # Helper to calculate working days
     def working_days(start, end):
-        return sum(1 for d in (start + timedelta(n) for n in range((end - start).days + 1)) if d.weekday() < 5)
+        return sum(1 for n in range((end - start).days + 1)
+                   if (start + timedelta(n)).weekday() < 5)
 
     working_days_passed = working_days(start_of_month, today)
-    total_working_days = working_days(start_of_month, today.replace(day=calendar.monthrange(today.year, today.month)[1]))
+    total_days_in_month = monthrange(today.year, today.month)[1]
+    total_working_days = working_days(start_of_month,
+                                      start_of_month.replace(day=total_days_in_month))
 
-    todays_sales = db.session.query(func.sum(LoanApplication.loan_amount)) \
-        .filter(func.date(LoanApplication.created_at) == today).scalar() or 0
+    # Query all active agents
+    agents = Agent.query.filter(Agent.active.is_(True)).all()
+    agent_ids = [a.id for a in agents]
 
-    mtd_sales = db.session.query(func.sum(LoanApplication.loan_amount)) \
-        .filter(LoanApplication.created_at >= start_of_month).scalar() or 0
+    # Aggregate loans per agent
+    loans_per_agent = (
+        db.session.query(
+            LoanApplication.agent_id,
+            func.count(LoanApplication.id).label("applications"),
+            func.coalesce(func.sum(LoanApplication.loan_amount), 0).label("total_loan_amount"),
+            func.coalesce(
+                func.sum(
+                    case(
+                            (
+                                (LoanApplication.created_at >= start_of_today) &
+                                (LoanApplication.created_at <= end_of_today),
+                                LoanApplication.loan_amount
+                            )
+                        ,
+                        else_=0
+                    )
+                ),
+                0
+            ).label("todays_sales")
+        )
+        .filter(LoanApplication.agent_id.in_(agent_ids))
+        .filter(LoanApplication.created_at >= start_of_month_dt)
+        .filter(LoanApplication.created_at <= end_of_today_dt)
+        .group_by(LoanApplication.agent_id)
+        .all()
+    )
 
-    total_budget = db.session.query(func.sum(Agent.monthly_budget)).scalar() or 0
+    # Build agent table including agents with no loans
+    agent_table = []
+    for agent in agents:
+        row = next((r for r in loans_per_agent if r.agent_id == agent.id), None)
+        applications = row.applications if row else 0
+        total_loan = float(row.total_loan_amount) if row else 0
+        today_loan = float(row.todays_sales) if row else 0
+        active_days = applications  # or custom logic if you track actual working days per agent
+        applications_per_day = applications / active_days if active_days else 0
+        agent_table.append({
+            "agent_name": agent.name,
+            "region": agent.region,
+            "district": agent.district,
+            "applications": applications,
+            "applications_per_day": round(applications_per_day, 2),
+            "active_days": active_days,
+            "total_loan_amount": total_loan,
+            "monthly_budget": agent.monthly_budget,
+            "achievement_percent": round((total_loan / agent.monthly_budget * 100) if agent.monthly_budget else 0, 2),
+            "todays_sales": today_loan
+        })
 
+    # Total sales
+    todays_sales = sum(a["todays_sales"] for a in agent_table)
+    mtd_sales = sum(a["total_loan_amount"] for a in agent_table)
+    total_budget = sum(a.monthly_budget for a in agents)
     budget_achievement = (mtd_sales / total_budget * 100) if total_budget else 0
     working_days_ratio = (working_days_passed / total_working_days * 100) if total_working_days else 0
 
@@ -8055,43 +8309,9 @@ def sales_summary_notification():
         "total_budget": round(total_budget, 2),
         "achievement_percent": round(budget_achievement, 2),
         "working_days_percent": round(working_days_ratio, 2),
-        "on_track": budget_achievement >= working_days_ratio
+        "on_track": budget_achievement >= working_days_ratio,
+        "agent_table": agent_table
     })
-
-@app.route('/dashboard/team-leader')
-def team_leader_dashboard():
-    from sqlalchemy.orm import aliased
-
-    TeamLeader = aliased(Agent)
-
-    stats = (
-        db.session.query(
-            TeamLeader,
-            func.count(LoanApplication.id).label('applications'),
-            func.sum(LoanApplication.loan_amount).label('total_loan_amount'),
-            func.sum(Agent.monthly_budget).label('team_budget')
-        )
-        .join(Agent, LoanApplication.agent_id == Agent.id)
-        .join(TeamLeader, Agent.team_leader_id == TeamLeader.id)
-        .group_by(TeamLeader)
-        .all()
-    )
-
-    # Build list for template
-    team_stats = []
-    for row in stats:
-        team_leader = row[0]  # TeamLeader is the first element of the row tuple
-        achievement = round((row.total_loan_amount / row.team_budget) * 100, 2) if row.team_budget else 0
-
-        team_stats.append({
-            "team_leader": team_leader,  # Full object, access .name, .email, etc.
-            "applications": row.applications,
-            "total_loan_amount": row.total_loan_amount,
-            "team_budget": row.team_budget,
-            "achievement": achievement
-        })
-
-    return render_template("dashboard/team_leader_dashboard.html", stats=team_stats, active_tab="team")
 
 @app.route('/agents/team/add', methods=['GET', 'POST'])
 def add_team_with_agents():
@@ -8283,130 +8503,322 @@ def calculate_time_percentage(comparisons):
     """Calculate time progression percentage"""
     return (comparisons['current_days'] / comparisons['total_days'] * 100) if comparisons['total_days'] > 0 else 0.0
 
-def get_sales_data():
-    """Get comprehensive sales data with team leader performance and historical comparisons"""
+from flask import render_template, jsonify, request
+from datetime import datetime, date, timedelta
+from sqlalchemy import case, func, and_, extract, or_
+
+SAMPLE_SALES = [
+    {"category": "Youth", "sales_count": 18, "total_sales": 94000000},
+    {"category": "Male", "sales_count": 5, "total_sales": 25000000},
+    {"category": "Female", "sales_count": 10, "total_sales": 50000000},
+    # "Other" intentionally left out to test zero fill
+]
+
+
+from flask import render_template, request
+from datetime import datetime, date, timedelta
+from sqlalchemy import case, func, literal
+
+@app.route("/sales-by-gender")
+def gender_dashboard():
+    # Get filter parameters
+    start_date_str = request.args.get("start_date")
+    end_date_str = request.args.get("end_date")
+    
+    # Parse dates with validation
     today = date.today()
+    
+    # Default to current month
+    first_day = today.replace(day=1)
+    last_day = (today.replace(month=today.month % 12 + 1, day=1) - timedelta(days=1))
+    
     try:
-        # 1. Get date comparisons
-        comparisons = get_historical_comparisons(today)
-        
-        # 2. Get overall sales metrics
-        today_sales = get_today_sales(today)
-        mtd_sales = get_mtd_sales(comparisons['start_of_month'])
-        total_budget = get_total_budget()
-        sales_pct = calculate_sales_percentage(mtd_sales, total_budget)
-        time_pct = calculate_time_percentage(comparisons)
-        
-        # 3. Get historical sales metrics
-        last_month_sales = get_mtd_sales(comparisons['start_of_last_month'], comparisons['last_month_days'])
-        last_year_sales = get_mtd_sales(comparisons['start_of_last_year'], comparisons['last_year_days'])
-        last_month_sales_pct = calculate_sales_percentage(last_month_sales, total_budget)
-        last_year_sales_pct = calculate_sales_percentage(last_year_sales, total_budget)
-        
-        # 4. Get team leader performance
-        team_leaders = get_team_leader_performance(comparisons)
-        
-        return {
-            "today_sales": float(today_sales),
-            "mtd_sales": float(mtd_sales),
-            "total_budget": float(total_budget),
-            "sales_pct": round(sales_pct, 1),
-            "time_pct": round(time_pct, 1),
-            "last_month_sales": float(last_month_sales),
-            "last_year_sales": float(last_year_sales),
-            "last_month_sales_pct": round(last_month_sales_pct, 1),
-            "last_year_sales_pct": round(last_year_sales_pct, 1),
-            "working_days": int(comparisons['total_days']),
-            "days_passed": int(comparisons['current_days']),
-            "report_date": today.strftime("%B %d, %Y"),
-            "team_leaders": team_leaders,
-            "is_valid": True
-        }
-            
-    except Exception as e:
-        app.logger.error(f"Sales data error: {str(e)}", exc_info=True)
-        return get_fallback_sales_data(today)
-
-def get_mtd_sales(start_date, max_days=None):
-    """Get month-to-date sales total for a given period"""
-    query = db.session.query(
-        func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
-    ).filter(LoanApplication.created_at >= start_date)
-    
-    if max_days:
-        end_date = start_date + timedelta(days=max_days)
-        query = query.filter(LoanApplication.created_at < end_date)
-    
-    return query.scalar()
-
-def get_team_leader_performance(comparisons):
-    """Get performance metrics for each team leader with historical comparisons"""
-    team_leaders = Agent.query.filter(Agent.role == "Team Leader").all()
-    leader_performance = []
-    
-    for leader in team_leaders:
-        team_agent_ids = [leader.id] + [agent.id for agent in leader.team_members]
-        
-        # Current MTD metrics
-        team_sales = db.session.query(
-            func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
-        ).filter(
-            LoanApplication.created_at >= comparisons['start_of_month'],
-            LoanApplication.agent_id.in_(team_agent_ids)
-        ).scalar()
-        team_applications = db.session.query(
-            func.count(LoanApplication.id)
-        ).filter(
-            LoanApplication.created_at >= comparisons['start_of_month'],
-            LoanApplication.agent_id.in_(team_agent_ids)
-        ).scalar()
-        team_budget = db.session.query(
-            func.coalesce(func.sum(Agent.monthly_budget), 0.0)
-        ).filter(Agent.id.in_(team_agent_ids)).scalar()
-        achievement = (team_sales / team_budget * 100) if team_budget > 0 else 0.0
-        
-        # Last month MTD metrics
-        last_month_sales = db.session.query(
-            func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
-        ).filter(
-            LoanApplication.created_at >= comparisons['start_of_last_month'],
-            LoanApplication.created_at < comparisons['start_of_last_month'] + timedelta(days=comparisons['last_month_days']),
-            LoanApplication.agent_id.in_(team_agent_ids)
-        ).scalar()
-        last_month_achievement = (last_month_sales / team_budget * 100) if team_budget > 0 else 0.0
-        
-        # Last year MTD metrics
-        last_year_sales = db.session.query(
-            func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)
-        ).filter(
-            LoanApplication.created_at >= comparisons['start_of_last_year'],
-            LoanApplication.created_at < comparisons['start_of_last_year'] + timedelta(days=comparisons['last_year_days']),
-            LoanApplication.agent_id.in_(team_agent_ids)
-        ).scalar()
-        last_year_achievement = (last_year_sales / team_budget * 100) if team_budget > 0 else 0.0
-        
-        # Determine performance status
-        if achievement >= 100:
-            status = "exceeded"
-        elif achievement >= 75:
-            status = "on-track"
+        if start_date_str:
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
         else:
-            status = "needs-improvement"
-        
-        leader_performance.append({
-            'id': leader.id,
-            'name': leader.name,
-            'applications': int(team_applications or 0),
-            'sales': float(team_sales or 0),
-            'team_budget': float(team_budget or 0),
-            'achievement': round(achievement, 1),
-            'last_month_achievement': round(last_month_achievement, 1),
-            'last_year_achievement': round(last_year_achievement, 1),
-            'status': status
+            start_date = first_day
+            start_date_str = first_day.strftime("%Y-%m-%d")
+            
+        if end_date_str:
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+        else:
+            end_date = last_day
+            end_date_str = last_day.strftime("%Y-%m-%d")
+            
+    except (ValueError, TypeError):
+        # If date parsing fails, use default dates
+        start_date = first_day
+        end_date = last_day
+        start_date_str = first_day.strftime("%Y-%m-%d")
+        end_date_str = last_day.strftime("%Y-%m-%d")
+
+    # Calculate age based on year only (simplified for SQLite)
+    birth_year = func.cast(func.substr(Customer.dob, 1, 4), db.Integer)
+    age = today.year - birth_year
+    
+    # Define category logic
+    category = case(
+        (age < 35, literal('Youth')),
+        (Customer.gender.ilike('male'), literal('Male')),
+        (Customer.gender.ilike('female'), literal('Female')),
+        else_=literal('Other')
+    ).label('category')
+
+    # Build query
+    query = db.session.query(
+        category,
+        func.count(LoanApplication.id).label('sales_count'),
+        func.coalesce(func.sum(LoanApplication.loan_amount), 0).label('total_sales')
+    ).join(Customer, Customer.id == LoanApplication.customer_id)
+
+    # Apply date filters
+    if start_date:
+        query = query.filter(LoanApplication.created_at >= start_date)
+    if end_date:
+        next_day = end_date + timedelta(days=1)
+        query = query.filter(LoanApplication.created_at < next_day)
+
+    # Group and execute
+    results = query.group_by(category).all()
+    
+    # Prepare final results with all categories
+    all_categories = ["Youth", "Male", "Female", "Other"]
+    category_data = {r[0]: r for r in results}
+    
+    final_results = []
+    total_sales_count = 0
+    total_sales_amount = 0.0
+    
+    for cat in all_categories:
+        if cat in category_data:
+            sales_count = int(category_data[cat][1])
+            sales_amount = float(category_data[cat][2])
+            final_results.append({
+                "category": cat,
+                "sales_count": sales_count,
+                "total_sales": sales_amount
+            })
+            total_sales_count += sales_count
+            total_sales_amount += sales_amount
+        else:
+            final_results.append({
+                "category": cat,
+                "sales_count": 0,
+                "total_sales": 0.0
+            })
+    
+    # Format numbers as strings with commas
+    def format_number(num):
+        return f"{num:,.0f}"
+    
+    formatted_results = []
+    for item in final_results:
+        formatted_results.append({
+            "category": item["category"],
+            "sales_count": format_number(item["sales_count"]),
+            "total_sales": format_number(item["total_sales"])
         })
     
-    leader_performance.sort(key=lambda x: x['achievement'], reverse=True)
-    return leader_performance
+    return render_template(
+        "sales_by_gender.html",
+        data=formatted_results,
+        total_sales_count=format_number(total_sales_count),
+        total_sales_amount=format_number(total_sales_amount),
+        start_date=start_date_str,
+        end_date=end_date_str,
+        active_tab='gender'
+    )
+
+from datetime import date, datetime, time, timedelta
+from sqlalchemy import func
+
+def _apply_agent_filters_to_loan_query(q, filters):
+    """Join to Agent and apply region/district/team_leader filters."""
+    if not filters:
+        return q
+    q = q.join(Agent, Agent.id == LoanApplication.agent_id)
+    if filters.get('region'):
+        q = q.filter(Agent.region == filters['region'])
+    if filters.get('district'):
+        q = q.filter(Agent.district == filters['district'])
+    if filters.get('team_leader_id'):
+        q = q.filter(Agent.team_leader_id == filters['team_leader_id'])
+    # Exclude loans that were (accidentally) assigned to a Team Leader if you never want that counted:
+    q = q.filter(Agent.role != 'Team Leader')
+    return q
+
+def _day_bounds(d: date):
+    start = datetime.combine(d, time.min)  # 00:00:00
+    end = datetime.combine(d, time.max)    # 23:59:59.999999
+    return start, end
+
+
+def get_sales_data(filters=None):
+    with app.app_context():
+        today = date.today()
+        try:
+            cmp = get_historical_comparisons(today)
+
+            today_sales = get_today_sales(today, filters)
+            mtd_sales   = get_mtd_sales(cmp['start_of_month'], filters)
+            total_budget = get_total_budget(filters)
+
+            sales_pct = calculate_sales_percentage(mtd_sales, total_budget)
+            time_pct  = calculate_time_percentage(cmp)
+
+            # Same elapsed days comparison
+            days_so_far = cmp['current_days']
+            start_last_month = cmp['start_of_last_month']
+            start_last_year  = cmp['start_of_last_year']
+
+            last_month_sales = get_mtd_sales(start_last_month, filters={
+                **(filters or {}),
+                # bound by same elapsed days:
+                '__end__': start_last_month + timedelta(days=days_so_far)  # handled below if you keep a single entrypoint
+            })
+            last_year_sales = get_mtd_sales(start_last_year, filters={
+                **(filters or {}),
+                '__end__': start_last_year + timedelta(days=days_so_far)
+            })
+
+            # If you keep the single get_mtd_sales signature, add support for filters.get('__end__'):
+            # (see small tweak below)
+
+            last_month_sales_pct = calculate_sales_percentage(last_month_sales, total_budget)
+            last_year_sales_pct  = calculate_sales_percentage(last_year_sales, total_budget)
+
+            team_leaders = get_team_leader_performance(cmp, filters)
+
+            return {
+                "today_sales": float(today_sales),
+                "mtd_sales": float(mtd_sales),
+                "total_budget": float(total_budget),
+                "sales_pct": round(sales_pct, 1),
+                "time_pct": round(time_pct, 1),
+                "last_month_sales": float(last_month_sales),
+                "last_year_sales": float(last_year_sales),
+                "last_month_sales_pct": round(last_month_sales_pct, 1),
+                "last_year_sales_pct": round(last_year_sales_pct, 1),
+                "working_days": int(cmp['total_days']),
+                "days_passed": int(cmp['current_days']),
+                "report_date": today.strftime("%B %d, %Y"),
+                "team_leaders": team_leaders,
+                "is_valid": True
+            }
+        except Exception as e:
+            app.logger.error(f"Sales data error: {str(e)}", exc_info=True)
+            return get_fallback_sales_data(today)
+
+def get_today_sales(today: date, filters=None):
+    start, end = _day_bounds(today)
+    q = db.session.query(func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)) \
+                  .filter(LoanApplication.created_at >= start,
+                          LoanApplication.created_at < end)
+    q = _apply_agent_filters_to_loan_query(q, filters)
+    return q.scalar() or 0.0
+
+def get_mtd_sales(start_date: date, filters=None):
+    # Allow optional hard end via filters['__end__']
+    hard_end = None
+    if filters and filters.get('__end__'):
+        hard_end = filters['__end__']
+    _, default_end = _day_bounds(date.today())
+    end = hard_end or default_end
+
+    q = db.session.query(func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)) \
+                  .filter(LoanApplication.created_at >= start_date,
+                          LoanApplication.created_at < end)
+    q = _apply_agent_filters_to_loan_query(q, filters)
+    return q.scalar() or 0.0
+
+def get_team_leader_performance(comparisons, filters=None):
+    """Per-leader MTD vs same-period last month/year, using only agents (no leaders)."""
+    start_mtd = comparisons['start_of_month']
+    # Compare apples-to-apples: same number of elapsed *days* as current month
+    days_so_far = comparisons['current_days']
+    start_last_month = comparisons['start_of_last_month']
+    end_last_month   = start_last_month + timedelta(days=days_so_far)
+    start_last_year  = comparisons['start_of_last_year']
+    end_last_year    = start_last_year + timedelta(days=days_so_far)
+
+    leaders = Agent.query.filter(Agent.role == "Team Leader").all()
+    perf = []
+
+    for leader in leaders:
+        # Agents in this team (exclude the leader)
+        agent_ids = [a.id for a in Agent.query
+                     .filter(Agent.team_leader_id == leader.id,
+                             Agent.role != 'Team Leader',
+                             Agent.active.is_(True)).all()]
+
+        if not agent_ids:
+            agent_ids = [-1]  # prevent empty IN() SQL
+
+        def _sum_sales(start_dt, end_dt):
+            q = db.session.query(func.coalesce(func.sum(LoanApplication.loan_amount), 0.0)) \
+                          .filter(LoanApplication.created_at >= start_dt,
+                                  LoanApplication.created_at < end_dt,
+                                  LoanApplication.agent_id.in_(agent_ids))
+            # Optional higher-level filters can further narrow by region/district if you want:
+            if filters:
+                if filters.get('region'):
+                    q = q.join(Agent, Agent.id == LoanApplication.agent_id).filter(Agent.region == filters['region'])
+                if filters.get('district'):
+                    q = q.join(Agent, Agent.id == LoanApplication.agent_id).filter(Agent.district == filters['district'])
+            return q.scalar() or 0.0
+
+        # MTD current
+        today_start, today_end = _day_bounds(date.today())
+        team_sales_mtd = _sum_sales(start_mtd, today_end)
+
+        team_apps_mtd = db.session.query(func.count(LoanApplication.id)).filter(
+            LoanApplication.created_at >= start_mtd,
+            LoanApplication.created_at < today_end,
+            LoanApplication.agent_id.in_(agent_ids)
+        ).scalar() or 0
+
+        team_budget = db.session.query(func.coalesce(func.sum(Agent.monthly_budget), 0.0)) \
+            .filter(Agent.id.in_(agent_ids)).scalar() or 0.0
+
+        ach = (team_sales_mtd / team_budget * 100.0) if team_budget > 0 else 0.0
+
+        # Last month / last year (same elapsed days)
+        last_month_sales = _sum_sales(start_last_month, end_last_month)
+        last_year_sales  = _sum_sales(start_last_year,  end_last_year)
+        last_month_ach = (last_month_sales / team_budget * 100.0) if team_budget > 0 else 0.0
+        last_year_ach  = (last_year_sales  / team_budget * 100.0) if team_budget > 0 else 0.0
+
+        status = "exceeded" if ach >= 100 else "on-track" if ach >= 75 else "needs-improvement"
+
+        perf.append({
+            'id': leader.id,
+            'name': leader.name,
+            'applications': int(team_apps_mtd),
+            'sales': float(team_sales_mtd),
+            'team_budget': float(team_budget),
+            'achievement': round(ach, 1),
+            'last_month_achievement': round(last_month_ach, 1),
+            'last_year_achievement': round(last_year_ach, 1),
+            'status': status
+        })
+
+    perf.sort(key=lambda x: x['achievement'], reverse=True)
+    return perf
+
+
+def get_total_budget(filters=None):
+    q = db.session.query(func.coalesce(func.sum(Agent.monthly_budget), 0.0)) \
+                  .filter(Agent.role != 'Team Leader', Agent.active.is_(True))
+    if filters:
+        if filters.get('region'):
+            q = q.filter(Agent.region == filters['region'])
+        if filters.get('district'):
+            q = q.filter(Agent.district == filters['district'])
+        if filters.get('team_leader_id'):
+            q = q.filter(Agent.team_leader_id == filters['team_leader_id'])
+    return q.scalar() or 0.0
+
+
 
 def get_fallback_sales_data(today):
     """Get fallback data when sales data retrieval fails"""
@@ -8450,6 +8862,8 @@ def generate_performance_table(data, title, columns):
         {rows}
     </table>
     """
+
+
 
 
                 
@@ -9120,6 +9534,77 @@ Budget Achievement: {sales_data['sales_pct']}%
         current_app.logger.error(f"Email failed: {str(e)}")
         return False    
 
+def notify_arrears():
+    """
+    Notify admins of significant arrears (>30 days).
+    """
+    with app.app_context():
+        arrears = Arrear.query.filter(
+            Arrear.status == 'unresolved',
+            Arrear.due_date < date.today() - timedelta(days=30)
+        ).join(LoanApplication).join(Customer).all()
+        
+        if not arrears:
+            return
+        
+        recipients = [user.email for user in User.query.filter_by(role_id=Role.query.filter_by(name='admin').first().id).all()]
+        msg = Message(
+            subject=f"Arrears Alert: {len(arrears)} Overdue Schedules",
+            recipients=recipients,
+            html=render_template(
+                'email/arrears_notification.html',
+                arrears=arrears,
+                format_currency=format_currency
+            )
+        )
+        try:
+            mail.send(msg)
+            app.logger.info(f"Arrears notification sent to {recipients}")
+        except Exception as e:
+            app.logger.error(f"Arrears notification failed: {str(e)}")
+
+
+@app.route('/admin/vote_report', methods=['GET'])
+@login_required
+@role_required('admin')
+def vote_report():
+    votes = Vote.query.all()
+    report = []
+    for vote in votes:
+        deductions = PayrollDeduction.query.filter(
+            PayrollDeduction.vote_id == vote.id,
+            PayrollDeduction.deduction_date >= date.today().replace(day=1)
+        ).all()
+        receipts = CashReceipt.query.filter(
+            CashReceipt.vote_id == vote.id,
+            CashReceipt.receipt_date >= date.today().replace(day=1)
+        ).all()
+        total_deducted = sum(d.amount for d in deductions)
+        total_received = sum(r.amount for r in receipts)
+        report.append({
+            'vote': vote,
+            'deduction_count': len(deductions),
+            'total_deducted': total_deducted,
+            'total_received': total_received,
+            'discrepancy': total_deducted - total_received
+        })
+    return render_template(
+        'admin/vote_report.html',
+        report=report,
+        format_currency=format_currency
+    )
+
+@app.route('/admin/reconciliation_report', methods=['GET'])
+@login_required
+@role_required('admin')
+def reconciliation_report():
+    reports = ReconciliationReport.query.order_by(ReconciliationReport.date.desc()).all()
+    return render_template(
+        'admin/reconciliation_report.html',
+        reports=reports,
+        format_currency=format_currency
+    )
+
 @app.route('/configure-report', methods=['GET', 'POST'])
 @login_required
 def configure_report():
@@ -9167,88 +9652,318 @@ def test_template():
     }
     return render_template('email/sales_report.html', **test_data)
 
-@app.route('/reconcile/loan/<int:loan_id>')
-def reconcile_loan(loan_id):
-    return jsonify(reconcile_loan_vs_payroll(loan_id))
+import csv
+from io import StringIO
+from datetime import datetime
+from flask import request, flash, redirect, url_for, render_template
+from flask_login import login_required
+
+def parse_csv_file(uploaded_file, expected_headers):
+    """Read CSV file, validate headers, and return DictReader or error message."""
+    if not uploaded_file or not uploaded_file.filename.endswith('.csv'):
+        return None, "Upload a valid CSV file."
+
+    stream = StringIO(uploaded_file.stream.read().decode('utf-8'), newline='')
+    reader = csv.DictReader(stream)
+
+    if not all(header in reader.fieldnames for header in expected_headers):
+        return None, f"Invalid CSV headers. Expected: {', '.join(expected_headers)}"
+
+    return reader, None
 
 
-@app.route('/reconcile/vote/<int:vote_id>/<string:month>')
-def reconcile_vote(vote_id, month):
-    from datetime import datetime
-    month_date = datetime.strptime(month, "%Y-%m")
-    return jsonify(reconcile_vote_receipts(vote_id, month_date))
-
-@app.route('/upload/payroll', methods=['GET', 'POST'])
+@app.route('/admin/upload_payroll', methods=['GET', 'POST'])
+@login_required
 @role_required('admin')
 def upload_payroll():
+    """Bulk upload payroll deductions with duplicate detection."""
     if request.method == 'POST':
-        file = request.files.get('file')
-        if not file or not file.filename.endswith('.csv'):
-            flash('Upload a valid CSV file.', 'danger')
-            return redirect(request.url)
+        reader, error = parse_csv_file(request.files.get('file'),
+                                       ['loan_number', 'amount', 'deduction_date', 'vote_code'])
+        if error:
+            flash(error, 'danger')
+            return redirect(url_for('upload_payroll'))
 
-        csv_data = file.read().decode('utf-8').splitlines()
-        reader = csv.DictReader(csv_data)
-
-        imported, skipped = 0, 0
+        batch_id = f"PAYROLL-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+        processed, duplicates, errors = 0, 0, []
 
         for row in reader:
             try:
+                loan = LoanApplication.query.filter_by(loan_number=row['loan_number']).first()
+                if not loan:
+                    errors.append(f"Loan {row['loan_number']} not found")
+                    continue
+
+                vote = Vote.query.filter_by(code=row['vote_code']).first()
+                if not vote:
+                    errors.append(f"Vote {row['vote_code']} not found")
+                    continue
+
+                deduction_date = datetime.strptime(row['deduction_date'], '%Y-%m-%d').date()
+                amount = float(row['amount'])
+
+                # Duplicate detection
+                exists = PayrollDeduction.query.filter_by(
+                    loan_id=loan.id,
+                    vote_id=vote.id,
+                    deduction_date=deduction_date,
+                    amount=amount
+                ).first()
+                if exists:
+                    duplicates += 1
+                    continue
+
+                schedule = RepaymentSchedule.query.filter_by(
+                    loan_id=loan.id,
+                    due_date=deduction_date
+                ).first()
+
                 deduction = PayrollDeduction(
-                    loan_id=int(row['loan_id']),
-                    deduction_date=datetime.strptime(row['deduction_date'], '%Y-%m-%d').date(),
-                    amount=float(row['amount']),
-                    reference=row.get('reference', ''),
-                    source=row.get('source', '')
+                    loan_id=loan.id,
+                    schedule_id=schedule.id if schedule else None,
+                    vote_id=vote.id,
+                    amount=amount,
+                    deduction_date=deduction_date,
+                    batch_id=batch_id,
+                    status='processed'
                 )
                 db.session.add(deduction)
-                imported += 1
+                processed += 1
             except Exception as e:
-                app.logger.warning(f"Skipped row due to error: {e}")
-                skipped += 1
+                errors.append(f"Error processing {row['loan_number']}: {str(e)}")
 
-        db.session.commit()
-        flash(f'{imported} deductions imported. {skipped} skipped.', 'success')
+        try:
+            db.session.commit()
+            app.logger.info(f"Payroll batch {batch_id} processed: {processed} new, {duplicates} duplicates, {len(errors)} errors")
+            flash(f'Processed: {processed} new, {duplicates} duplicates. Errors: {len(errors)}', 'success')
+            if errors:
+                flash("; ".join(errors), 'warning')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Failed to process payroll batch: {str(e)}', 'danger')
+
         return redirect(url_for('upload_payroll'))
 
-    return render_template('uploads/payroll_upload.html')
+    return render_template('admin/upload_payroll_batch.html')
 
-@app.route('/upload/cash_receipts', methods=['GET', 'POST'])
+
+@app.route('/admin/upload_cash', methods=['GET', 'POST'])
+@login_required
 @role_required('admin')
-def upload_cash_receipts():
+def upload_cash():
+    """Bulk upload cash receipts with duplicate detection."""
     if request.method == 'POST':
-        file = request.files.get('file')
-        if not file or not file.filename.endswith('.csv'):
-            flash('Upload a valid CSV file.', 'danger')
-            return redirect(request.url)
+        reader, error = parse_csv_file(request.files.get('file'),
+                                       ['vote_code', 'amount', 'receipt_date', 'reference'])
+        if error:
+            flash(error, 'danger')
+            return redirect(url_for('upload_cash'))
 
-        csv_data = file.read().decode('utf-8').splitlines()
-        reader = csv.DictReader(csv_data)
-
-        imported, skipped = 0, 0
+        batch_id = f"CASH-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+        processed, duplicates, errors = 0, 0, []
 
         for row in reader:
             try:
+                vote = Vote.query.filter_by(code=row['vote_code']).first()
+                if not vote:
+                    errors.append(f"Vote {row['vote_code']} not found")
+                    continue
+
+                receipt_date = datetime.strptime(row['receipt_date'], '%Y-%m-%d').date()
+                amount = float(row['amount'])
+                reference = row.get('reference', '').strip()
+
+                # Duplicate detection
+                exists = CashReceipt.query.filter_by(
+                    vote_id=vote.id,
+                    receipt_date=receipt_date,
+                    amount=amount,
+                    reference=reference
+                ).first()
+                if exists:
+                    duplicates += 1
+                    continue
+
                 receipt = CashReceipt(
-                    vote_id=int(row['vote_id']),
-                    received_date=datetime.strptime(row['received_date'], '%Y-%m-%d').date(),
-                    amount=float(row['amount']),
-                    reference=row.get('reference', ''),
-                    source=row.get('source', '')
+                    vote_id=vote.id,
+                    amount=amount,
+                    receipt_date=receipt_date,
+                    reference=reference,
+                    batch_id=batch_id,
+                    status='processed'
                 )
                 db.session.add(receipt)
-                imported += 1
+                processed += 1
             except Exception as e:
-                app.logger.warning(f"Skipped row due to error: {e}")
-                skipped += 1
+                errors.append(f"Error processing vote {row['vote_code']}: {str(e)}")
 
-        db.session.commit()
-        flash(f'{imported} receipts imported. {skipped} skipped.', 'success')
-        return redirect(url_for('upload_cash_receipts'))
+        try:
+            db.session.commit()
+            app.logger.info(f"Cash batch {batch_id} processed: {processed} new, {duplicates} duplicates, {len(errors)} errors")
+            flash(f'Processed: {processed} new, {duplicates} duplicates. Errors: {len(errors)}', 'success')
+            if errors:
+                flash("; ".join(errors), 'warning')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Failed to process cash batch: {str(e)}', 'danger')
 
-    return render_template('uploads/cash_receipt_upload.html')
+        return redirect(url_for('upload_cash'))
+
+    return render_template('admin/upload_cash_batch.html')
+
+import json
+from datetime import date, datetime
+from app import app, db
 
 
+def _get_month_range(month_str=None):
+    """Helper to get month start and end dates."""
+    if month_str:
+        month_date = datetime.strptime(month_str, "%Y-%m").date()
+    else:
+        month_date = date.today().replace(day=1)
+
+    month_start = month_date
+    # Next month first day minus one day = last day of month
+    if month_start.month == 12:
+        month_end = date(month_start.year + 1, 1, 1) - timedelta(days=1)
+    else:
+        month_end = date(month_start.year, month_start.month + 1, 1) - timedelta(days=1)
+
+    return month_start, month_end
+
+
+def reconcile_cash(month_str=None):
+    """
+    Reconcile payroll deductions against cash receipts by vote for the given month.
+    If month_str is None, uses current month.
+    """
+    with app.app_context():
+        month_start, month_end = _get_month_range(month_str)
+
+        discrepancies = []
+        total_expected = 0
+        total_received = 0
+
+        for vote in Vote.query.all():
+            deductions = PayrollDeduction.query.filter(
+                PayrollDeduction.vote_id == vote.id,
+                PayrollDeduction.deduction_date >= month_start,
+                PayrollDeduction.deduction_date <= month_end
+            ).all()
+
+            receipts = CashReceipt.query.filter(
+                CashReceipt.vote_id == vote.id,
+                CashReceipt.receipt_date >= month_start,
+                CashReceipt.receipt_date <= month_end
+            ).all()
+
+            deducted_sum = sum(d.amount for d in deductions)
+            received_sum = sum(r.amount for r in receipts)
+
+            total_expected += deducted_sum
+            total_received += received_sum
+
+            if abs(deducted_sum - received_sum) > 0.01:
+                discrepancy_amount = deducted_sum - received_sum
+                discrepancies.append({
+                    'vote_code': vote.code,
+                    'total_deducted': float(deducted_sum),
+                    'total_received': float(received_sum),
+                    'discrepancy': float(discrepancy_amount)
+                })
+                app.logger.warning(
+                    f"[Vote {vote.code}] Cash discrepancy: "
+                    f"Deducted {deducted_sum:.2f}, Received {received_sum:.2f}"
+                )
+
+        try:
+            report = ReconciliationReport(
+                date=month_end,
+                level='cash',
+                total_expected=total_expected,
+                total_received=total_received,
+                discrepancy_count=len(discrepancies),
+                details=json.dumps(discrepancies)
+            )
+            db.session.add(report)
+            db.session.commit()
+            app.logger.info(f"Cash Reconciliation ({month_start} to {month_end}): Discrepancies: {len(discrepancies)}")
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Cash reconciliation failed: {str(e)}")
+
+
+def reconcile_payroll(month_str=None):
+    """
+    Reconcile expected deductions from RepaymentSchedule against actual payroll deductions for the given month.
+    If month_str is None, uses current month.
+    """
+    with app.app_context():
+        month_start, month_end = _get_month_range(month_str)
+
+        schedules = RepaymentSchedule.query.filter(
+            RepaymentSchedule.due_date >= month_start,
+            RepaymentSchedule.due_date <= month_end,
+            RepaymentSchedule.status.notin_(['paid', 'settled', 'cancelled'])
+        ).all()
+
+        discrepancies = []
+        total_expected = 0
+        total_deducted = 0
+
+        for schedule in schedules:
+            expected_amount = float(schedule.expected_amount)
+            total_expected += expected_amount
+
+            deduction = PayrollDeduction.query.filter_by(
+                schedule_id=schedule.id,
+                deduction_date=schedule.due_date
+            ).first()
+
+            deducted_amount = float(deduction.amount) if deduction else 0.0
+            total_deducted += deducted_amount
+
+            if abs(expected_amount - deducted_amount) > 0.01:
+                arrears_amount = expected_amount - deducted_amount
+
+                if arrears_amount > 0:
+                    existing = Arrear.query.filter_by(schedule_id=schedule.id).first()
+                    if not existing:
+                        arrear = Arrear(
+                            loan_id=schedule.loan_id,
+                            schedule_id=schedule.id,
+                            due_date=schedule.due_date,
+                            expected_amount=expected_amount,
+                            deducted_amount=deducted_amount,
+                            status='unresolved'
+                        )
+                        db.session.add(arrear)
+                        app.logger.info(f"[{schedule.loan.loan_number}] Recorded arrear: {arrears_amount:.2f}")
+
+                discrepancies.append({
+                    'loan_number': schedule.loan.loan_number,
+                    'schedule_id': schedule.id,
+                    'due_date': str(schedule.due_date),
+                    'expected': expected_amount,
+                    'deducted': deducted_amount,
+                    'arrears': arrears_amount
+                })
+                app.logger.warning(
+                    f"[{schedule.loan.loan_number}] Payroll discrepancy in schedule {schedule.id}: "
+                    f"Expected {expected_amount:.2f}, Deducted {deducted_amount:.2f}"
+                )
+
+        try:
+            db.session.commit()
+            app.logger.info(
+                f"Payroll Reconciliation ({month_start} to {month_end}): "
+                f"Expected: {total_expected:.2f}, Deducted: {total_deducted:.2f}, "
+                f"Discrepancies: {len(discrepancies)}"
+            )
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Payroll reconciliation failed: {str(e)}")
 
 def format_mwk(amount):
     """Format amount as Malawian Kwacha"""
@@ -9429,6 +10144,118 @@ def auto_post_payments():
             }))
             db.session.rollback()
 
+from flask import jsonify, request, render_template
+from datetime import datetime, date
+from sqlalchemy import extract
+import threading
+import os
+from twilio.rest import Client
+
+# SMS Sender with Rate Limiting
+def send_sms(phone_number, message):
+    """Send SMS with Twilio with cost controls"""
+    # Skip if not a valid Malawi number
+    if not phone_number.startswith('+265'):
+        return False
+    
+    # Initialize Twilio client
+    account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
+    auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+    twilio_number = os.environ.get('TWILIO_PHONE_NUMBER')
+    
+    if not all([account_sid, auth_token, twilio_number]):
+        print("Twilio credentials not configured")
+        return False
+    
+    try:
+        client = Client(account_sid, auth_token)
+        message = client.messages.create(
+            body=message,
+            from_=twilio_number,
+            to=phone_number
+        )
+        print(f"Sent SMS to {phone_number} (SID: {message.sid})")
+        return True
+    except Exception as e:
+        print(f"Failed to send SMS to {phone_number}: {str(e)}")
+        return False
+
+@app.route("/send-birthday-sms", methods=["POST"])
+def send_birthday_sms():
+    # Get budget from request or use default
+    max_messages = int(request.form.get('max_messages', 10))
+    
+    # Get today's month and day
+    today = date.today()
+    month = today.month
+    day = today.day
+    
+    # Find customers with birthdays today
+    customers = Customer.query.filter(
+        extract('month', Customer.dob) == month,
+        extract('day', Customer.dob) == day,
+        Customer.phone.startswith('+265')  # Only Malawi numbers
+    ).limit(max_messages).all()  # Limit to stay within budget
+    
+    if not customers:
+        return jsonify({
+            "success": True,
+            "message": "No birthdays today",
+            "count": 0
+        })
+    
+    # Send SMS to each customer
+    success_count = 0
+    for customer in customers:
+        message = (f"Happy Birthday {customer.first_name}! "
+                   "Thank you for being our valued customer. "
+                   "Wishing you a wonderful day!")
+        
+        if send_sms(customer.phone, message):
+            success_count += 1
+    
+    # Calculate cost (approx $0.01 per SMS)
+    estimated_cost = success_count * 0.01
+    
+    return jsonify({
+        "success": True,
+        "message": f"Sent {success_count}/{len(customers)} messages",
+        "count": success_count,
+        "estimated_cost": f"${estimated_cost:.2f}",
+        "max_messages": max_messages
+    })
+
+@app.route("/sms-dashboard")
+def sms_dashboard():
+    # Get today's birthdays
+    today = date.today()
+    today_birthdays = Customer.query.filter(
+        extract('month', Customer.dob) == today.month,
+        extract('day', Customer.dob) == today.day
+    ).all()
+    
+    return render_template(
+        "sms_dashboard.html",
+        today_birthdays=today_birthdays,
+        last_sent=datetime.now().strftime("%Y-%m-%d %H:%M"),
+        active_tab='sms'
+    )
+
+# Scheduled task (runs daily at 9AM)
+def birthday_sms_scheduler():
+    while True:
+        now = datetime.now()
+        # Run at 9:00 AM daily
+        if now.hour == 9 and now.minute == 0:
+            with app.app_context():
+                # Create mock request to limit to 5 messages/day
+                with app.test_request_context(
+                    '/send-birthday-sms',
+                    method='POST',
+                    data={'max_messages': 5}
+                ):
+                    send_birthday_sms()
+        time.sleep(60)
 
 @app.route('/test-email-now')
 def test_email_now():
@@ -9483,8 +10310,10 @@ def start_scheduler():
 scheduler.add_job(
     id='auto_post_due_schedules',
     func=auto_post_payments,
-    trigger='interval',
-    minutes=5,
+    trigger='cron',
+    day=25,
+    hour=0,
+    minute=0,
     timezone='Africa/Blantyre',
     replace_existing=True
 )

@@ -71,18 +71,30 @@
             </td>
             <td class="text-nowrap">
               <div class="d-flex gap-2">
+                <!-- View Docs Button -->
                 <button type="button"
                         class="btn btn-sm btn-outline-primary"
                         data-bs-toggle="modal"
                         data-bs-target="#loanDocsModal{{ entry.loan.id }}">
                   <i class="bi bi-file-earmark-text me-1"></i>Docs
                 </button>
+
+                <!-- Edit Loan Button -->
+                <a href="{{ url_for('edit_loan', loan_id=entry.loan.id) }}" 
+                  class="btn btn-warning-soft btn-sm px-3 py-1"
+                  title="Edit Loan">
+                  <i class="bi bi-pencil"></i>
+                </a>
+
+                <!-- Approve Loan -->
                 <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='approve') }}">
                   <button class="btn btn-success-soft btn-sm px-3 py-1" type="submit"
                           {% if entry.loan.application_status == 'approved' %}disabled{% endif %}>
                     <i class="bi bi-check2"></i>
                   </button>
                 </form>
+
+                <!-- Reject Loan -->
                 <form method="POST" action="{{ url_for('process_loan', loan_id=entry.loan.id, action='reject') }}">
                   <button class="btn btn-danger-soft btn-sm px-3 py-1" type="submit"
                           {% if entry.loan.application_status == 'rejected' %}disabled{% endif %}>
