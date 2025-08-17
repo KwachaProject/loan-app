@@ -17,6 +17,11 @@
           <p><strong>Loan Amount:</strong> MWK {{ "{:,.2f}".format(loan.loan_amount or 0) }}</p>
           <p><strong>Term:</strong> {{ loan.term_months }} months</p>
           <p><strong>Top-Up Balance:</strong> MWK {{ "{:,.2f}".format(top_up_balance or 0) }}</p>
+
+
+          <a href="{{ url_for('edit_loan', loan_id=loan.id) }}" class="btn btn-sm btn-outline-warning mt-1">
+            <i class="bi bi-pencil"></i> Edit Loan
+          </a>
         </div>
 
         <div class="col-md-6">
