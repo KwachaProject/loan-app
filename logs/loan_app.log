@@ -1649,3 +1649,9 @@ sqlalchemy.exc.ArgumentError: The "whens" argument to case(), when referring to 
 [2025-08-17 18:40:24,376] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-17 18:40:24,379] INFO in app: System encoding: utf-8
 [2025-08-17 18:40:24,382] INFO in app: ==================================================
+[2025-08-17 19:03:33,488] INFO in app: ==================================================
+[2025-08-17 19:03:33,494] INFO in app: Application logging initialized successfully
+[2025-08-17 19:03:33,499] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 19:03:33,500] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 19:03:33,504] INFO in app: System encoding: utf-8
+[2025-08-17 19:03:33,506] INFO in app: ==================================================

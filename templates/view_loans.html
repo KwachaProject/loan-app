@@ -180,7 +180,9 @@
     // Initialize DataTables
     $('#loanTable').DataTable({
       order: [[5, 'desc']],
-      columnDefs: [{ orderable: false, targets: [7] }]
+      columnDefs: [{ orderable: false, targets: [7] }],
+      pageLength: -1,      // show all rows
+      lengthChange: false   // hide page length selector
     });
     
     // Debug modal events
