@@ -4571,3 +4571,256 @@ sqlalchemy.exc.ArgumentError: The "whens" argument to case(), when referring to 
 [2025-08-17 09:25:16,453] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-17 09:25:16,459] INFO in app: System encoding: utf-8
 [2025-08-17 09:25:16,463] INFO in app: ==================================================
+2025-08-17 09:25:16,886 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 09:25:16,888 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 09:25:16,888 - INFO - Scheduler started
+2025-08-17 09:25:17,652 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 09:25:17,653 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 09:25:17,661 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 09:25:17,661 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-17 15:09:32,299] INFO in app: ==================================================
+[2025-08-17 15:09:32,390] INFO in app: Application logging initialized successfully
+[2025-08-17 15:09:32,392] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 15:09:32,393] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 15:09:32,395] INFO in app: System encoding: utf-8
+[2025-08-17 15:09:32,399] INFO in app: ==================================================
+2025-08-17 15:09:32,917 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 15:09:32,930 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 15:09:32,930 - INFO - Scheduler started
+2025-08-17 15:09:34,025 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 15:09:34,026 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 15:09:34,064 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 15:09:34,065 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-17 15:48:11,780] INFO in app: ==================================================
+[2025-08-17 15:48:11,791] INFO in app: Application logging initialized successfully
+[2025-08-17 15:48:11,793] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 15:48:11,797] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 15:48:11,804] INFO in app: System encoding: utf-8
+[2025-08-17 15:48:11,807] INFO in app: ==================================================
+2025-08-17 15:48:12,222 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 15:48:12,224 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 15:48:12,224 - INFO - Scheduler started
+2025-08-17 15:48:13,424 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 15:48:13,425 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 15:48:13,456 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 15:48:13,456 - INFO - [33mPress CTRL+C to quit[0m
+[2025-08-17 15:55:32,669] INFO in app: ==================================================
+[2025-08-17 15:55:32,675] INFO in app: Application logging initialized successfully
+[2025-08-17 15:55:32,678] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 15:55:32,679] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 15:55:32,685] INFO in app: System encoding: utf-8
+[2025-08-17 15:55:32,687] INFO in app: ==================================================
+2025-08-17 15:55:32,974 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 15:55:32,976 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 15:55:32,976 - INFO - Scheduler started
+2025-08-17 15:55:33,834 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 15:55:33,835 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 15:55:33,845 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 15:55:33,845 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 15:56:50,830 - INFO - 127.0.0.1 - - [17/Aug/2025 15:56:50] "GET /agents HTTP/1.1" 200 -
+2025-08-17 15:56:51,670 - INFO - 127.0.0.1 - - [17/Aug/2025 15:56:51] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-17 15:56:56,892 - INFO - 127.0.0.1 - - [17/Aug/2025 15:56:56] "GET /loans HTTP/1.1" 200 -
+2025-08-17 15:57:06,327 - INFO - 127.0.0.1 - - [17/Aug/2025 15:57:06] "GET /loans/19/edit HTTP/1.1" 200 -
+2025-08-17 15:57:31,315 - INFO - 127.0.0.1 - - [17/Aug/2025 15:57:31] "[32mPOST /loans/19/edit HTTP/1.1[0m" 302 -
+2025-08-17 15:57:31,649 - INFO - 127.0.0.1 - - [17/Aug/2025 15:57:31] "GET /loans/19/edit HTTP/1.1" 200 -
+[2025-08-17 15:58:05,623] INFO in app: ==================================================
+[2025-08-17 15:58:05,632] INFO in app: Application logging initialized successfully
+[2025-08-17 15:58:05,634] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 15:58:05,636] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 15:58:05,640] INFO in app: System encoding: utf-8
+[2025-08-17 15:58:05,644] INFO in app: ==================================================
+2025-08-17 15:58:05,921 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 15:58:05,923 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 15:58:05,923 - INFO - Scheduler started
+2025-08-17 15:58:06,657 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 15:58:06,657 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 15:58:06,670 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 15:58:06,670 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 15:58:08,066 - INFO - 127.0.0.1 - - [17/Aug/2025 15:58:08] "GET /loans/19/edit HTTP/1.1" 200 -
+2025-08-17 15:58:08,894 - INFO - 127.0.0.1 - - [17/Aug/2025 15:58:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-17 15:58:29,020 - INFO - 127.0.0.1 - - [17/Aug/2025 15:58:29] "[32mPOST /loans/19/edit HTTP/1.1[0m" 302 -
+2025-08-17 15:58:29,350 - INFO - 127.0.0.1 - - [17/Aug/2025 15:58:29] "GET /loans/19/edit HTTP/1.1" 200 -
+[2025-08-17 16:55:17,798] INFO in app: ==================================================
+[2025-08-17 16:55:17,808] INFO in app: Application logging initialized successfully
+[2025-08-17 16:55:17,819] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 16:55:17,823] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 16:55:17,827] INFO in app: System encoding: utf-8
+[2025-08-17 16:55:17,853] INFO in app: ==================================================
+2025-08-17 16:55:18,284 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 16:55:18,285 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 16:55:18,285 - INFO - Scheduler started
+2025-08-17 16:55:19,407 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 16:55:19,408 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 16:55:19,418 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 16:55:19,418 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 16:56:02,937 - INFO - 127.0.0.1 - - [17/Aug/2025 16:56:02] "GET /loans/19/edit HTTP/1.1" 200 -
+2025-08-17 16:56:03,989 - INFO - 127.0.0.1 - - [17/Aug/2025 16:56:03] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-17 16:56:15,113 - INFO - 127.0.0.1 - - [17/Aug/2025 16:56:15] "[32mPOST /loans/19/edit HTTP/1.1[0m" 302 -
+2025-08-17 16:56:15,437 - INFO - 127.0.0.1 - - [17/Aug/2025 16:56:15] "GET /loans/19/edit HTTP/1.1" 200 -
+2025-08-17 17:00:00,011 - INFO - Running job "send_sales_notification_email (trigger: cron[hour='17', minute='0'], next run at: 2025-08-17 17:00:00 CAT)" (scheduled at 2025-08-17 17:00:00+02:00)
+2025-08-17 17:00:00,072 - ERROR - Job "send_sales_notification_email (trigger: cron[hour='17', minute='0'], next run at: 2025-08-18 17:00:00 CAT)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "C:\Users\pc\loan-app\app.py", line 9607, in send_sales_notification_email
+    db.session.rollback()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\scoping.py", line 1794, in rollback
+    return self._proxied.rollback()
+           ^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\orm\scoping.py", line 197, in _proxied
+    return self.registry()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\sqlalchemy\util\_collections.py", line 634, in __call__
+    key = self.scopefunc()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask_sqlalchemy\session.py", line 111, in _app_ctx_id
+    return id(app_ctx._get_current_object())  # type: ignore[attr-defined]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\werkzeug\local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+[2025-08-17 17:05:18,284] INFO in app: ==================================================
+[2025-08-17 17:05:18,293] INFO in app: Application logging initialized successfully
+[2025-08-17 17:05:18,296] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 17:05:18,299] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 17:05:18,305] INFO in app: System encoding: utf-8
+[2025-08-17 17:05:18,310] INFO in app: ==================================================
+2025-08-17 17:05:18,695 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 17:05:18,696 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 17:05:18,697 - INFO - Scheduler started
+2025-08-17 17:05:19,839 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 17:05:19,841 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 17:05:19,850 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 17:05:19,850 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 17:05:27,880 - INFO - 127.0.0.1 - - [17/Aug/2025 17:05:27] "GET /loans/19/edit HTTP/1.1" 200 -
+2025-08-17 17:05:29,362 - INFO - 127.0.0.1 - - [17/Aug/2025 17:05:29] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-17 17:05:36,266 - INFO - 127.0.0.1 - - [17/Aug/2025 17:05:36] "[32mPOST /loans/19/edit HTTP/1.1[0m" 302 -
+2025-08-17 17:05:36,567 - INFO - 127.0.0.1 - - [17/Aug/2025 17:05:36] "GET /loans/19/edit HTTP/1.1" 200 -
+[2025-08-17 17:09:16,761] INFO in app: ==================================================
+[2025-08-17 17:09:16,770] INFO in app: Application logging initialized successfully
+[2025-08-17 17:09:16,774] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 17:09:16,781] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 17:09:16,785] INFO in app: System encoding: utf-8
+[2025-08-17 17:09:16,786] INFO in app: ==================================================
+2025-08-17 17:09:17,419 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 17:09:17,421 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 17:09:17,421 - INFO - Scheduler started
+2025-08-17 17:09:18,540 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 17:09:18,541 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 17:09:18,554 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 17:09:18,554 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 17:09:20,723 - INFO - 127.0.0.1 - - [17/Aug/2025 17:09:20] "GET /loans/19/edit HTTP/1.1" 200 -
+2025-08-17 17:09:21,391 - INFO - 127.0.0.1 - - [17/Aug/2025 17:09:21] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-17 17:09:30,153] INFO in app: Generating repayment schedule for loan 103000019 with disbursement_date=None
+2025-08-17 17:09:30,153 - INFO - Generating repayment schedule for loan 103000019 with disbursement_date=None
+[2025-08-17 17:09:30,167] INFO in app: First due date: 2025-09-25
+2025-08-17 17:09:30,167 - INFO - First due date: 2025-09-25
+[2025-08-17 17:09:30,169] INFO in app: Instalment 1: Due 2025-09-25, Principal 373765.58, Interest 40635.00, Fees 2500.00
+2025-08-17 17:09:30,169 - INFO - Instalment 1: Due 2025-09-25, Principal 373765.58, Interest 40635.00, Fees 2500.00
+[2025-08-17 17:09:30,171] INFO in app: Instalment 2: Due 2025-10-25, Principal 386847.38, Interest 27553.20, Fees 2500.00
+2025-08-17 17:09:30,171 - INFO - Instalment 2: Due 2025-10-25, Principal 386847.38, Interest 27553.20, Fees 2500.00
+[2025-08-17 17:09:30,180] INFO in app: Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
+2025-08-17 17:09:30,180 - INFO - Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
+2025-08-17 17:09:30,199 - INFO - 127.0.0.1 - - [17/Aug/2025 17:09:30] "[32mPOST /loans/19/edit HTTP/1.1[0m" 302 -
+2025-08-17 17:09:30,725 - INFO - 127.0.0.1 - - [17/Aug/2025 17:09:30] "GET /loans HTTP/1.1" 200 -
+2025-08-17 17:09:57,145 - INFO - 127.0.0.1 - - [17/Aug/2025 17:09:57] "GET /loans/20/edit HTTP/1.1" 200 -
+[2025-08-17 17:10:06,898] INFO in app: Generating repayment schedule for loan 136000020 with disbursement_date=None
+2025-08-17 17:10:06,898 - INFO - Generating repayment schedule for loan 136000020 with disbursement_date=None
+[2025-08-17 17:10:06,904] INFO in app: First due date: 2025-09-25
+2025-08-17 17:10:06,904 - INFO - First due date: 2025-09-25
+[2025-08-17 17:10:06,906] INFO in app: Instalment 1: Due 2025-09-25, Principal 19197.91, Interest 47040.00, Fees 11200.00
+2025-08-17 17:10:06,906 - INFO - Instalment 1: Due 2025-09-25, Principal 19197.91, Interest 47040.00, Fees 11200.00
+[2025-08-17 17:10:06,911] INFO in app: Instalment 2: Due 2025-10-25, Principal 19869.84, Interest 46368.07, Fees 11200.00
+2025-08-17 17:10:06,911 - INFO - Instalment 2: Due 2025-10-25, Principal 19869.84, Interest 46368.07, Fees 11200.00
+[2025-08-17 17:10:06,924] INFO in app: Instalment 3: Due 2025-11-25, Principal 20565.29, Interest 45672.63, Fees 11200.00
+2025-08-17 17:10:06,924 - INFO - Instalment 3: Due 2025-11-25, Principal 20565.29, Interest 45672.63, Fees 11200.00
+[2025-08-17 17:10:06,934] INFO in app: Instalment 4: Due 2025-12-25, Principal 21285.07, Interest 44952.84, Fees 11200.00
+2025-08-17 17:10:06,934 - INFO - Instalment 4: Due 2025-12-25, Principal 21285.07, Interest 44952.84, Fees 11200.00
+[2025-08-17 17:10:06,937] INFO in app: Instalment 5: Due 2026-01-25, Principal 22030.05, Interest 44207.87, Fees 11200.00
+2025-08-17 17:10:06,937 - INFO - Instalment 5: Due 2026-01-25, Principal 22030.05, Interest 44207.87, Fees 11200.00
+[2025-08-17 17:10:06,939] INFO in app: Instalment 6: Due 2026-02-25, Principal 22801.10, Interest 43436.81, Fees 11200.00
+2025-08-17 17:10:06,939 - INFO - Instalment 6: Due 2026-02-25, Principal 22801.10, Interest 43436.81, Fees 11200.00
+[2025-08-17 17:10:06,940] INFO in app: Instalment 7: Due 2026-03-25, Principal 23599.14, Interest 42638.78, Fees 11200.00
+2025-08-17 17:10:06,940 - INFO - Instalment 7: Due 2026-03-25, Principal 23599.14, Interest 42638.78, Fees 11200.00
+[2025-08-17 17:10:06,951] INFO in app: Instalment 8: Due 2026-04-25, Principal 24425.11, Interest 41812.81, Fees 11200.00
+2025-08-17 17:10:06,951 - INFO - Instalment 8: Due 2026-04-25, Principal 24425.11, Interest 41812.81, Fees 11200.00
+[2025-08-17 17:10:06,954] INFO in app: Instalment 9: Due 2026-05-25, Principal 25279.99, Interest 40957.93, Fees 11200.00
+2025-08-17 17:10:06,954 - INFO - Instalment 9: Due 2026-05-25, Principal 25279.99, Interest 40957.93, Fees 11200.00
+[2025-08-17 17:10:06,955] INFO in app: Instalment 10: Due 2026-06-25, Principal 26164.79, Interest 40073.13, Fees 11200.00
+2025-08-17 17:10:06,955 - INFO - Instalment 10: Due 2026-06-25, Principal 26164.79, Interest 40073.13, Fees 11200.00
+[2025-08-17 17:10:06,957] INFO in app: Instalment 11: Due 2026-07-25, Principal 27080.55, Interest 39157.36, Fees 11200.00
+2025-08-17 17:10:06,957 - INFO - Instalment 11: Due 2026-07-25, Principal 27080.55, Interest 39157.36, Fees 11200.00
+[2025-08-17 17:10:06,966] INFO in app: Instalment 12: Due 2026-08-25, Principal 28028.37, Interest 38209.54, Fees 11200.00
+2025-08-17 17:10:06,966 - INFO - Instalment 12: Due 2026-08-25, Principal 28028.37, Interest 38209.54, Fees 11200.00
+[2025-08-17 17:10:06,969] INFO in app: Instalment 13: Due 2026-09-25, Principal 29009.37, Interest 37228.55, Fees 11200.00
+2025-08-17 17:10:06,969 - INFO - Instalment 13: Due 2026-09-25, Principal 29009.37, Interest 37228.55, Fees 11200.00
+[2025-08-17 17:10:06,971] INFO in app: Instalment 14: Due 2026-10-25, Principal 30024.70, Interest 36213.22, Fees 11200.00
+2025-08-17 17:10:06,971 - INFO - Instalment 14: Due 2026-10-25, Principal 30024.70, Interest 36213.22, Fees 11200.00
+[2025-08-17 17:10:06,973] INFO in app: Instalment 15: Due 2026-11-25, Principal 31075.56, Interest 35162.36, Fees 11200.00
+2025-08-17 17:10:06,973 - INFO - Instalment 15: Due 2026-11-25, Principal 31075.56, Interest 35162.36, Fees 11200.00
+[2025-08-17 17:10:06,978] INFO in app: Instalment 16: Due 2026-12-25, Principal 32163.20, Interest 34074.71, Fees 11200.00
+2025-08-17 17:10:06,978 - INFO - Instalment 16: Due 2026-12-25, Principal 32163.20, Interest 34074.71, Fees 11200.00
+[2025-08-17 17:10:06,985] INFO in app: Instalment 17: Due 2027-01-25, Principal 33288.92, Interest 32949.00, Fees 11200.00
+2025-08-17 17:10:06,985 - INFO - Instalment 17: Due 2027-01-25, Principal 33288.92, Interest 32949.00, Fees 11200.00
+[2025-08-17 17:10:06,987] INFO in app: Instalment 18: Due 2027-02-25, Principal 34454.03, Interest 31783.89, Fees 11200.00
+2025-08-17 17:10:06,987 - INFO - Instalment 18: Due 2027-02-25, Principal 34454.03, Interest 31783.89, Fees 11200.00
+[2025-08-17 17:10:06,989] INFO in app: Instalment 19: Due 2027-03-25, Principal 35659.92, Interest 30578.00, Fees 11200.00
+2025-08-17 17:10:06,989 - INFO - Instalment 19: Due 2027-03-25, Principal 35659.92, Interest 30578.00, Fees 11200.00
+[2025-08-17 17:10:06,991] INFO in app: Instalment 20: Due 2027-04-25, Principal 36908.02, Interest 29329.90, Fees 11200.00
+2025-08-17 17:10:06,991 - INFO - Instalment 20: Due 2027-04-25, Principal 36908.02, Interest 29329.90, Fees 11200.00
+[2025-08-17 17:10:07,000] INFO in app: Instalment 21: Due 2027-05-25, Principal 38199.80, Interest 28038.12, Fees 11200.00
+2025-08-17 17:10:07,000 - INFO - Instalment 21: Due 2027-05-25, Principal 38199.80, Interest 28038.12, Fees 11200.00
+[2025-08-17 17:10:07,003] INFO in app: Instalment 22: Due 2027-06-25, Principal 39536.79, Interest 26701.12, Fees 11200.00
+2025-08-17 17:10:07,003 - INFO - Instalment 22: Due 2027-06-25, Principal 39536.79, Interest 26701.12, Fees 11200.00
+[2025-08-17 17:10:07,004] INFO in app: Instalment 23: Due 2027-07-25, Principal 40920.58, Interest 25317.34, Fees 11200.00
+2025-08-17 17:10:07,004 - INFO - Instalment 23: Due 2027-07-25, Principal 40920.58, Interest 25317.34, Fees 11200.00
+[2025-08-17 17:10:07,007] INFO in app: Instalment 24: Due 2027-08-25, Principal 42352.80, Interest 23885.12, Fees 11200.00
+2025-08-17 17:10:07,007 - INFO - Instalment 24: Due 2027-08-25, Principal 42352.80, Interest 23885.12, Fees 11200.00
+[2025-08-17 17:10:07,008] INFO in app: Instalment 25: Due 2027-09-25, Principal 43835.15, Interest 22402.77, Fees 11200.00
+2025-08-17 17:10:07,008 - INFO - Instalment 25: Due 2027-09-25, Principal 43835.15, Interest 22402.77, Fees 11200.00
+[2025-08-17 17:10:07,017] INFO in app: Instalment 26: Due 2027-10-25, Principal 45369.38, Interest 20868.54, Fees 11200.00
+2025-08-17 17:10:07,017 - INFO - Instalment 26: Due 2027-10-25, Principal 45369.38, Interest 20868.54, Fees 11200.00
+[2025-08-17 17:10:07,019] INFO in app: Instalment 27: Due 2027-11-25, Principal 46957.30, Interest 19280.61, Fees 11200.00
+2025-08-17 17:10:07,019 - INFO - Instalment 27: Due 2027-11-25, Principal 46957.30, Interest 19280.61, Fees 11200.00
+[2025-08-17 17:10:07,021] INFO in app: Instalment 28: Due 2027-12-25, Principal 48600.81, Interest 17637.10, Fees 11200.00
+2025-08-17 17:10:07,021 - INFO - Instalment 28: Due 2027-12-25, Principal 48600.81, Interest 17637.10, Fees 11200.00
+[2025-08-17 17:10:07,023] INFO in app: Instalment 29: Due 2028-01-25, Principal 50301.84, Interest 15936.08, Fees 11200.00
+2025-08-17 17:10:07,023 - INFO - Instalment 29: Due 2028-01-25, Principal 50301.84, Interest 15936.08, Fees 11200.00
+[2025-08-17 17:10:07,025] INFO in app: Instalment 30: Due 2028-02-25, Principal 52062.40, Interest 14175.51, Fees 11200.00
+2025-08-17 17:10:07,025 - INFO - Instalment 30: Due 2028-02-25, Principal 52062.40, Interest 14175.51, Fees 11200.00
+[2025-08-17 17:10:07,035] INFO in app: Instalment 31: Due 2028-03-25, Principal 53884.59, Interest 12353.33, Fees 11200.00
+2025-08-17 17:10:07,035 - INFO - Instalment 31: Due 2028-03-25, Principal 53884.59, Interest 12353.33, Fees 11200.00
+[2025-08-17 17:10:07,037] INFO in app: Instalment 32: Due 2028-04-25, Principal 55770.55, Interest 10467.37, Fees 11200.00
+2025-08-17 17:10:07,037 - INFO - Instalment 32: Due 2028-04-25, Principal 55770.55, Interest 10467.37, Fees 11200.00
+[2025-08-17 17:10:07,039] INFO in app: Instalment 33: Due 2028-05-25, Principal 57722.52, Interest 8515.40, Fees 11200.00
+2025-08-17 17:10:07,039 - INFO - Instalment 33: Due 2028-05-25, Principal 57722.52, Interest 8515.40, Fees 11200.00
+[2025-08-17 17:10:07,040] INFO in app: Instalment 34: Due 2028-06-25, Principal 59742.81, Interest 6495.11, Fees 11200.00
+2025-08-17 17:10:07,040 - INFO - Instalment 34: Due 2028-06-25, Principal 59742.81, Interest 6495.11, Fees 11200.00
+[2025-08-17 17:10:07,049] INFO in app: Instalment 35: Due 2028-07-25, Principal 61833.80, Interest 4404.11, Fees 11200.00
+2025-08-17 17:10:07,049 - INFO - Instalment 35: Due 2028-07-25, Principal 61833.80, Interest 4404.11, Fees 11200.00
+[2025-08-17 17:10:07,051] INFO in app: Instalment 36: Due 2028-08-25, Principal 63997.95, Interest 2239.96, Fees 11200.00
+2025-08-17 17:10:07,051 - INFO - Instalment 36: Due 2028-08-25, Principal 63997.95, Interest 2239.96, Fees 11200.00
+2025-08-17 17:10:07,063 - INFO - 127.0.0.1 - - [17/Aug/2025 17:10:07] "[32mPOST /loans/20/edit HTTP/1.1[0m" 302 -
+2025-08-17 17:10:07,355 - INFO - 127.0.0.1 - - [17/Aug/2025 17:10:07] "GET /loans HTTP/1.1" 200 -
+2025-08-17 17:10:15,988 - INFO - 127.0.0.1 - - [17/Aug/2025 17:10:15] "GET /loanbook HTTP/1.1" 200 -
+2025-08-17 17:10:32,577 - INFO - 127.0.0.1 - - [17/Aug/2025 17:10:32] "GET /income_report HTTP/1.1" 200 -
+2025-08-17 17:10:42,440 - INFO - 127.0.0.1 - - [17/Aug/2025 17:10:42] "GET /loanbook HTTP/1.1" 200 -
+2025-08-17 17:11:10,982 - INFO - 127.0.0.1 - - [17/Aug/2025 17:11:10] "GET /loan/136000020/statement HTTP/1.1" 200 -
+[2025-08-17 18:40:24,363] INFO in app: ==================================================
+[2025-08-17 18:40:24,372] INFO in app: Application logging initialized successfully
+[2025-08-17 18:40:24,374] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 18:40:24,376] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 18:40:24,379] INFO in app: System encoding: utf-8
+[2025-08-17 18:40:24,382] INFO in app: ==================================================
