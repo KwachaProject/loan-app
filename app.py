@@ -4645,6 +4645,99 @@ def admin_approval_dashboard():
         pending_customers=pending_customers
     )
 
+def update_loan(loan, form_data):
+    # Update basic loan attributes
+    new_amount = form_data.get('loan_amount')
+    new_term = form_data.get('term_months')
+    new_cat = form_data.get('loan_category')
+
+    if new_amount:
+        loan.loan_amount = float(new_amount)
+    if new_term:
+        loan.term_months = int(new_term)
+    if new_cat and new_cat.isdigit():
+        loan.loan_category = int(new_cat)
+
+    loan.application_status = form_data.get('application_status', loan.application_status)
+    loan.loan_state = form_data.get('loan_state', loan.loan_state)
+
+    # Update relationships
+    vote_id = form_data.get('vote_id')
+    agent_id = form_data.get('agent_id')
+    loan.vote_id = int(vote_id) if vote_id and vote_id.isdigit() else None
+    loan.agent_id = int(agent_id) if agent_id and agent_id.isdigit() else loan.agent_id
+
+    # Recalculate pricing using the same method as registration
+    CATEGORY_MAP = {
+        1: 'civil_servant',
+        2: 'private_sector',
+        3: 'sme'
+    }
+    category_code = loan.loan_category or 1
+    category_label = CATEGORY_MAP.get(category_code, 'civil_servant')
+    config = get_pricing_config(category_label, loan.term_months)
+    
+    # Calculate new fees and payments
+    crb_fees = 3000
+    origination_fees = loan.loan_amount * config['origination']
+    insurance_fees = loan.loan_amount * config['insurance']
+    collection_fees = loan.loan_amount * config['collection']
+    capitalized_amount = loan.loan_amount + origination_fees + insurance_fees + crb_fees
+    
+    # Calculate monthly payment
+    r = config['rate']
+    annuity = (r * (1 + r) ** loan.term_months) / ((1 + r) ** loan.term_months - 1)
+    monthly_payment = (capitalized_amount * annuity) + collection_fees
+    
+    # Update loan financials
+    loan.crb_fees = crb_fees
+    loan.origination_fees = round(origination_fees, 2)
+    loan.insurance_fees = round(insurance_fees, 2)
+    loan.collection_fees = round(collection_fees, 2)
+    loan.monthly_instalment = round(monthly_payment, 2)
+    loan.total_repayment = round(monthly_payment * loan.term_months, 2)
+    loan.cash_to_client = loan.loan_amount  # Simplified for edit flow
+    loan.applied_interest_rate = config['rate']
+    loan.applied_collection_fee = config['collection']
+    loan.category = category_label
+
+    # Handle disbursement
+    completed_disb = Disbursement.query.filter(
+        Disbursement.loan_id == loan.id,
+        Disbursement.status.in_(["completed", "posted", "paid"])
+    ).first()
+
+    if not completed_disb:
+        pending_disb = Disbursement.query.filter_by(
+            loan_id=loan.id
+        ).filter(
+            Disbursement.status.in_(["pending", "scheduled"])
+        ).first()
+
+        if pending_disb:
+            pending_disb.amount = loan.cash_to_client
+            if not pending_disb.reference:
+                pending_disb.reference = f"Initial disbursement for {loan.loan_number}"
+        else:
+            db.session.add(Disbursement(
+                loan_id=loan.id,
+                amount=loan.cash_to_client,
+                method='bank',
+                status='pending',
+                reference=f"Initial disbursement for {loan.loan_number}"
+            ))
+    else:
+        return "Disbursement already completed—amounts updated on the loan, but existing disbursement wasn’t altered."
+
+    # Regenerate repayment schedule
+    # First delete existing repayments
+    RepaymentSchedule.query.filter_by(loan_id=loan.id).delete()
+    db.session.flush()
+    
+    # Then generate new schedule
+    loan.generate_repayment_schedule()
+
+# Refactored route
 @app.route('/loans/<int:loan_id>/edit', methods=['GET', 'POST'])
 def edit_loan(loan_id):
     loan = LoanApplication.query.get_or_404(loan_id)
@@ -4653,32 +4746,23 @@ def edit_loan(loan_id):
 
     if request.method == 'POST':
         try:
-            loan.loan_amount = float(request.form.get('loan_amount', loan.loan_amount))
-            loan.term_months = int(request.form.get('term_months', loan.term_months))
-            loan.monthly_instalment = float(request.form.get('monthly_instalment', loan.monthly_instalment))
-        except (ValueError, TypeError):
-            flash('Invalid numeric input.', 'danger')
+            warning = update_loan(loan, request.form)
+            db.session.commit()
+            
+            if warning:
+                flash(warning, "warning")
+                flash('Loan updated with full recalculation! Disbursement not modified.', 'success')
+            else:
+                flash('Loan updated with full recalculation!', 'success')
+                
+            return redirect(url_for('view_loans'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error updating loan: {str(e)}', 'danger')
             return redirect(request.url)
 
-        loan.category = request.form.get('category', loan.category)
-        loan.application_status = request.form.get('application_status', loan.application_status)
-        loan.loan_state = request.form.get('loan_state', loan.loan_state)
-
-        # Vote assignment
-        vote_id = request.form.get('vote_id')
-        loan.vote_id = int(vote_id) if vote_id and vote_id.isdigit() else None
-
-        # ✅ Agent assignment fix
-        agent_id = request.form.get('agent_id')
-        if agent_id and agent_id.isdigit():
-            loan.agent_id = int(agent_id)
-
-        db.session.commit()
-        flash('Loan updated successfully.', 'success')
-        return redirect(url_for('view_loans'))
-
     return render_template('edit_loan.html', loan=loan, agents=agents, votes=votes)
-
 
 # Route to handle approval
 @app.route('/admin/admin_approval/<int:customer_id>', methods=['POST'])

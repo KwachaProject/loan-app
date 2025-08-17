@@ -1558,3 +1558,94 @@ sqlalchemy.exc.ArgumentError: The "whens" argument to case(), when referring to 
 [2025-08-17 09:25:16,453] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-17 09:25:16,459] INFO in app: System encoding: utf-8
 [2025-08-17 09:25:16,463] INFO in app: ==================================================
+[2025-08-17 15:09:32,299] INFO in app: ==================================================
+[2025-08-17 15:09:32,390] INFO in app: Application logging initialized successfully
+[2025-08-17 15:09:32,392] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 15:09:32,393] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 15:09:32,395] INFO in app: System encoding: utf-8
+[2025-08-17 15:09:32,399] INFO in app: ==================================================
+[2025-08-17 15:48:11,780] INFO in app: ==================================================
+[2025-08-17 15:48:11,791] INFO in app: Application logging initialized successfully
+[2025-08-17 15:48:11,793] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 15:48:11,797] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 15:48:11,804] INFO in app: System encoding: utf-8
+[2025-08-17 15:48:11,807] INFO in app: ==================================================
+[2025-08-17 15:55:32,669] INFO in app: ==================================================
+[2025-08-17 15:55:32,675] INFO in app: Application logging initialized successfully
+[2025-08-17 15:55:32,678] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 15:55:32,679] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 15:55:32,685] INFO in app: System encoding: utf-8
+[2025-08-17 15:55:32,687] INFO in app: ==================================================
+[2025-08-17 15:58:05,623] INFO in app: ==================================================
+[2025-08-17 15:58:05,632] INFO in app: Application logging initialized successfully
+[2025-08-17 15:58:05,634] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 15:58:05,636] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 15:58:05,640] INFO in app: System encoding: utf-8
+[2025-08-17 15:58:05,644] INFO in app: ==================================================
+[2025-08-17 16:55:17,798] INFO in app: ==================================================
+[2025-08-17 16:55:17,808] INFO in app: Application logging initialized successfully
+[2025-08-17 16:55:17,819] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 16:55:17,823] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 16:55:17,827] INFO in app: System encoding: utf-8
+[2025-08-17 16:55:17,853] INFO in app: ==================================================
+[2025-08-17 17:05:18,284] INFO in app: ==================================================
+[2025-08-17 17:05:18,293] INFO in app: Application logging initialized successfully
+[2025-08-17 17:05:18,296] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 17:05:18,299] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 17:05:18,305] INFO in app: System encoding: utf-8
+[2025-08-17 17:05:18,310] INFO in app: ==================================================
+[2025-08-17 17:09:16,761] INFO in app: ==================================================
+[2025-08-17 17:09:16,770] INFO in app: Application logging initialized successfully
+[2025-08-17 17:09:16,774] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 17:09:16,781] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 17:09:16,785] INFO in app: System encoding: utf-8
+[2025-08-17 17:09:16,786] INFO in app: ==================================================
+[2025-08-17 17:09:30,153] INFO in app: Generating repayment schedule for loan 103000019 with disbursement_date=None
+[2025-08-17 17:09:30,167] INFO in app: First due date: 2025-09-25
+[2025-08-17 17:09:30,169] INFO in app: Instalment 1: Due 2025-09-25, Principal 373765.58, Interest 40635.00, Fees 2500.00
+[2025-08-17 17:09:30,171] INFO in app: Instalment 2: Due 2025-10-25, Principal 386847.38, Interest 27553.20, Fees 2500.00
+[2025-08-17 17:09:30,180] INFO in app: Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
+[2025-08-17 17:10:06,898] INFO in app: Generating repayment schedule for loan 136000020 with disbursement_date=None
+[2025-08-17 17:10:06,904] INFO in app: First due date: 2025-09-25
+[2025-08-17 17:10:06,906] INFO in app: Instalment 1: Due 2025-09-25, Principal 19197.91, Interest 47040.00, Fees 11200.00
+[2025-08-17 17:10:06,911] INFO in app: Instalment 2: Due 2025-10-25, Principal 19869.84, Interest 46368.07, Fees 11200.00
+[2025-08-17 17:10:06,924] INFO in app: Instalment 3: Due 2025-11-25, Principal 20565.29, Interest 45672.63, Fees 11200.00
+[2025-08-17 17:10:06,934] INFO in app: Instalment 4: Due 2025-12-25, Principal 21285.07, Interest 44952.84, Fees 11200.00
+[2025-08-17 17:10:06,937] INFO in app: Instalment 5: Due 2026-01-25, Principal 22030.05, Interest 44207.87, Fees 11200.00
+[2025-08-17 17:10:06,939] INFO in app: Instalment 6: Due 2026-02-25, Principal 22801.10, Interest 43436.81, Fees 11200.00
+[2025-08-17 17:10:06,940] INFO in app: Instalment 7: Due 2026-03-25, Principal 23599.14, Interest 42638.78, Fees 11200.00
+[2025-08-17 17:10:06,951] INFO in app: Instalment 8: Due 2026-04-25, Principal 24425.11, Interest 41812.81, Fees 11200.00
+[2025-08-17 17:10:06,954] INFO in app: Instalment 9: Due 2026-05-25, Principal 25279.99, Interest 40957.93, Fees 11200.00
+[2025-08-17 17:10:06,955] INFO in app: Instalment 10: Due 2026-06-25, Principal 26164.79, Interest 40073.13, Fees 11200.00
+[2025-08-17 17:10:06,957] INFO in app: Instalment 11: Due 2026-07-25, Principal 27080.55, Interest 39157.36, Fees 11200.00
+[2025-08-17 17:10:06,966] INFO in app: Instalment 12: Due 2026-08-25, Principal 28028.37, Interest 38209.54, Fees 11200.00
+[2025-08-17 17:10:06,969] INFO in app: Instalment 13: Due 2026-09-25, Principal 29009.37, Interest 37228.55, Fees 11200.00
+[2025-08-17 17:10:06,971] INFO in app: Instalment 14: Due 2026-10-25, Principal 30024.70, Interest 36213.22, Fees 11200.00
+[2025-08-17 17:10:06,973] INFO in app: Instalment 15: Due 2026-11-25, Principal 31075.56, Interest 35162.36, Fees 11200.00
+[2025-08-17 17:10:06,978] INFO in app: Instalment 16: Due 2026-12-25, Principal 32163.20, Interest 34074.71, Fees 11200.00
+[2025-08-17 17:10:06,985] INFO in app: Instalment 17: Due 2027-01-25, Principal 33288.92, Interest 32949.00, Fees 11200.00
+[2025-08-17 17:10:06,987] INFO in app: Instalment 18: Due 2027-02-25, Principal 34454.03, Interest 31783.89, Fees 11200.00
+[2025-08-17 17:10:06,989] INFO in app: Instalment 19: Due 2027-03-25, Principal 35659.92, Interest 30578.00, Fees 11200.00
+[2025-08-17 17:10:06,991] INFO in app: Instalment 20: Due 2027-04-25, Principal 36908.02, Interest 29329.90, Fees 11200.00
+[2025-08-17 17:10:07,000] INFO in app: Instalment 21: Due 2027-05-25, Principal 38199.80, Interest 28038.12, Fees 11200.00
+[2025-08-17 17:10:07,003] INFO in app: Instalment 22: Due 2027-06-25, Principal 39536.79, Interest 26701.12, Fees 11200.00
+[2025-08-17 17:10:07,004] INFO in app: Instalment 23: Due 2027-07-25, Principal 40920.58, Interest 25317.34, Fees 11200.00
+[2025-08-17 17:10:07,007] INFO in app: Instalment 24: Due 2027-08-25, Principal 42352.80, Interest 23885.12, Fees 11200.00
+[2025-08-17 17:10:07,008] INFO in app: Instalment 25: Due 2027-09-25, Principal 43835.15, Interest 22402.77, Fees 11200.00
+[2025-08-17 17:10:07,017] INFO in app: Instalment 26: Due 2027-10-25, Principal 45369.38, Interest 20868.54, Fees 11200.00
+[2025-08-17 17:10:07,019] INFO in app: Instalment 27: Due 2027-11-25, Principal 46957.30, Interest 19280.61, Fees 11200.00
+[2025-08-17 17:10:07,021] INFO in app: Instalment 28: Due 2027-12-25, Principal 48600.81, Interest 17637.10, Fees 11200.00
+[2025-08-17 17:10:07,023] INFO in app: Instalment 29: Due 2028-01-25, Principal 50301.84, Interest 15936.08, Fees 11200.00
+[2025-08-17 17:10:07,025] INFO in app: Instalment 30: Due 2028-02-25, Principal 52062.40, Interest 14175.51, Fees 11200.00
+[2025-08-17 17:10:07,035] INFO in app: Instalment 31: Due 2028-03-25, Principal 53884.59, Interest 12353.33, Fees 11200.00
+[2025-08-17 17:10:07,037] INFO in app: Instalment 32: Due 2028-04-25, Principal 55770.55, Interest 10467.37, Fees 11200.00
+[2025-08-17 17:10:07,039] INFO in app: Instalment 33: Due 2028-05-25, Principal 57722.52, Interest 8515.40, Fees 11200.00
+[2025-08-17 17:10:07,040] INFO in app: Instalment 34: Due 2028-06-25, Principal 59742.81, Interest 6495.11, Fees 11200.00
+[2025-08-17 17:10:07,049] INFO in app: Instalment 35: Due 2028-07-25, Principal 61833.80, Interest 4404.11, Fees 11200.00
+[2025-08-17 17:10:07,051] INFO in app: Instalment 36: Due 2028-08-25, Principal 63997.95, Interest 2239.96, Fees 11200.00
+[2025-08-17 18:40:24,363] INFO in app: ==================================================
+[2025-08-17 18:40:24,372] INFO in app: Application logging initialized successfully
+[2025-08-17 18:40:24,374] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 18:40:24,376] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 18:40:24,379] INFO in app: System encoding: utf-8
+[2025-08-17 18:40:24,382] INFO in app: ==================================================
