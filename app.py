@@ -4499,6 +4499,8 @@ def process_customer_registration(data, files=None):
     top_up_balance = calculate_balances(previous).get('top_up_balance', 0) if previous else 0
     cash_to_client = max(loan_amount - top_up_balance, 0)
 
+    agent_id = request.form.get("agent_id")
+    agent_id = int(agent_id) if agent_id and agent_id.isdigit() else current_user.id
     # Create loan record
     loan = LoanApplication(
         customer_id=customer.id,
@@ -4515,7 +4517,7 @@ def process_customer_registration(data, files=None):
         loan_state='application',
         performance_status='pending',
         crb_fees=crb_fees,
-        agent_id=current_user.id,
+        agent_id=agent_id,
         origination_fees=round(origination_fees, 2),
         insurance_fees=round(insurance_fees, 2),
         collection_fees=round(collection_fees, 2),
@@ -4662,11 +4664,14 @@ def edit_loan(loan_id):
         loan.application_status = request.form.get('application_status', loan.application_status)
         loan.loan_state = request.form.get('loan_state', loan.loan_state)
 
+        # Vote assignment
         vote_id = request.form.get('vote_id')
         loan.vote_id = int(vote_id) if vote_id and vote_id.isdigit() else None
 
+        # ✅ Agent assignment fix
         agent_id = request.form.get('agent_id')
-        loan.agent_id = int(agent_id) if agent_id and agent_id.isdigit() else None
+        if agent_id and agent_id.isdigit():
+            loan.agent_id = int(agent_id)
 
         db.session.commit()
         flash('Loan updated successfully.', 'success')
@@ -5685,7 +5690,8 @@ def process_topup_registration(data, base_loan, loan_form=None, bank_payslip=Non
     loan_sequence = str(db.session.query(LoanApplication).count() + 1).zfill(6)
     loan_number = f"{category_info['prefix']}{str(term_months).zfill(2)}{loan_sequence}"
 
-    agent_id = int(data['agent_id']) if data.get('agent_id') else None
+    agent_id = request.form.get("agent_id")
+    agent_id = int(agent_id) if agent_id and agent_id.isdigit() else current_user.id
 
     # --- Create New Top-up Loan
     topup_loan = LoanApplication(
@@ -5888,7 +5894,8 @@ def process_additional_registration(data, base_loan, new_category=None,
     loan_sequence = str(db.session.query(LoanApplication).count() + 1).zfill(6)
     loan_number = f"{prefix}{str(term_months).zfill(2)}{loan_sequence}"
 
-    agent_id = int(data['agent_id']) if data.get('agent_id') else None
+    agent_id = request.form.get("agent_id")
+    agent_id = int(agent_id) if agent_id and agent_id.isdigit() else current_user.id
 
     additional_loan = LoanApplication(
         customer_id=base_loan.customer_id,
@@ -8323,15 +8330,25 @@ def add_team_with_agents():
                 leader = Agent.query.get(int(existing_leader_id))
                 print(f"Using existing team leader: {leader.name} (ID: {leader.id})")
             else:
-                leader = Agent(
-                    name=request.form['leader_name'],
-                    contact=request.form.get('leader_phone'),
-                    email=request.form.get('leader_email'),
-                    role='Team Leader'
-                )
-                db.session.add(leader)
-                db.session.flush()  # assigns leader.id
-                print(f"Created new team leader: {leader.name} (ID: {leader.id})")
+                # Prevent duplicate leaders by phone or name
+                existing_leader = Agent.query.filter(
+                    (Agent.contact == request.form.get('leader_phone')) |
+                    (Agent.name.ilike(request.form['leader_name']))
+                ).first()
+
+                if existing_leader:
+                    leader = existing_leader
+                    print(f"Using existing leader (duplicate detected): {leader.name}")
+                else:
+                    leader = Agent(
+                        name=request.form['leader_name'].strip(),
+                        contact=request.form.get('leader_phone').strip(),
+                        email=request.form.get('leader_email').strip(),
+                        role='Team Leader'
+                    )
+                    db.session.add(leader)
+                    db.session.flush()  # assigns leader.id
+                    print(f"Created new team leader: {leader.name} (ID: {leader.id})")
 
             # Fetch submitted agent data
             names = request.form.getlist('agent_name[]')
@@ -8351,6 +8368,16 @@ def add_team_with_agents():
                     print("Skipped agent with empty name.")
                     continue
 
+                # Check for duplicates (by phone or name)
+                existing_agent = Agent.query.filter(
+                    (Agent.contact == phone.strip()) |
+                    (Agent.name.ilike(name.strip()))
+                ).first()
+
+                if existing_agent:
+                    print(f"⚠️ Skipping duplicate agent: {existing_agent.name} ({existing_agent.contact})")
+                    continue
+
                 try:
                     budget = float(budget_str) if budget_str else 0.0
                 except ValueError:
@@ -8368,10 +8395,10 @@ def add_team_with_agents():
                 )
                 db.session.add(agent)
                 added_agents += 1
-                print(f"Added agent: {agent.name}, team leader: {leader.name}")
+                print(f"✅ Added agent: {agent.name}, team leader: {leader.name}")
 
             if added_agents == 0:
-                raise Exception("No valid agents submitted.")
+                raise Exception("No valid agents submitted (all duplicates or empty).")
 
             db.session.commit()
             flash(f"Team created with {added_agents} agent(s)!", "success")
