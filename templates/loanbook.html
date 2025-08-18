@@ -4,13 +4,11 @@
 {% block content %}
 
 <style>
-  /* ADDED SCROLL CONTAINMENT STYLES */
   .table-responsive {
-    max-height: calc(100vh - 300px);  /* Adjusted for better spacing */
+    max-height: calc(100vh - 300px);
     overflow: auto;
     position: relative;
   }
-  
   .table-responsive thead th {
     position: sticky;
     top: 0;
@@ -18,7 +16,6 @@
     z-index: 2;
     box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);
   }
-
   .table-responsive tfoot td {
     position: sticky;
     bottom: 0;
@@ -26,8 +23,6 @@
     z-index: 2;
     box-shadow: 0 -2px 2px -1px rgba(0,0,0,0.1);
   }
-
-  /* ORIGINAL STYLES BELOW */
   #loadMoreBtn {
     transition: background-color 0.2s ease;
     border-radius: 25px;
@@ -38,23 +33,17 @@
     background-color: #0056b3;
     transform: scale(1.03);
   }
-
-  /* Align all numeric columns to right */
-  table.table tbody td:nth-child(4),  /* Loan Amount */
-  table.table tbody td:nth-child(5),  /* Term Months */
-  table.table tbody td:nth-child(7),  /* CRB Fee */
-  table.table tbody td:nth-child(8),  /* Origination */
-  table.table tbody td:nth-child(9),  /* Insurance */
-  table.table tbody td:nth-child(10), /* Total Fees */
-  table.table tbody td:nth-child(11), /* Collection Fees */
-  table.table tbody td:nth-child(12), /* Instalment */
-  table.table tbody td:nth-child(13), /* Total Repayment */
-  table.table tbody td:nth-child(14)  /* Principal Balance */
-  {
-    text-align: right;
-  }
-
-  /* Also align footer cells the same way */
+  /* Align numeric columns */
+  table.table tbody td:nth-child(4),
+  table.table tbody td:nth-child(5),
+  table.table tbody td:nth-child(7),
+  table.table tbody td:nth-child(8),
+  table.table tbody td:nth-child(9),
+  table.table tbody td:nth-child(10),
+  table.table tbody td:nth-child(11),
+  table.table tbody td:nth-child(12),
+  table.table tbody td:nth-child(13),
+  table.table tbody td:nth-child(14),
   table.table tfoot td:nth-child(4),
   table.table tfoot td:nth-child(5),
   table.table tfoot td:nth-child(7),
@@ -69,9 +58,44 @@
   }
 </style>
 
-
 <h2 class="mb-4">Loan Book</h2>
 
+<!-- REPORT GENERATOR PANEL -->
+<div class="card mb-4 shadow-sm">
+  <div class="card-header bg-light">
+    <strong>Generate Loan Report</strong>
+  </div>
+  <div class="card-body">
+    <form method="get" action="{{ url_for('generate_report') }}" class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label for="start_date" class="form-label">Start Date</label>
+        <input type="date" class="form-control" name="start_date" id="start_date"
+               value="{{ request.args.get('start_date', '') }}">
+      </div>
+      <div class="col-md-3">
+        <label for="end_date" class="form-label">End Date</label>
+        <input type="date" class="form-control" name="end_date" id="end_date"
+               value="{{ request.args.get('end_date', '') }}">
+      </div>
+      <div class="col-md-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-select" name="status" id="status">
+          <option value="">All</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="col-md-3 text-end">
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-download"></i> Export to Excel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- SEARCH / FILTER BAR -->
 <div class="row search-bar">
   <div class="col-md-6 mb-2">
     <input type="text" id="searchInput" class="form-control" placeholder="Search by name or status">
@@ -94,8 +118,10 @@
   </div>
 </div>
 
-<button class="btn btn-success mb-3" onclick="exportToExcel()">Export to Excel</button>
+<!-- EXPORT BUTTON -->
+<button class="btn btn-success mb-3" onclick="exportToExcel()">Export Table to Excel</button>
 
+<!-- LOAN TABLE -->
 <div class="table-responsive" style="max-height: 600px; overflow: auto;">
   <table class="table table-bordered table-hover text-nowrap" id="loanTable">
     <thead class="table-light sticky-top">
@@ -145,7 +171,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
 <script>
   const searchInput = document.getElementById("searchInput");
   const categoryFilter = document.getElementById("categoryFilter");
@@ -159,7 +184,6 @@
     const selectedTenure = tenureFilter.value;
 
     const rows = tableBody.querySelectorAll("tr");
-
     rows.forEach(row => {
       const name = row.cells[2].textContent.toLowerCase();
       const category = row.cells[5].textContent.toLowerCase();
@@ -171,43 +195,6 @@
 
       row.style.display = (matchSearch && matchCategory && matchTenure) ? "" : "none";
     });
-
-    updateTotals();
-  }
-
-  function updateTotals() {
-    let loanAmount = 0, crbFees = 0, originationFees = 0, insuranceFees = 0,
-        totalFees = 0, collectionFees = 0, monthlyInstalment = 0, totalRepayment = 0, totalBalance = 0;
-
-    const rows = tableBody.querySelectorAll("tr");
-    rows.forEach(row => {
-      if (row.style.display !== "none") {
-        const getNumber = (index) => parseFloat(row.cells[index].textContent.replace(/,/g, '')) || 0;
-
-        loanAmount += getNumber(3);
-        crbFees += getNumber(6);
-        originationFees += getNumber(7);
-        insuranceFees += getNumber(8);
-        totalFees += getNumber(9);
-        collectionFees += getNumber(10);
-        monthlyInstalment += getNumber(11);
-        totalRepayment += getNumber(12);
-        totalBalance += getNumber(13);
-      }
-    });
-
-    const format = num => num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const footerCells = table.querySelector("tfoot tr").cells;
-
-    footerCells[1].textContent = format(loanAmount);
-    footerCells[4].textContent = format(crbFees);
-    footerCells[5].textContent = format(originationFees);
-    footerCells[6].textContent = format(insuranceFees);
-    footerCells[7].textContent = format(totalFees);
-    footerCells[8].textContent = format(collectionFees);
-    footerCells[9].textContent = format(monthlyInstalment);
-    footerCells[10].textContent = format(totalRepayment);
-    footerCells[11].textContent = format(totalBalance);
   }
 
   searchInput.addEventListener("input", filterTable);
@@ -215,59 +202,23 @@
   tenureFilter.addEventListener("change", filterTable);
 
   function exportToExcel() {
-  const wb = XLSX.utils.book_new();
-  const headers = Array.from(document.querySelectorAll("thead th")).map(th => th.textContent.trim());
-  const visibleRows = Array.from(document.querySelectorAll("tbody tr")).filter(r => r.style.display !== "none");
-  const data = visibleRows.map(row =>
-    Array.from(row.cells).map(cell => cell.textContent.trim())
-  );
-
-  const footer = Array.from(document.querySelector("tfoot tr").cells);
-  const totalsRow = [
-    "Totals", "", "", 
-    footer[1].textContent,   // Loan Amount (index 1)
-    "", "",                   // Empty cells for Term/Category
-    footer[4].textContent,    // CRB Fee (index 4)
-    footer[5].textContent,    // Origination (index 5)
-    footer[6].textContent,    // Insurance (index 6)
-    footer[7].textContent,    // Total Fees (index 7)
-    footer[8].textContent,    // Collection Fees (index 8)
-    footer[9].textContent,    // Instalment (index 9)
-    footer[10].textContent,   // Total Repayment (index 10)
-    footer[11].textContent    // Principal Balance (index 11)
-  ];
-
-  const ws = XLSX.utils.aoa_to_sheet([headers, ...data, totalsRow]);
-  XLSX.utils.book_append_sheet(wb, ws, "Loan Book");
-  XLSX.writeFile(wb, "loan_book.xlsx");
-}
-
-
-$.get('/loanbook', { page: nextPage, ajax: true }, function(response) {
-    $('#loan-table-body').append(response.html);
-    if (!response.has_next) {
-        $('#load-more-button').hide();
-    }
-    // Update totals
-    $('#total-loan-amount').text(response.totals.loan_amount.toFixed(2));
-    $('#total-crb-fees').text(response.totals.crb_fees.toFixed(2));
-    $('#total-origination').text(response.origination_fees.toFixed(2));
-    $('#total-insurance').text(response.insurance_fees.toFixed(2));
-    $('#total-collection').text(response.collection_fees.toFixed(2));
-    $('#total-instalment').text(response.monthly_instalment.toFixed(2));
-    $('#total-repayment').text(response.total_repayment.toFixed(2)); 
-    $('#total-principa-balance').text(response.total_balance.toFixed(2)); 
-    // Repeat for other totals...
-});
+    const wb = XLSX.utils.book_new();
+    const headers = Array.from(document.querySelectorAll("thead th")).map(th => th.textContent.trim());
+    const visibleRows = Array.from(document.querySelectorAll("tbody tr")).filter(r => r.style.display !== "none");
+    const data = visibleRows.map(row =>
+      Array.from(row.cells).map(cell => cell.textContent.trim())
+    );
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    XLSX.utils.book_append_sheet(wb, ws, "Loan Book");
+    XLSX.writeFile(wb, "loan_book.xlsx");
+  }
 
   document.addEventListener("DOMContentLoaded", function () {
     const loadMoreBtn = document.getElementById("loadMoreBtn");
-
     if (loadMoreBtn) {
       loadMoreBtn.addEventListener("click", function () {
         const page = this.dataset.page;
         this.textContent = "Loading...";
-
         fetch(`/loan-book?page=${page}&ajax=true`)
           .then(response => response.json())
           .then(data => {
@@ -278,13 +229,10 @@ $.get('/loanbook', { page: nextPage, ajax: true }, function(response) {
             } else {
               loadMoreBtn.remove();
             }
-            updateTotals();
           });
       });
     }
   });
-
 </script>
-
 
 {% endblock %}

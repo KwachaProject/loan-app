@@ -4877,3 +4877,200 @@ with app.app_context(). See the documentation for more information.
 2025-08-17 19:26:25,039 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
 2025-08-17 19:26:25,041 - INFO - Added job "snapshot_par" to job store "default"
 2025-08-17 19:26:25,041 - INFO - Scheduler started
+2025-08-17 19:26:25,819 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 19:26:25,820 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 19:26:25,827 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 19:26:25,827 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 19:26:27,303 - INFO - 127.0.0.1 - - [17/Aug/2025 19:26:27] "GET /loan/112000001/statement HTTP/1.1" 200 -
+2025-08-17 19:26:27,875 - INFO - 127.0.0.1 - - [17/Aug/2025 19:26:27] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-17 20:27:34,028] INFO in app: ==================================================
+[2025-08-17 20:27:34,036] INFO in app: Application logging initialized successfully
+[2025-08-17 20:27:34,039] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 20:27:34,041] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 20:27:34,044] INFO in app: System encoding: utf-8
+[2025-08-17 20:27:34,049] INFO in app: ==================================================
+2025-08-17 20:27:34,358 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 20:27:34,360 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 20:27:34,360 - INFO - Scheduler started
+2025-08-17 20:27:35,208 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 20:27:35,208 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 20:27:35,215 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 20:27:35,215 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 20:27:42,375 - INFO - 127.0.0.1 - - [17/Aug/2025 20:27:42] "GET /loan/112000001/statement HTTP/1.1" 200 -
+2025-08-17 20:27:44,106 - INFO - 127.0.0.1 - - [17/Aug/2025 20:27:44] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-17 20:27:46,646 - INFO - 127.0.0.1 - - [17/Aug/2025 20:27:46] "GET /loanbook HTTP/1.1" 200 -
+[2025-08-17 20:28:07,714] ERROR in app: Exception on /reports [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 5721, in generate_report
+    "CRB Fee": loan.crb_fee,
+               ^^^^^^^^^^^^
+AttributeError: 'LoanApplication' object has no attribute 'crb_fee'. Did you mean: 'crb_fees'?
+2025-08-17 20:28:07,714 - ERROR - Exception on /reports [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 5721, in generate_report
+    "CRB Fee": loan.crb_fee,
+               ^^^^^^^^^^^^
+AttributeError: 'LoanApplication' object has no attribute 'crb_fee'. Did you mean: 'crb_fees'?
+2025-08-17 20:28:07,780 - INFO - 127.0.0.1 - - [17/Aug/2025 20:28:07] "[35m[1mGET /reports?start_date=2025-08-01&end_date=2025-08-17&status= HTTP/1.1[0m" 500 -
+[2025-08-17 20:30:48,503] INFO in app: ==================================================
+[2025-08-17 20:30:48,510] INFO in app: Application logging initialized successfully
+[2025-08-17 20:30:48,515] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 20:30:48,517] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 20:30:48,521] INFO in app: System encoding: utf-8
+[2025-08-17 20:30:48,523] INFO in app: ==================================================
+2025-08-17 20:30:48,815 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 20:30:48,817 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 20:30:48,817 - INFO - Scheduler started
+2025-08-17 20:30:49,646 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 20:30:49,646 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 20:30:49,654 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 20:30:49,654 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 20:30:54,831 - INFO - 127.0.0.1 - - [17/Aug/2025 20:30:54] "GET /loanbook HTTP/1.1" 200 -
+2025-08-17 20:30:55,657 - INFO - 127.0.0.1 - - [17/Aug/2025 20:30:55] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-17 20:31:06,069] ERROR in app: Exception on /reports [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 5736, in generate_report
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+         ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\pandas\io\excel\_xlsxwriter.py", line 197, in __init__
+    from xlsxwriter import Workbook
+ModuleNotFoundError: No module named 'xlsxwriter'
+2025-08-17 20:31:06,069 - ERROR - Exception on /reports [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 5736, in generate_report
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+         ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\pandas\io\excel\_xlsxwriter.py", line 197, in __init__
+    from xlsxwriter import Workbook
+ModuleNotFoundError: No module named 'xlsxwriter'
+2025-08-17 20:31:06,123 - INFO - 127.0.0.1 - - [17/Aug/2025 20:31:06] "[35m[1mGET /reports?start_date=2025-08-01&end_date=2025-08-17&status= HTTP/1.1[0m" 500 -
+[2025-08-17 20:32:28,480] INFO in app: ==================================================
+[2025-08-17 20:32:28,488] INFO in app: Application logging initialized successfully
+[2025-08-17 20:32:28,493] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 20:32:28,495] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 20:32:28,500] INFO in app: System encoding: utf-8
+[2025-08-17 20:32:28,502] INFO in app: ==================================================
+2025-08-17 20:32:28,806 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 20:32:28,808 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 20:32:28,808 - INFO - Scheduler started
+2025-08-17 20:32:29,414 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 20:32:29,415 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 20:32:29,422 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 20:32:29,422 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 20:32:37,455 - INFO - 127.0.0.1 - - [17/Aug/2025 20:32:37] "GET /reports?start_date=2025-08-01&end_date=2025-08-17&status= HTTP/1.1" 200 -
+2025-08-17 20:33:29,757 - INFO - 127.0.0.1 - - [17/Aug/2025 20:33:29] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-17 20:33:39,075 - INFO - 127.0.0.1 - - [17/Aug/2025 20:33:39] "GET /reports?start_date=2025-07-01&end_date=2025-08-17&status= HTTP/1.1" 200 -
+[2025-08-17 20:37:24,975] INFO in app: ==================================================
+[2025-08-17 20:37:24,983] INFO in app: Application logging initialized successfully
+[2025-08-17 20:37:24,985] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 20:37:24,987] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 20:37:24,990] INFO in app: System encoding: utf-8
+[2025-08-17 20:37:24,997] INFO in app: ==================================================
+2025-08-17 20:37:25,314 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-17 20:37:25,316 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-17 20:37:25,316 - INFO - Scheduler started
+2025-08-17 20:37:25,941 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-17 20:37:25,942 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-17 20:37:25,956 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-17 20:37:25,956 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-17 20:38:02,227 - INFO - 127.0.0.1 - - [17/Aug/2025 20:38:02] "GET /loanbook HTTP/1.1" 200 -
+2025-08-17 20:38:05,454 - INFO - 127.0.0.1 - - [17/Aug/2025 20:38:05] "GET /loan/112000001/statement HTTP/1.1" 200 -
+2025-08-17 20:38:16,251 - INFO - 127.0.0.1 - - [17/Aug/2025 20:38:16] "GET /loanbook HTTP/1.1" 200 -
+2025-08-17 20:38:17,966 - INFO - 127.0.0.1 - - [17/Aug/2025 20:38:17] "GET /customer/202507000001/account HTTP/1.1" 200 -
+2025-08-17 20:38:19,631 - INFO - 127.0.0.1 - - [17/Aug/2025 20:38:19] "GET /customer/202507000001/account?section=additional HTTP/1.1" 200 -
+[2025-08-17 20:38:56,821] INFO in app: Generating repayment schedule for loan 103000021 with disbursement_date=None
+2025-08-17 20:38:56,821 - INFO - Generating repayment schedule for loan 103000021 with disbursement_date=None
+[2025-08-17 20:38:56,849] INFO in app: First due date: 2025-09-25
+2025-08-17 20:38:56,849 - INFO - First due date: 2025-09-25
+[2025-08-17 20:38:56,854] INFO in app: Instalment 1: Due 2025-09-25, Principal 373765.58, Interest 40635.00, Fees 2500.00
+2025-08-17 20:38:56,854 - INFO - Instalment 1: Due 2025-09-25, Principal 373765.58, Interest 40635.00, Fees 2500.00
+[2025-08-17 20:38:56,860] INFO in app: Instalment 2: Due 2025-10-25, Principal 386847.38, Interest 27553.20, Fees 2500.00
+2025-08-17 20:38:56,860 - INFO - Instalment 2: Due 2025-10-25, Principal 386847.38, Interest 27553.20, Fees 2500.00
+[2025-08-17 20:38:56,875] INFO in app: Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
+2025-08-17 20:38:56,875 - INFO - Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
+2025-08-17 20:38:56,912 - INFO - 127.0.0.1 - - [17/Aug/2025 20:38:56] "[32mPOST /apply_additional/1 HTTP/1.1[0m" 302 -
+2025-08-17 20:38:57,079 - INFO - 127.0.0.1 - - [17/Aug/2025 20:38:57] "GET /customer/202507000001/account?section=statement HTTP/1.1" 200 -
+2025-08-17 20:39:00,077 - INFO - 127.0.0.1 - - [17/Aug/2025 20:39:00] "GET /customer/202507000001/account?section=additional HTTP/1.1" 200 -
+[2025-08-17 20:39:42,595] INFO in app: Generating repayment schedule for loan 103000022 with disbursement_date=None
+2025-08-17 20:39:42,595 - INFO - Generating repayment schedule for loan 103000022 with disbursement_date=None
+[2025-08-17 20:39:42,613] INFO in app: First due date: 2025-09-25
+2025-08-17 20:39:42,613 - INFO - First due date: 2025-09-25
+[2025-08-17 20:39:42,627] INFO in app: Instalment 1: Due 2025-09-25, Principal 746565.36, Interest 81165.00, Fees 5000.00
+2025-08-17 20:39:42,627 - INFO - Instalment 1: Due 2025-09-25, Principal 746565.36, Interest 81165.00, Fees 5000.00
+[2025-08-17 20:39:42,632] INFO in app: Instalment 2: Due 2025-10-25, Principal 772695.15, Interest 55035.21, Fees 5000.00
+2025-08-17 20:39:42,632 - INFO - Instalment 2: Due 2025-10-25, Principal 772695.15, Interest 55035.21, Fees 5000.00
+[2025-08-17 20:39:42,645] INFO in app: Instalment 3: Due 2025-11-25, Principal 799739.49, Interest 27990.87, Fees 5000.00
+2025-08-17 20:39:42,645 - INFO - Instalment 3: Due 2025-11-25, Principal 799739.49, Interest 27990.87, Fees 5000.00
+2025-08-17 20:39:42,661 - INFO - 127.0.0.1 - - [17/Aug/2025 20:39:42] "[32mPOST /apply_additional/1 HTTP/1.1[0m" 302 -
+2025-08-17 20:39:42,714 - INFO - 127.0.0.1 - - [17/Aug/2025 20:39:42] "GET /customer/202507000001/account?section=statement HTTP/1.1" 200 -
+2025-08-17 20:39:44,532 - INFO - 127.0.0.1 - - [17/Aug/2025 20:39:44] "GET /loans HTTP/1.1" 200 -
+2025-08-17 20:39:48,788 - INFO - 127.0.0.1 - - [17/Aug/2025 20:39:48] "[32mPOST /process_loan/21/approve HTTP/1.1[0m" 302 -
+2025-08-17 20:39:49,185 - INFO - 127.0.0.1 - - [17/Aug/2025 20:39:49] "GET /loans HTTP/1.1" 200 -
+2025-08-17 20:39:54,592 - INFO - 127.0.0.1 - - [17/Aug/2025 20:39:54] "[32mPOST /process_loan/22/approve HTTP/1.1[0m" 302 -
+2025-08-17 20:39:54,998 - INFO - 127.0.0.1 - - [17/Aug/2025 20:39:54] "GET /loans HTTP/1.1" 200 -
+2025-08-17 20:40:03,420 - INFO - 127.0.0.1 - - [17/Aug/2025 20:40:03] "GET /loanbook HTTP/1.1" 200 -
+2025-08-17 20:40:20,508 - INFO - 127.0.0.1 - - [17/Aug/2025 20:40:20] "GET /customer/202507000001/account HTTP/1.1" 200 -
+2025-08-17 20:40:22,612 - INFO - 127.0.0.1 - - [17/Aug/2025 20:40:22] "GET /customer/202507000001/account?section=topup HTTP/1.1" 200 -
+[2025-08-17 20:41:01,814] INFO in app: [TOPUP] Submit route hit for loan 1
+2025-08-17 20:41:01,814 - INFO - [TOPUP] Submit route hit for loan 1
+2025-08-17 20:41:01,890 - INFO - 127.0.0.1 - - [17/Aug/2025 20:41:01] "[32mPOST /topup/1 HTTP/1.1[0m" 302 -
+2025-08-17 20:41:02,194 - INFO - 127.0.0.1 - - [17/Aug/2025 20:41:02] "GET /customer/202507000001/account?section=topup HTTP/1.1" 200 -
+[2025-08-17 20:41:49,276] INFO in app: [TOPUP] Submit route hit for loan 15
+2025-08-17 20:41:49,276 - INFO - [TOPUP] Submit route hit for loan 15
+[2025-08-17 20:41:49,458] INFO in app: Generating repayment schedule for loan 103000023 with disbursement_date=None
+2025-08-17 20:41:49,458 - INFO - Generating repayment schedule for loan 103000023 with disbursement_date=None
+[2025-08-17 20:41:49,477] INFO in app: First due date: 2025-09-25
+2025-08-17 20:41:49,477 - INFO - First due date: 2025-09-25
+[2025-08-17 20:41:49,481] INFO in app: Instalment 1: Due 2025-09-25, Principal 373765.58, Interest 40635.00, Fees 2500.00
+2025-08-17 20:41:49,481 - INFO - Instalment 1: Due 2025-09-25, Principal 373765.58, Interest 40635.00, Fees 2500.00
+[2025-08-17 20:41:49,484] INFO in app: Instalment 2: Due 2025-10-25, Principal 386847.38, Interest 27553.20, Fees 2500.00
+2025-08-17 20:41:49,484 - INFO - Instalment 2: Due 2025-10-25, Principal 386847.38, Interest 27553.20, Fees 2500.00
+[2025-08-17 20:41:49,487] INFO in app: Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
+2025-08-17 20:41:49,487 - INFO - Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
+[2025-08-17 20:41:49,497] INFO in app: [124000015] Top-up payment → principal: 0.0, top-up interest: 0.0
+2025-08-17 20:41:49,497 - INFO - [124000015] Top-up payment → principal: 0.0, top-up interest: 0.0
+[2025-08-17 20:41:49,529] INFO in app: [124000015] Loan closed after top-up payment.
+2025-08-17 20:41:49,529 - INFO - [124000015] Loan closed after top-up payment.
+2025-08-17 20:41:49,583 - INFO - 127.0.0.1 - - [17/Aug/2025 20:41:49] "[32mPOST /topup/15 HTTP/1.1[0m" 302 -
+2025-08-17 20:41:49,633 - INFO - 127.0.0.1 - - [17/Aug/2025 20:41:49] "GET /customer/202507000001/account?section=statement HTTP/1.1" 200 -

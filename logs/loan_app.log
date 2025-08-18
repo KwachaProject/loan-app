@@ -1667,3 +1667,78 @@ sqlalchemy.exc.ArgumentError: The "whens" argument to case(), when referring to 
 [2025-08-17 19:26:24,637] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-17 19:26:24,640] INFO in app: System encoding: utf-8
 [2025-08-17 19:26:24,642] INFO in app: ==================================================
+[2025-08-17 20:27:34,028] INFO in app: ==================================================
+[2025-08-17 20:27:34,036] INFO in app: Application logging initialized successfully
+[2025-08-17 20:27:34,039] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 20:27:34,041] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 20:27:34,044] INFO in app: System encoding: utf-8
+[2025-08-17 20:27:34,049] INFO in app: ==================================================
+[2025-08-17 20:28:07,714] ERROR in app: Exception on /reports [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 5721, in generate_report
+    "CRB Fee": loan.crb_fee,
+               ^^^^^^^^^^^^
+AttributeError: 'LoanApplication' object has no attribute 'crb_fee'. Did you mean: 'crb_fees'?
+[2025-08-17 20:30:48,503] INFO in app: ==================================================
+[2025-08-17 20:30:48,510] INFO in app: Application logging initialized successfully
+[2025-08-17 20:30:48,515] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 20:30:48,517] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 20:30:48,521] INFO in app: System encoding: utf-8
+[2025-08-17 20:30:48,523] INFO in app: ==================================================
+[2025-08-17 20:31:06,069] ERROR in app: Exception on /reports [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 5736, in generate_report
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+         ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\pandas\io\excel\_xlsxwriter.py", line 197, in __init__
+    from xlsxwriter import Workbook
+ModuleNotFoundError: No module named 'xlsxwriter'
+[2025-08-17 20:32:28,480] INFO in app: ==================================================
+[2025-08-17 20:32:28,488] INFO in app: Application logging initialized successfully
+[2025-08-17 20:32:28,493] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 20:32:28,495] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 20:32:28,500] INFO in app: System encoding: utf-8
+[2025-08-17 20:32:28,502] INFO in app: ==================================================
+[2025-08-17 20:37:24,975] INFO in app: ==================================================
+[2025-08-17 20:37:24,983] INFO in app: Application logging initialized successfully
+[2025-08-17 20:37:24,985] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-17 20:37:24,987] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-17 20:37:24,990] INFO in app: System encoding: utf-8
+[2025-08-17 20:37:24,997] INFO in app: ==================================================
+[2025-08-17 20:38:56,821] INFO in app: Generating repayment schedule for loan 103000021 with disbursement_date=None
+[2025-08-17 20:38:56,849] INFO in app: First due date: 2025-09-25
+[2025-08-17 20:38:56,854] INFO in app: Instalment 1: Due 2025-09-25, Principal 373765.58, Interest 40635.00, Fees 2500.00
+[2025-08-17 20:38:56,860] INFO in app: Instalment 2: Due 2025-10-25, Principal 386847.38, Interest 27553.20, Fees 2500.00
+[2025-08-17 20:38:56,875] INFO in app: Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
+[2025-08-17 20:39:42,595] INFO in app: Generating repayment schedule for loan 103000022 with disbursement_date=None
+[2025-08-17 20:39:42,613] INFO in app: First due date: 2025-09-25
+[2025-08-17 20:39:42,627] INFO in app: Instalment 1: Due 2025-09-25, Principal 746565.36, Interest 81165.00, Fees 5000.00
+[2025-08-17 20:39:42,632] INFO in app: Instalment 2: Due 2025-10-25, Principal 772695.15, Interest 55035.21, Fees 5000.00
+[2025-08-17 20:39:42,645] INFO in app: Instalment 3: Due 2025-11-25, Principal 799739.49, Interest 27990.87, Fees 5000.00
+[2025-08-17 20:41:01,814] INFO in app: [TOPUP] Submit route hit for loan 1
+[2025-08-17 20:41:49,276] INFO in app: [TOPUP] Submit route hit for loan 15
+[2025-08-17 20:41:49,458] INFO in app: Generating repayment schedule for loan 103000023 with disbursement_date=None
+[2025-08-17 20:41:49,477] INFO in app: First due date: 2025-09-25
+[2025-08-17 20:41:49,481] INFO in app: Instalment 1: Due 2025-09-25, Principal 373765.58, Interest 40635.00, Fees 2500.00
+[2025-08-17 20:41:49,484] INFO in app: Instalment 2: Due 2025-10-25, Principal 386847.38, Interest 27553.20, Fees 2500.00
+[2025-08-17 20:41:49,487] INFO in app: Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
+[2025-08-17 20:41:49,497] INFO in app: [124000015] Top-up payment → principal: 0.0, top-up interest: 0.0
+[2025-08-17 20:41:49,529] INFO in app: [124000015] Loan closed after top-up payment.
