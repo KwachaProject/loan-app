@@ -5671,6 +5671,92 @@ def loanbook():
         flash(f"Error loading loan book: {str(e)}", "danger")
         return redirect(url_for('home'))
 
+from flask import request, send_file
+from io import BytesIO
+import pandas as pd
+from datetime import datetime
+from sqlalchemy import or_
+
+@app.route("/reports")
+def generate_report():
+    # Get filters from query string
+    search = request.args.get("search", "").lower()
+    category = request.args.get("category", "")
+    tenure = request.args.get("tenure", "")
+    from_date = request.args.get("from")
+    to_date = request.args.get("to")
+
+    query = db.session.query(LoanApplication).join(Customer)
+
+    # Apply filters
+    if search:
+        query = query.filter(
+            or_(
+                Customer.first_name.ilike(f"%{search}%"),
+                Customer.last_name.ilike(f"%{search}%"),
+                LoanApplication.application_status.ilike(f"%{search}%")
+            )
+        )
+    if category:
+        query = query.filter(LoanApplication.category == category)
+    if tenure:
+        query = query.filter(LoanApplication.term_months == int(tenure))
+    if from_date:
+        query = query.filter(LoanApplication.created_at >= datetime.fromisoformat(from_date))
+    if to_date:
+        query = query.filter(LoanApplication.created_at <= datetime.fromisoformat(to_date))
+
+    loans = query.all()
+
+    # Build dataframe
+    rows = []
+    for loan in loans:
+        rows.append({
+            "Loan Number": loan.loan_number,
+            "File Number": loan.file_number,
+            "Customer": f"{loan.customer.first_name} {loan.customer.last_name}",
+            "Loan Amount": loan.loan_amount,
+            "Term Months": loan.term_months,
+            "Category": loan.category,
+            "CRB Fee": loan.crb_fees,
+            "Origination Fee": loan.origination_fees,
+            "Insurance Fee": loan.insurance_fees,
+            "Total Fees": loan.total_fees,
+            "Collection Fees": loan.collection_fees,
+            "Instalment": loan.monthly_instalment,
+            "Total Repayment": loan.total_repayment,
+            "Principal Balance": loan.balance,
+            "Created At": loan.created_at.strftime("%Y-%m-%d"),
+        })
+
+    df = pd.DataFrame(rows)
+
+    # Export to Excel in memory
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+        df.to_excel(writer, index=False, sheet_name="Loan Book")
+
+        # Add totals row
+        worksheet = writer.sheets["Loan Book"]
+        last_row = len(df) + 1
+        worksheet.write(last_row, 0, "Totals")
+        worksheet.write_formula(last_row, 3, f"=SUM(D2:D{last_row})")
+        worksheet.write_formula(last_row, 6, f"=SUM(G2:G{last_row})")
+        worksheet.write_formula(last_row, 7, f"=SUM(H2:H{last_row})")
+        worksheet.write_formula(last_row, 8, f"=SUM(I2:I{last_row})")
+        worksheet.write_formula(last_row, 9, f"=SUM(J2:J{last_row})")
+        worksheet.write_formula(last_row, 10, f"=SUM(K2:K{last_row})")
+        worksheet.write_formula(last_row, 11, f"=SUM(L2:L{last_row})")
+        worksheet.write_formula(last_row, 12, f"=SUM(M2:M{last_row})")
+        worksheet.write_formula(last_row, 13, f"=SUM(N2:N{last_row})")
+
+    output.seek(0)
+
+    filename = f"loan_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+    return send_file(output,
+                     as_attachment=True,
+                     download_name=filename,
+                     mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 
 def save_file(file_obj, subfolder=''):
