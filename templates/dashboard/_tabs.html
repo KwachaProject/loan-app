@@ -1,26 +1,32 @@
 <ul class="nav nav-tabs mb-3" id="salesTabs">
   <li class="nav-item">
-    <a class="nav-link {% if active_tab == 'agent' %}active{% endif %}"
+    <a class="nav-link {{ 'active' if active_tab == 'agent' else '' }}"
        href="{{ url_for('sales_dashboard') }}">
-       Agent Performance
+      Agent Performance
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link {% if active_tab == 'team' %}active{% endif %}"
+    <a class="nav-link {{ 'active' if active_tab == 'team' else '' }}"
        href="{{ url_for('team_leader_dashboard') }}">
-       Team Leader
+      Team Leader
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link {% if active_tab == 'analytics' %}active{% endif %}"
+    <a class="nav-link {{ 'active' if active_tab == 'analytics' else '' }}"
        href="{{ url_for('sales_charts') }}">
-       Analytics
+      Analytics
     </a>
-  </li> 
+  </li>
   <li class="nav-item">
-    <a class="nav-link {% if active_tab == 'gender' %}active{% endif %}"
+    <a class="nav-link {{ 'active' if active_tab == 'gender' else '' }}"
        href="{{ url_for('gender_dashboard') }}">
-       Sales by Gender
+      Sales by Gender
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{ 'active' if active_tab == 'monthly' else '' }}"
+       href="{{ url_for('sales_by_month') }}">
+      Sales by Month
     </a>
   </li>
 </ul>

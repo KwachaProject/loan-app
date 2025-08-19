@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Sales by Month{% endblock %}
+
+{% block content %}
+<main class="container mt-4">
+  <header class="mb-4">
+    <h2 class="text-primary">Sales by Month</h2>
+  </header>
+
+  <!-- Shared Tabs -->
+  {% set active_tab = 'monthly' %}
+  {% include "dashboard/_tabs.html" with context %}
+
+  <!-- Category Filter -->
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+      <label for="category" class="form-label">Category</label>
+      <select name="category" id="category" class="form-control">
+        <option value="">All</option>
+        {% for c in categories %}
+        <option value="{{ c }}" {% if category == c %}selected{% endif %}>{{ c|capitalize }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-auto align-self-end">
+      <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+  </form>
+
+  <!-- Sales by Month Chart -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Monthly Sales Trend</h5>
+      <canvas id="salesChart" height="120"></canvas>
+    </div>
+  </div>
+
+  <!-- Sales by Month Table -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Month</th>
+          <th>Total Sales</th>
+          <th>Loan Count</th>
+          <th>Ticket Size</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in sales_stats %}
+        <tr>
+          <td class="fw-bold">{{ row.month }}</td>
+          <td class="text-start">{{ "{:,.2f}".format(row.total_sales) }}</td>
+          <td class="text-start">{{ row.loan_count }}</td>
+          <td class="text-start">{{ "{:,.2f}".format(row.ticket_size) }}</td>
+          <td>
+            <a href="{{ url_for('download_sales_by_month', year_month=row.raw_month, category=category) }}"
+               class="btn btn-sm btn-outline-success">
+              Download
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+        <tr class="fw-bold table-secondary">
+          <td>Total</td>
+          <td class="text-start">{{ "{:,.2f}".format(totals_row.total_sales) }}</td>
+          <td class="text-start">{{ totals_row.loan_count }}</td>
+          <td class="text-start">{{ "{:,.2f}".format(totals_row.ticket_size) }}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('salesChart').getContext('2d');
+
+  const salesData = {
+    labels: {{ sales_stats | map(attribute='month') | list | tojson }},
+    datasets: [
+      {
+        label: 'Total Sales (MK)',
+        data: {{ sales_stats | map(attribute='total_sales') | list | tojson }},
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.2
+      },
+      {
+        label: 'Loan Count',
+        data: {{ sales_stats | map(attribute='loan_count') | list | tojson }},
+        backgroundColor: 'rgba(255, 159, 64, 0.6)',
+        borderColor: 'rgba(255, 159, 64, 1)',
+        borderWidth: 2,
+        type: 'line',
+        yAxisID: 'y1'
+      }
+    ]
+  };
+
+  const salesChart = new Chart(ctx, {
+    type: 'bar',
+    data: salesData,
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      stacked: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Total Sales (MK)' }
+        },
+        y1: {
+          beginAtZero: true,
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'Loan Count' }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}
