@@ -9639,6 +9639,133 @@ def deploy():
 def catch_all(path):
     return f"404: The URL /{path} was not found.", 404
 
+
+from flask import render_template, request, flash, redirect, url_for
+from sqlalchemy import func
+from datetime import datetime
+
+@app.route("/sales-by-month")
+def sales_by_month():
+    try:
+        category = request.args.get("category", None)
+
+        # Base query – include all loans, not just disbursed
+        query = (
+            db.session.query(
+                func.strftime('%Y-%m', LoanApplication.created_at).label('month'),
+                func.sum(LoanApplication.loan_amount).label('total_sales'),
+                func.count(LoanApplication.id).label('loan_count')
+            )
+        )
+
+        if category:
+            query = query.filter(LoanApplication.category == category)
+
+        monthly_data = (
+            query.group_by(func.strftime('%Y-%m', LoanApplication.created_at))
+                 .order_by(func.strftime('%Y-%m', LoanApplication.created_at).asc())
+                 .all()
+        )
+
+        sales_stats = []
+        total_sales = 0
+        total_count = 0
+
+        for row in monthly_data:
+            try:
+                # Human-friendly month label
+                month_label = datetime.strptime(row.month, "%Y-%m").strftime("%B %Y")
+            except Exception:
+                month_label = row.month
+
+            ticket_size = round((row.total_sales or 0) / (row.loan_count or 1), 2)
+            total_sales += row.total_sales or 0
+            total_count += row.loan_count
+
+            sales_stats.append({
+                "month": month_label,       # pretty label e.g. "April 2025"
+                "raw_month": row.month,     # machine readable e.g. "2025-04"
+                "total_sales": round(row.total_sales or 0, 2),
+                "loan_count": row.loan_count,
+                "ticket_size": ticket_size
+            })
+
+        # Totals row
+        totals_row = {
+            "month": "TOTAL",
+            "total_sales": round(total_sales, 2),
+            "loan_count": total_count,
+            "ticket_size": round((total_sales / total_count), 2) if total_count > 0 else 0
+        }
+
+        return render_template(
+            "sales_by_month.html",
+            sales_stats=sales_stats,
+            totals_row=totals_row,
+            active_tab="monthly",
+            category=category,
+            categories=['civil_servant', 'private_sector', 'sme']
+        )
+    except Exception as e:
+        flash(f"Error loading sales by month: {str(e)}", "danger")
+        return redirect(url_for("sales_dashboard"))
+
+
+import io
+import pandas as pd
+from flask import send_file
+
+@app.route("/sales-by-month/download/<year_month>")
+def download_sales_by_month(year_month):
+    try:
+        category = request.args.get("category", None)
+
+        # Filter loans by year-month
+        query = db.session.query(
+            LoanApplication.id,
+            LoanApplication.loan_amount,
+            LoanApplication.category,
+            LoanApplication.status,
+            LoanApplication.created_at
+        ).filter(func.strftime('%Y-%m', LoanApplication.created_at) == year_month)
+
+        if category:
+            query = query.filter(LoanApplication.category == category)
+
+        loans = query.order_by(LoanApplication.created_at.asc()).all()
+
+        if not loans:
+            flash("No data available for this month", "warning")
+            return redirect(url_for("sales_by_month", category=category))
+
+        # Convert to dataframe
+        df = pd.DataFrame([{
+            "ID": l.id,
+            "Loan Amount": l.loan_amount,
+            "Category": l.category,
+            "Status": l.status,
+            "Created At": l.created_at.strftime("%Y-%m-%d")
+        } for l in loans])
+
+        # Write Excel to memory
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            df.to_excel(writer, index=False, sheet_name="SalesByMonth")
+
+        output.seek(0)
+
+        filename = f"sales_{year_month}.xlsx"
+        return send_file(
+            output,
+            as_attachment=True,
+            download_name=filename,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+    except Exception as e:
+        flash(f"Error exporting Excel: {str(e)}", "danger")
+        return redirect(url_for("sales_by_month"))
+
+
 def send_sales_notification_email(recipients=None, custom_message=None):
     """Enhanced email function with MWK formatting + notification tracking"""
     try:

@@ -1742,3 +1742,266 @@ ModuleNotFoundError: No module named 'xlsxwriter'
 [2025-08-17 20:41:49,487] INFO in app: Instalment 3: Due 2025-11-25, Principal 400387.04, Interest 14013.54, Fees 2500.00
 [2025-08-17 20:41:49,497] INFO in app: [124000015] Top-up payment → principal: 0.0, top-up interest: 0.0
 [2025-08-17 20:41:49,529] INFO in app: [124000015] Loan closed after top-up payment.
+[2025-08-18 05:22:35,032] INFO in app: ==================================================
+[2025-08-18 05:22:35,181] INFO in app: Application logging initialized successfully
+[2025-08-18 05:22:35,184] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-18 05:22:35,187] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-18 05:22:35,190] INFO in app: System encoding: utf-8
+[2025-08-18 05:22:35,202] INFO in app: ==================================================
+[2025-08-18 05:27:38,329] INFO in app: CSV headers: ['loan_number', 'created_at', ' loan_amount ', 'term_months', 'interest_rate', 'application_status', 'loan_state', 'performance_status', 'client_name', 'national_id', 'phone_number', 'email', 'business_name', 'business_sector', 'business_address']
+[2025-08-19 14:26:57,878] INFO in app: ==================================================
+[2025-08-19 14:26:57,975] INFO in app: Application logging initialized successfully
+[2025-08-19 14:26:57,976] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 14:26:57,978] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 14:26:57,982] INFO in app: System encoding: utf-8
+[2025-08-19 14:26:57,989] INFO in app: ==================================================
+[2025-08-19 15:06:05,048] INFO in app: ==================================================
+[2025-08-19 15:06:05,058] INFO in app: Application logging initialized successfully
+[2025-08-19 15:06:05,060] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:06:05,062] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:06:05,064] INFO in app: System encoding: utf-8
+[2025-08-19 15:06:05,066] INFO in app: ==================================================
+[2025-08-19 15:06:26,600] INFO in app: ==================================================
+[2025-08-19 15:06:26,608] INFO in app: Application logging initialized successfully
+[2025-08-19 15:06:26,610] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:06:26,617] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:06:26,620] INFO in app: System encoding: utf-8
+[2025-08-19 15:06:26,621] INFO in app: ==================================================
+[2025-08-19 15:11:38,543] INFO in app: ==================================================
+[2025-08-19 15:11:38,551] INFO in app: Application logging initialized successfully
+[2025-08-19 15:11:38,554] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:11:38,560] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:11:38,567] INFO in app: System encoding: utf-8
+[2025-08-19 15:11:38,569] INFO in app: ==================================================
+[2025-08-19 15:14:56,888] INFO in app: ==================================================
+[2025-08-19 15:14:56,898] INFO in app: Application logging initialized successfully
+[2025-08-19 15:14:56,902] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:14:56,906] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:14:56,913] INFO in app: System encoding: utf-8
+[2025-08-19 15:14:56,915] INFO in app: ==================================================
+[2025-08-19 15:20:25,306] INFO in app: ==================================================
+[2025-08-19 15:20:25,315] INFO in app: Application logging initialized successfully
+[2025-08-19 15:20:25,318] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:20:25,320] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:20:25,328] INFO in app: System encoding: utf-8
+[2025-08-19 15:20:25,332] INFO in app: ==================================================
+[2025-08-19 15:24:26,178] INFO in app: ==================================================
+[2025-08-19 15:24:26,190] INFO in app: Application logging initialized successfully
+[2025-08-19 15:24:26,192] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:24:26,195] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:24:26,204] INFO in app: System encoding: utf-8
+[2025-08-19 15:24:26,206] INFO in app: ==================================================
+[2025-08-19 15:29:11,775] INFO in app: ==================================================
+[2025-08-19 15:29:11,781] INFO in app: Application logging initialized successfully
+[2025-08-19 15:29:11,786] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:29:11,789] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:29:11,793] INFO in app: System encoding: utf-8
+[2025-08-19 15:29:11,795] INFO in app: ==================================================
+[2025-08-19 15:30:42,220] INFO in app: ==================================================
+[2025-08-19 15:30:42,229] INFO in app: Application logging initialized successfully
+[2025-08-19 15:30:42,246] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:30:42,248] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:30:42,250] INFO in app: System encoding: utf-8
+[2025-08-19 15:30:42,259] INFO in app: ==================================================
+[2025-08-19 15:40:50,275] INFO in app: ==================================================
+[2025-08-19 15:40:50,283] INFO in app: Application logging initialized successfully
+[2025-08-19 15:40:50,287] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:40:50,289] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:40:50,291] INFO in app: System encoding: utf-8
+[2025-08-19 15:40:50,296] INFO in app: ==================================================
+[2025-08-19 15:55:06,348] INFO in app: ==================================================
+[2025-08-19 15:55:06,355] INFO in app: Application logging initialized successfully
+[2025-08-19 15:55:06,358] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 15:55:06,362] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 15:55:06,367] INFO in app: System encoding: utf-8
+[2025-08-19 15:55:06,370] INFO in app: ==================================================
+[2025-08-19 15:55:18,191] ERROR in app: Exception on /dashboard/sales [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 8304, in sales_dashboard
+    return render_template(
+        "dashboard/sales_dashboard.html",
+    ...<5 lines>...
+        notif=notif
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\dashboard\sales_dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 177, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\dashboard\sales_dashboard.html", line 159, in block 'content'
+    <td>{{ totals_row.month }}</td>
+    ^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'totals_row' is undefined
+[2025-08-19 16:00:20,584] INFO in app: ==================================================
+[2025-08-19 16:00:20,592] INFO in app: Application logging initialized successfully
+[2025-08-19 16:00:20,594] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 16:00:20,596] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 16:00:20,599] INFO in app: System encoding: utf-8
+[2025-08-19 16:00:20,607] INFO in app: ==================================================
+[2025-08-19 16:00:29,993] ERROR in app: Exception on /dashboard/sales [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 8304, in sales_dashboard
+    return render_template(
+        "dashboard/sales_dashboard.html",
+    ...<5 lines>...
+        notif=notif
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\dashboard\sales_dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 177, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\dashboard\sales_dashboard.html", line 159, in block 'content'
+    <td>{{ totals_row.month }}</td>
+    ^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'totals_row' is undefined
+[2025-08-19 16:01:52,902] INFO in app: ==================================================
+[2025-08-19 16:01:52,912] INFO in app: Application logging initialized successfully
+[2025-08-19 16:01:52,913] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 16:01:52,915] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 16:01:52,918] INFO in app: System encoding: utf-8
+[2025-08-19 16:01:52,921] INFO in app: ==================================================
+[2025-08-19 16:01:59,422] ERROR in app: Exception on /dashboard/sales [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 8304, in sales_dashboard
+    return render_template(
+        "dashboard/sales_dashboard.html",
+    ...<5 lines>...
+        notif=notif
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\dashboard\sales_dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 177, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\dashboard\sales_dashboard.html", line 159, in block 'content'
+    <td>{{ totals_row.month }}</td>
+    ^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'totals_row' is undefined
+[2025-08-19 16:02:03,506] ERROR in app: Exception on /dashboard/sales [GET]
+Traceback (most recent call last):
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\app.py", line 8304, in sales_dashboard
+    return render_template(
+        "dashboard/sales_dashboard.html",
+    ...<5 lines>...
+        notif=notif
+    )
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\pc\loan-app\templates\dashboard\sales_dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\pc\loan-app\templates\base.html", line 177, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\templates\dashboard\sales_dashboard.html", line 159, in block 'content'
+    <td>{{ totals_row.month }}</td>
+    ^^^^^^^^^^^
+  File "C:\Users\pc\loan-app\.venv\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'totals_row' is undefined
+[2025-08-19 16:02:59,314] INFO in app: ==================================================
+[2025-08-19 16:02:59,322] INFO in app: Application logging initialized successfully
+[2025-08-19 16:02:59,324] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 16:02:59,326] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 16:02:59,329] INFO in app: System encoding: utf-8
+[2025-08-19 16:02:59,337] INFO in app: ==================================================
+[2025-08-19 16:07:55,377] INFO in app: ==================================================
+[2025-08-19 16:07:55,386] INFO in app: Application logging initialized successfully
+[2025-08-19 16:07:55,388] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 16:07:55,390] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 16:07:55,392] INFO in app: System encoding: utf-8
+[2025-08-19 16:07:55,394] INFO in app: ==================================================
+[2025-08-19 16:12:46,538] INFO in app: ==================================================
+[2025-08-19 16:12:46,545] INFO in app: Application logging initialized successfully
+[2025-08-19 16:12:46,548] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 16:12:46,556] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 16:12:46,564] INFO in app: System encoding: utf-8
+[2025-08-19 16:12:46,571] INFO in app: ==================================================
+[2025-08-19 16:21:11,958] INFO in app: ==================================================
+[2025-08-19 16:21:11,965] INFO in app: Application logging initialized successfully
+[2025-08-19 16:21:11,969] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 16:21:11,971] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 16:21:11,973] INFO in app: System encoding: utf-8
+[2025-08-19 16:21:11,974] INFO in app: ==================================================
+[2025-08-19 17:12:19,104] INFO in app: ==================================================
+[2025-08-19 17:12:19,111] INFO in app: Application logging initialized successfully
+[2025-08-19 17:12:19,113] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 17:12:19,116] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 17:12:19,118] INFO in app: System encoding: utf-8
+[2025-08-19 17:12:19,124] INFO in app: ==================================================
