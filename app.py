@@ -9644,17 +9644,35 @@ from flask import render_template, request, flash, redirect, url_for
 from sqlalchemy import func
 from datetime import datetime
 
+from sqlalchemy import func
+from sqlalchemy.engine import Engine
+
+from sqlalchemy import func
+from sqlalchemy.orm import class_mapper
+
+from sqlalchemy import func, text
+from datetime import datetime
+
 @app.route("/sales-by-month")
 def sales_by_month():
     try:
         category = request.args.get("category", None)
 
-        # Base query – include all loans, not just disbursed
+        # Get the current engine and dialect
+        engine = db.get_engine()
+        dialect = engine.dialect.name
+
+        if dialect == "sqlite":
+            month_expr = func.strftime("%Y-%m", LoanApplication.created_at)
+        else:  # assume PostgreSQL
+            month_expr = func.to_char(LoanApplication.created_at, text("'YYYY-MM'"))
+
+        # Base query – include all loans
         query = (
             db.session.query(
-                func.strftime('%Y-%m', LoanApplication.created_at).label('month'),
-                func.sum(LoanApplication.loan_amount).label('total_sales'),
-                func.count(LoanApplication.id).label('loan_count')
+                month_expr.label("month"),
+                func.sum(LoanApplication.loan_amount).label("total_sales"),
+                func.count(LoanApplication.id).label("loan_count"),
             )
         )
 
@@ -9662,8 +9680,8 @@ def sales_by_month():
             query = query.filter(LoanApplication.category == category)
 
         monthly_data = (
-            query.group_by(func.strftime('%Y-%m', LoanApplication.created_at))
-                 .order_by(func.strftime('%Y-%m', LoanApplication.created_at).asc())
+            query.group_by(month_expr)
+                 .order_by(month_expr.asc())
                  .all()
         )
 
@@ -9673,7 +9691,7 @@ def sales_by_month():
 
         for row in monthly_data:
             try:
-                # Human-friendly month label
+                # Format month into "April 2025"
                 month_label = datetime.strptime(row.month, "%Y-%m").strftime("%B %Y")
             except Exception:
                 month_label = row.month
@@ -9683,8 +9701,8 @@ def sales_by_month():
             total_count += row.loan_count
 
             sales_stats.append({
-                "month": month_label,       # pretty label e.g. "April 2025"
-                "raw_month": row.month,     # machine readable e.g. "2025-04"
+                "month": month_label,
+                "raw_month": row.month,
                 "total_sales": round(row.total_sales or 0, 2),
                 "loan_count": row.loan_count,
                 "ticket_size": ticket_size
@@ -9704,12 +9722,12 @@ def sales_by_month():
             totals_row=totals_row,
             active_tab="monthly",
             category=category,
-            categories=['civil_servant', 'private_sector', 'sme']
+            categories=["civil_servant", "private_sector", "sme"],
         )
+
     except Exception as e:
         flash(f"Error loading sales by month: {str(e)}", "danger")
         return redirect(url_for("sales_dashboard"))
-
 
 import io
 import pandas as pd

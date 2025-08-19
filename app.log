@@ -5783,3 +5783,54 @@ with app.app_context(). See the documentation for more information.
 2025-08-19 17:12:19,406 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
 2025-08-19 17:12:19,408 - INFO - Added job "snapshot_par" to job store "default"
 2025-08-19 17:12:19,408 - INFO - Scheduler started
+2025-08-19 17:12:20,063 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-19 17:12:20,063 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-19 17:12:20,074 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-19 17:12:20,074 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 17:13:49,689 - INFO - 127.0.0.1 - - [19/Aug/2025 17:13:49] "GET /sales-by-month HTTP/1.1" 200 -
+2025-08-19 17:13:54,029 - INFO - 127.0.0.1 - - [19/Aug/2025 17:13:54] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-19 17:49:57,883] INFO in app: ==================================================
+[2025-08-19 17:49:57,897] INFO in app: Application logging initialized successfully
+[2025-08-19 17:49:57,902] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 17:49:57,905] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 17:49:57,908] INFO in app: System encoding: utf-8
+[2025-08-19 17:49:57,911] INFO in app: ==================================================
+2025-08-19 17:49:58,366 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-19 17:49:58,368 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-19 17:49:58,368 - INFO - Scheduler started
+2025-08-19 17:49:59,594 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-19 17:49:59,594 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-19 17:49:59,610 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-19 17:49:59,611 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 17:50:24,028 - INFO - 127.0.0.1 - - [19/Aug/2025 17:50:24] "[32mGET /sales-by-month HTTP/1.1[0m" 302 -
+2025-08-19 17:50:24,201 - INFO - 127.0.0.1 - - [19/Aug/2025 17:50:24] "GET /dashboard/sales HTTP/1.1" 200 -
+2025-08-19 17:50:24,810 - INFO - 127.0.0.1 - - [19/Aug/2025 17:50:24] "GET /notifications/sales-summary HTTP/1.1" 200 -
+2025-08-19 17:50:25,729 - INFO - 127.0.0.1 - - [19/Aug/2025 17:50:25] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-19 17:54:05,075] INFO in app: ==================================================
+[2025-08-19 17:54:05,092] INFO in app: Application logging initialized successfully
+[2025-08-19 17:54:05,094] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 17:54:05,099] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 17:54:05,102] INFO in app: System encoding: utf-8
+[2025-08-19 17:54:05,110] INFO in app: ==================================================
+2025-08-19 17:54:05,788 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-08-19 17:54:05,796 - INFO - Added job "snapshot_par" to job store "default"
+2025-08-19 17:54:05,796 - INFO - Scheduler started
+2025-08-19 17:54:07,161 - INFO - Added job "auto_post_payments" to job store "default"
+2025-08-19 17:54:07,162 - INFO - Added job "send_sales_notification_email" to job store "default"
+2025-08-19 17:54:07,179 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-19 17:54:07,179 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 17:54:13,456 - INFO - 127.0.0.1 - - [19/Aug/2025 17:54:13] "GET /dashboard/sales HTTP/1.1" 200 -
+2025-08-19 17:54:14,866 - INFO - 127.0.0.1 - - [19/Aug/2025 17:54:14] "GET /notifications/sales-summary HTTP/1.1" 200 -
+2025-08-19 17:54:18,440 - INFO - 127.0.0.1 - - [19/Aug/2025 17:54:18] "[32mGET /sales-by-month HTTP/1.1[0m" 302 -
+2025-08-19 17:54:18,720 - INFO - 127.0.0.1 - - [19/Aug/2025 17:54:18] "GET /dashboard/sales HTTP/1.1" 200 -
+2025-08-19 17:54:19,097 - INFO - 127.0.0.1 - - [19/Aug/2025 17:54:19] "GET /notifications/sales-summary HTTP/1.1" 200 -
+2025-08-19 17:54:21,885 - INFO - 127.0.0.1 - - [19/Aug/2025 17:54:21] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2025-08-19 17:56:43,510] INFO in app: ==================================================
+[2025-08-19 17:56:43,530] INFO in app: Application logging initialized successfully
+[2025-08-19 17:56:43,534] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 17:56:43,536] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 17:56:43,538] INFO in app: System encoding: utf-8
+[2025-08-19 17:56:43,540] INFO in app: ==================================================
