@@ -2023,3 +2023,9 @@ jinja2.exceptions.UndefinedError: 'totals_row' is undefined
 [2025-08-19 17:56:43,536] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 [2025-08-19 17:56:43,538] INFO in app: System encoding: utf-8
 [2025-08-19 17:56:43,540] INFO in app: ==================================================
+[2025-08-19 18:09:51,479] INFO in app: ==================================================
+[2025-08-19 18:09:51,492] INFO in app: Application logging initialized successfully
+[2025-08-19 18:09:51,502] INFO in app: Log directory: C:\Users\pc\loan-app\logs
+[2025-08-19 18:09:51,512] INFO in app: Python version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2025-08-19 18:09:51,514] INFO in app: System encoding: utf-8
+[2025-08-19 18:09:51,518] INFO in app: ==================================================

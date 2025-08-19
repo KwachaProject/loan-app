@@ -9732,11 +9732,21 @@ def sales_by_month():
 import io
 import pandas as pd
 from flask import send_file
+from sqlalchemy import func, text
 
 @app.route("/sales-by-month/download/<year_month>")
 def download_sales_by_month(year_month):
     try:
         category = request.args.get("category", None)
+
+        # Detect dialect (SQLite vs Postgres)
+        engine = db.get_engine()
+        dialect = engine.dialect.name
+
+        if dialect == "sqlite":
+            month_expr = func.strftime("%Y-%m", LoanApplication.created_at)
+        else:  # Postgres
+            month_expr = func.to_char(LoanApplication.created_at, text("'YYYY-MM'"))
 
         # Filter loans by year-month
         query = db.session.query(
@@ -9745,7 +9755,7 @@ def download_sales_by_month(year_month):
             LoanApplication.category,
             LoanApplication.status,
             LoanApplication.created_at
-        ).filter(func.strftime('%Y-%m', LoanApplication.created_at) == year_month)
+        ).filter(month_expr == year_month)
 
         if category:
             query = query.filter(LoanApplication.category == category)
@@ -9756,7 +9766,7 @@ def download_sales_by_month(year_month):
             flash("No data available for this month", "warning")
             return redirect(url_for("sales_by_month", category=category))
 
-        # Convert to dataframe
+        # Convert to DataFrame
         df = pd.DataFrame([{
             "ID": l.id,
             "Loan Amount": l.loan_amount,
@@ -9779,6 +9789,7 @@ def download_sales_by_month(year_month):
             download_name=filename,
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
+
     except Exception as e:
         flash(f"Error exporting Excel: {str(e)}", "danger")
         return redirect(url_for("sales_by_month"))
